@@ -6,7 +6,21 @@
     <description>Recent content in Home on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Thu, 24 Aug 2023 15:22:11 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 26 Aug 2023 18:46:37 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DirectX12の描画処理 #2 [Devlog #003]</title>
+      <link>https://nishihi6.github.io/blog/posts/devlog_dx12_02/</link>
+      <pubDate>Sat, 26 Aug 2023 18:46:37 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/devlog_dx12_02/</guid>
+      <description>DirectX12を使った描画処理 環境構築の続き プリコンパイル済みヘッダーの追加 Sourceフォルダ以下にstdafx.hとstdafx.cppと追加
+dev-dx12-202308（プロジェクト名） └─ Source ├─ Application │ ├─ Application.h │ └─ Application.cpp ├─ Graphics ├─ System │ └─ Window │ ├─ Window.h │ └─ Window.cpp ├─ stdafx.h └─ stdafx.cpp プロジェクトのプロパティの設定からプリコンパイル済みヘッダーを使用(/Yu)に設定（プリコンパイル済みヘッダーファイルはstdafx.h）
+プロジェクトのプロパティの設定から必ず使用されるインクルードファイルにstdafx.hを追加設定
+追加したstdafx.cppのプロパティの設定からプリコンパイル済みヘッダーを作成(/Yc)に設定（プリコンパイル済みヘッダーファイルはstdafx.h）
+以下コード
+// stdafx.h #pragma once // 基本 #pragma comment(lib,&amp;#34;winmm.lib&amp;#34;) #define NOMINMAX #include &amp;lt;Windows.h&amp;gt; #include &amp;lt;iostream&amp;gt; #include &amp;lt;cassert&amp;gt; #include &amp;lt;wrl/client.h&amp;gt; // STL #include &amp;lt;map&amp;gt; #include &amp;lt;unordered_map&amp;gt; #include &amp;lt;unordered_set&amp;gt; #include &amp;lt;string&amp;gt; #include &amp;lt;array&amp;gt; #include &amp;lt;vector&amp;gt; #include &amp;lt;stack&amp;gt; #include &amp;lt;list&amp;gt; #include &amp;lt;iterator&amp;gt; #include &amp;lt;queue&amp;gt; #include &amp;lt;algorithm&amp;gt; #include &amp;lt;memory&amp;gt; #include &amp;lt;random&amp;gt; #include &amp;lt;fstream&amp;gt; #include &amp;lt;iostream&amp;gt; #include &amp;lt;sstream&amp;gt; #include &amp;lt;functional&amp;gt; #include &amp;lt;thread&amp;gt; #include &amp;lt;atomic&amp;gt; #include &amp;lt;mutex&amp;gt; #include &amp;lt;future&amp;gt; #include &amp;lt;fileSystem&amp;gt; #include &amp;lt;chrono&amp;gt; #define _USE_MATH_DEFINES #include &amp;lt;math.</description>
+    </item>
+    
     <item>
       <title>CG理論#1 レンダリングパイプライン [Devlog #002]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_cg_01/</link>
@@ -50,7 +64,7 @@
       <pubDate>Wed, 23 Aug 2023 01:19:34 +0900</pubDate>
       
       <guid>https://nishihi6.github.io/blog/posts/devlog_dx12_01/</guid>
-      <description>DirectX12を使った描画処理 環境構築 VisualStudio2022でプロジェクトの作成 (新規作成-&amp;gt;プロジェクト-&amp;gt;)新しいプロジェクトの作成-&amp;gt;空のプロジェクト プロジェクト名（ソリューション名）と保存パスを指定 &amp;ldquo;ソリューションとプロジェクトを同じディレクトリに配置する&amp;quot;にチェック 作成 ソリューションのプロパティを変更 構成プロパティ-&amp;gt;リンカー-&amp;gt;システム-&amp;gt;サブシステム &amp;ldquo;コンソール&amp;quot;から&amp;quot;Windows&amp;quot;に変更 以下のようにフォルダを構成 新しいフォルダを作成 フォルダに新しい項目を追加（以降説明省略） Applicationフィルターに新しい項目を追加 .cpp 名前：Application.cpp 場所：Source/Application（フォルダを作成） .h 名前：Application.h 場所：Source/Application dev-dx12-202308（プロジェクト名） └─ Source ├─ Application │ ├─ Application.h │ └─ Application.cpp └─ Graphics Application.h Applicationクラス 実行を行うExecute()関数を宣言し、Applicationクラスオブジェクトを生成するInstance()関数を定義する
+      <description>DirectX12を使った描画処理 環境構築 VisualStudio2022でプロジェクトの作成 (新規作成-&amp;gt;プロジェクト-&amp;gt;)新しいプロジェクトの作成-&amp;gt;空のプロジェクト プロジェクト名（ソリューション名）と保存パスを指定 &amp;ldquo;ソリューションとプロジェクトを同じディレクトリに配置する&amp;quot;にチェック 作成 ソリューションのプロパティを変更 構成プロパティ-&amp;gt;リンカー-&amp;gt;システム-&amp;gt;サブシステム &amp;ldquo;コンソール&amp;quot;から&amp;quot;Windows&amp;quot;に変更 以下のようにフォルダを構成 新しいフォルダを作成 フォルダに新しい項目を追加（以降説明省略） Applicationフィルターに新しい項目を追加 .cpp 名前：Application.cpp 場所：Source/Application（フォルダを作成） .h 名前：Application.h 場所：Source/Application dev-dx12-202308（プロジェクト名） └─ Source ├─ Application │ ├─ Application.h │ └─ Application.cpp └─ Graphics Application.h Applicationクラス 実行を行うExecute()関数を宣言し、Applicationクラスオブジェクトを生成するInstance()関数を定義する（シングルトン）
 // Application.h // Applicationクラス class Application { public: void Execute(); static Application&amp;amp; Instance() { static Application instance; return instance; } private: Window m_window; Application() {} } Application.cpp Windows.hのインクルード WindowsプログラムのためにWindows.hをインクルード（Windowsプログラムの型や構造体、定数、ファンクションコールが定義されている） （※Windows.hとWindow.hの混同に注意）
 Windowsプログラムにmain()関数は無く、WinMain()関数からプログラムが開始される
 WinMain()関数 WINAPIはWindows.hでWin32 API 関数を呼び出すときの規約として定義される。#define WINAPI __stdcall</description>

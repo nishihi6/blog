@@ -3,11 +3,11 @@
 <meta http-equiv="content-type" content="text/html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title itemprop="name">Posts | nishihi6</title>
-<meta property="og:title" content="Posts | nishihi6" />
-<meta name="twitter:title" content="Posts | nishihi6" />
-<meta itemprop="name" content="Posts | nishihi6" />
-<meta name="application-name" content="Posts | nishihi6" />
+<title itemprop="name">DirectX12の描画処理 #2 [Devlog #003] | nishihi6</title>
+<meta property="og:title" content="DirectX12の描画処理 #2 [Devlog #003] | nishihi6" />
+<meta name="twitter:title" content="DirectX12の描画処理 #2 [Devlog #003] | nishihi6" />
+<meta itemprop="name" content="DirectX12の描画処理 #2 [Devlog #003] | nishihi6" />
+<meta name="application-name" content="DirectX12の描画処理 #2 [Devlog #003] | nishihi6" />
 <meta property="og:site_name" content="nishihi6" />
 
 <meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
@@ -32,11 +32,6 @@
     
     
     
-    <link rel="first" href="/blog/posts/" />
-    <link rel="last" href="/blog/posts/" />
-    
-    
-    
 
     <meta property="og:type" content="article" />
     <meta property="og:article:published_time" content=2023-08-26T18:46:37&#43;0900 />
@@ -50,14 +45,14 @@
     {
         "@context": "http://schema.org",
         "@type": "Article",
-        "headline": "Posts",
+        "headline": "DirectX12の描画処理 #2 [Devlog #003]",
         "author": {
         "@type": "Person",
         "name": ""
         },
         "datePublished": "2023-08-26",
         "description": "",
-        "wordCount":  0 ,
+        "wordCount":  112 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-08-26",
         "image": {
@@ -76,9 +71,7 @@
 
     
 
-    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/">
-    <link href="/blog/posts/index.xml" rel="alternate" type="application/rss+xml" title="nishihi6">
-    <link href="/blog/posts/index.xml" rel="feed" type="application/rss+xml" title="nishihi6">
+    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/devlog_dx12_02/">
     <link href="/blog/style.min.840eada6dfddec7b8ccfcf867f039bf80b1f16a265ec6e01dc553a3dddc9d509.css" rel="stylesheet">
     <link href="/blog/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
 
@@ -179,79 +172,103 @@ stroke-linejoin="round" class="feather feather-home">
         </div>
     </nav>
 </div>
-<div class="wrapper list-page">
-    <header class="header">
-        <h1 class="header-title center">Posts</h1>
-    </header>
+
+<div class="wrapper post">
     <main class="page-content" aria-label="Content">
-        
-        
-        <h2 class="post-year">2023</h2>
+        <article>
+            <header class="header">
+                <h1 class="header-title">DirectX12の描画処理 #2 [Devlog #003]</h1>
+                
+                
+                <div class="post-meta">
+                    <time datetime="2023-08-26T18:46:37&#43;09:00" itemprop="datePublished"> 26 Aug 2023 </time>
+                </div>
+                
+            </header>
+            <details class="toc">
+                <summary><b>Table of Contents</b></summary>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#環境構築の続き">環境構築の続き</a>
+      <ul>
+        <li><a href="#プリコンパイル済みヘッダーの追加">プリコンパイル済みヘッダーの追加</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+            </details><div class="page-content">
+                <h1 id="directx12を使った描画処理">DirectX12を使った描画処理</h1>
+<hr>
+<h2 id="環境構築の続き">環境構築の続き</h2>
+<h3 id="プリコンパイル済みヘッダーの追加">プリコンパイル済みヘッダーの追加</h3>
+<p><code>Source</code>フォルダ以下に<code>stdafx.h</code>と<code>stdafx.cpp</code>と追加</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">dev-dx12-202308（プロジェクト名）
+</span></span><span class="line"><span class="cl">└─ Source
+</span></span><span class="line"><span class="cl">   ├─ Application
+</span></span><span class="line"><span class="cl">   │  ├─ Application.h
+</span></span><span class="line"><span class="cl">   │  └─ Application.cpp
+</span></span><span class="line"><span class="cl">   ├─ Graphics
+</span></span><span class="line"><span class="cl">   ├─ System
+</span></span><span class="line"><span class="cl">   │  └─ Window
+</span></span><span class="line"><span class="cl">   │     ├─ Window.h
+</span></span><span class="line"><span class="cl">   │     └─ Window.cpp
+</span></span><span class="line"><span class="cl">   ├─ stdafx.h
+</span></span><span class="line"><span class="cl">   └─ stdafx.cpp
+</span></span></code></pre></div><p>プロジェクトのプロパティの設定から<code>プリコンパイル済みヘッダー</code>を<code>使用(/Yu)</code>に設定（プリコンパイル済みヘッダーファイルは<code>stdafx.h</code>）</p>
+<img src="../img/devlog_dx12_02_001.png" width="100%">
+<p>プロジェクトのプロパティの設定から<code>必ず使用されるインクルードファイル</code>に<code>stdafx.h</code>を追加設定</p>
+<img src="../img/devlog_dx12_02_002.png" width="100%">
+<p>追加した<code>stdafx.cpp</code>のプロパティの設定から<code>プリコンパイル済みヘッダー</code>を<code>作成(/Yc)</code>に設定（プリコンパイル済みヘッダーファイルは<code>stdafx.h</code>）</p>
+<img src="../img/devlog_dx12_02_003.png" width="100%">
+<p>以下コード</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// stdafx.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp">#pragma once
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 基本
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp">#pragma comment(lib,&#34;winmm.lib&#34;)
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#define NOMINMAX
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;Windows.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;cassert&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;wrl/client.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// STL
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp">#include</span> <span class="cpf">&lt;map&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;unordered_map&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;unordered_set&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;array&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stack&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;list&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iterator&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;queue&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;random&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;functional&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;atomic&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;mutex&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;future&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;fileSystem&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#define _USE_MATH_DEFINES
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;</span><span class="cp">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// stdafx.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp"># include &#34;stdafx.h&#34;
+</span></span></span></code></pre></div><p><a href="https://github.com/nishihi6/DX12FrameworkBasics">GitHubリポジトリ</a></p>
 
-        
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_02/">DirectX12の描画処理 #2 [Devlog #003]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-26T18:46:37&#43;0900">
-        26 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_cg_01/">CG理論#1 レンダリングパイプライン [Devlog #002]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-24T15:22:11&#43;0900">
-        24 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_01/">DirectX12の描画処理 #1 [Devlog #001]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-23T01:19:34&#43;0900">
-        23 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/my-first-post/">My First Post（記事作成に関する備忘録）</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-22T06:05:10&#43;0900">
-        22 Aug 2023
-    </time>
-</article>
-
-
-         
-
-         
-
-    </main>
-</div><footer class="footer">
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
     <span class="footer_item"> </span>
     &nbsp;
 
