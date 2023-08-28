@@ -1,12 +1,13 @@
-<!DOCTYPE html><html lang="ja-jp" class="dark"><head><meta charset="utf-8">
+<!DOCTYPE html>
+<html lang="ja-jp"><head><meta charset="utf-8">
 <meta http-equiv="content-type" content="text/html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title itemprop="name">Home | nishihi6</title>
-<meta property="og:title" content="Home | nishihi6" />
-<meta name="twitter:title" content="Home | nishihi6" />
-<meta itemprop="name" content="Home | nishihi6" />
-<meta name="application-name" content="Home | nishihi6" />
+<title itemprop="name">DirectX12の描画処理 #3 [Devlog #004] | nishihi6</title>
+<meta property="og:title" content="DirectX12の描画処理 #3 [Devlog #004] | nishihi6" />
+<meta name="twitter:title" content="DirectX12の描画処理 #3 [Devlog #004] | nishihi6" />
+<meta itemprop="name" content="DirectX12の描画処理 #3 [Devlog #004] | nishihi6" />
+<meta name="application-name" content="DirectX12の描画処理 #3 [Devlog #004] | nishihi6" />
 <meta property="og:site_name" content="nishihi6" />
 
 <meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
@@ -27,14 +28,50 @@
 
 
 
+    
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2023-08-27T21:44:55&#43;0900 />
+    <meta property="article:published_time" content=2023-08-27T21:44:55&#43;0900 />
+
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "DirectX12の描画処理 #3 [Devlog #004]",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2023-08-27",
+        "description": "",
+        "wordCount":  15 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2023-08-27",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "nishihi6"
+        }
+    }
+    </script>
+
 
 <meta name="generator" content="Hugo 0.117.0">
 
     
 
-    <link rel="canonical" href="https://nishihi6.github.io/blog/">
-    <link href="/blog/index.xml" rel="alternate" type="application/rss+xml" title="nishihi6">
-    <link href="/blog/index.xml" rel="feed" type="application/rss+xml" title="nishihi6">
+    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/devlog_dx12_03/">
     <link href="/blog/style.min.840eada6dfddec7b8ccfcf867f039bf80b1f16a265ec6e01dc553a3dddc9d509.css" rel="stylesheet">
     <link href="/blog/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
 
@@ -75,7 +112,7 @@
     });"></script>
 
     </head>
-<body data-theme="dark" class="notransition">
+<body data-theme = "dark" class="notransition">
 
 <script src="/blog/js/theme.min.8961c317c5b88b953fe27525839672c9343f1058ab044696ca225656c8ba2ab0.js" integrity="sha256-iWHDF8W4i5U/4nUlg5ZyyTQ/EFirBEaWyiJWVsi6KrA="></script>
 
@@ -102,14 +139,14 @@ stroke-linejoin="round" class="feather feather-home">
                 
                 
                 <li>
-                    <a class="menu-link active" href="/blog/">
+                    <a class="menu-link " href="/blog/">
                         Home
                     </a>
                     
                 </li>
                 
                 <li>
-                    <a class="menu-link " href="/blog/posts/">
+                    <a class="menu-link active" href="/blog/posts/">
                         Posts
                     </a>
                     
@@ -135,89 +172,52 @@ stroke-linejoin="round" class="feather feather-home">
         </div>
     </nav>
 </div>
-<div class="wrapper">
-        
 
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">DirectX12の描画処理 #3 [Devlog #004]</h1>
+                
+                
+                <div class="post-meta">
+                    <time datetime="2023-08-27T21:44:55&#43;09:00" itemprop="datePublished"> 27 Aug 2023 </time>
+                </div>
+                
+            </header>
+            <details class="toc">
+                <summary><b>Table of Contents</b></summary>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#directx12の環境構築">DirectX12の環境構築</a>
+      <ul>
+        <li><a href="#初期化">初期化</a>
+          <ul>
+            <li><a href="#direct3d-d3d">Direct3D (D3D)</a></li>
+            <li><a href="#directx-graphics-infrastructure-dxgi">DirectX Graphics Infrastructure (DXGI)</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+            </details><div class="page-content">
+                <h1 id="directx12を使った描画処理">DirectX12を使った描画処理</h1>
+<hr>
+<h2 id="directx12の環境構築">DirectX12の環境構築</h2>
+<h3 id="初期化">初期化</h3>
+<h4 id="direct3d-d3d">Direct3D (D3D)</h4>
+<p><mark>Direct3D(D3D)</mark>とは、DirectXの中の3DグラフィクスAPIの一部であり、多様なグラフィクスハードウェア上でハードウェアアクセラレーションを活用したグラフィクスの表示や操作を行うことができる</p>
+<p><mark>D3D12Device</mark>は、D3D12(Direct3D 12)のインターフェースの一つで、グラフィクスハードウェアへの低レベルのアクセスを提供し、<strong>リソースの作成やコマンドのキューの管理</strong>などの主要な機能をもつ</p>
+<h4 id="directx-graphics-infrastructure-dxgi">DirectX Graphics Infrastructure (DXGI)</h4>
+<p><mark>DXGI</mark>とは、DirectXのコンポーネントの一つであり、アダプター（グラフィクスカード）、モニター、フレームバッファなどのリソース管理や、スワップチェーンの操作などのタスクを行う
+<br>またDXGIは、Direct3Dが多様なグラフィクスハードウェア上で一貫して動作するための基盤となる</p>
+<p><mark>DXGIFactory</mark>は、DXGIの中でも主要なインターフェースの一つで、<strong>アダプター（グラフィクスカード）やモニターの情報を取得</strong>したり、<strong>スワップチェーンを作成するためのメソッドを提供</strong>する</p>
 
-<div class="author">
-    
-    
-    <img class="author-avatar" src="/blog/avatar_hua482c13146070e7c1a389f9b830d9831_60230_100x100_fill_q75_h2_box_smart1.webp" alt="nishihi6" width="956"
-        height="956" />
-    
-    <h2 class="author-name">nishihi6</h2>
-    <p class="author-bio">Student specializing in computer vision and graphics.</p>
+            </div>
+        </article></main>
 </div>
-
-        <main aria-label="Content">
-            <h3 class="posts-item-note" aria-label="Recent Posts">Recent Posts</h3>
-            
-            
-            
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_03/">DirectX12の描画処理 #3 [Devlog #004]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-27T21:44:55&#43;0900">
-        27 Aug 2023
-    </time>
-</article>
-
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_02/">DirectX12の描画処理 #2 [Devlog #003]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-26T18:46:37&#43;0900">
-        26 Aug 2023
-    </time>
-</article>
-
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_cg_01/">CG理論#1 レンダリングパイプライン [Devlog #002]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-24T15:22:11&#43;0900">
-        24 Aug 2023
-    </time>
-</article>
-
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_01/">DirectX12の描画処理 #1 [Devlog #001]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-23T01:19:34&#43;0900">
-        23 Aug 2023
-    </time>
-</article>
-
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/my-first-post/">My First Post（記事作成に関する備忘録）</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-22T06:05:10&#43;0900">
-        22 Aug 2023
-    </time>
-</article>
-
-            
-            
-        </main>
-    </div><footer class="footer">
+<footer class="footer">
     <span class="footer_item"> </span>
     &nbsp;
 
@@ -306,5 +306,4 @@ stroke-linejoin="round" class="feather feather-home">
     
 
 </body>
-
 </html>
