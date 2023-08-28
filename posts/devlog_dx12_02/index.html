@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-08-26",
         "description": "",
-        "wordCount":  112 ,
+        "wordCount":  188 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-08-26",
         "image": {
@@ -192,6 +192,7 @@ stroke-linejoin="round" class="feather feather-home">
     <li><a href="#環境構築の続き">環境構築の続き</a>
       <ul>
         <li><a href="#プリコンパイル済みヘッダーの追加">プリコンパイル済みヘッダーの追加</a></li>
+        <li><a href="#スマートポインタcomptrの追加初期化に使用">スマートポインタ&quot;ComPtr&quot;の追加（初期化に使用）</a></li>
       </ul>
     </li>
   </ul>
@@ -264,7 +265,53 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// stdafx.cpp
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp"># include &#34;stdafx.h&#34;
 </span></span></span></code></pre></div><p><a href="https://github.com/nishihi6/DX12FrameworkBasics">GitHubリポジトリ</a></p>
-
+<h3 id="スマートポインタcomptrの追加初期化に使用">スマートポインタ&quot;ComPtr&quot;の追加（初期化に使用）</h3>
+<p><mark>ComPtr</mark>とは、MicrosoftのC++言語用のスマートポインタ型で、<strong>COM(Component Object Model)オブジェクト</strong>の参照カウントを自動的に管理するためのユーティリティ
+<br>参考：<a href="https://cocoa-programing.hatenablog.com/entry/2018/11/16/000242">https://cocoa-programing.hatenablog.com/entry/2018/11/16/000242</a></p>
+<p>COM(Component Object Model)は、オブジェクトのライフタイムを管理するために<strong>参照カウント方式</strong>を採用しており、参照カウントに応じてメモリの解放を行う</p>
+<p>DirectXの大部分はCOMオブジェクトで実装されている</p>
+<p><code>System</code>フォルダに<code>Utility</code>フォルダと<code>System.h</code>を追加し、<code>Utility</code>フォルダに<code>Utility.h</code>、<code>Utility.cpp</code>を追加</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">dev-dx12-202308（プロジェクト名）
+</span></span><span class="line"><span class="cl">└─ Source
+</span></span><span class="line"><span class="cl">   ├─ Application
+</span></span><span class="line"><span class="cl">   │  ├─ Application.h
+</span></span><span class="line"><span class="cl">   │  └─ Application.cpp
+</span></span><span class="line"><span class="cl">   ├─ Graphics
+</span></span><span class="line"><span class="cl">   ├─ System
+</span></span><span class="line"><span class="cl">   │  ├─ Utility
+</span></span><span class="line"><span class="cl">   │  │  ├─ Utility.h
+</span></span><span class="line"><span class="cl">   │  │  └─ Utility.cpp
+</span></span><span class="line"><span class="cl">   │  ├─ Window
+</span></span><span class="line"><span class="cl">   │  │  ├─ Window.h
+</span></span><span class="line"><span class="cl">   │  │  └─ Window.cpp
+</span></span><span class="line"><span class="cl">   │  └─ System.h
+</span></span><span class="line"><span class="cl">   ├─ stdafx.h
+</span></span><span class="line"><span class="cl">   └─ stdafx.cpp
+</span></span></code></pre></div><br>
+<p><code>stdafx.h</code>で<code>System.h</code>をインクルード</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//stdafx.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;System/System.h&#34;</span><span class="cp">
+</span></span></span></code></pre></div><br>
+<p>どこでも使うプログラム（今回は<code>Utility.h</code>）は<code>System.h</code>でインクルード</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//System.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;Utility/Utility.h&#34;</span><span class="cp">
+</span></span></span></code></pre></div><br>
+<p>ComPtrは<code>stdafx.h</code>で<code>&lt;wrl/client.h&gt;</code>をインクルードしているので使用可能</p>
+<details><summary>ComPtrの実際の使われ方</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Microsoft</span><span class="o">::</span><span class="n">WRL</span><span class="o">::</span><span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">ID3D12Device</span><span class="o">&gt;</span> <span class="n">device</span><span class="p">;</span>	<span class="c1">// deviceはCOMオブジェクト名
+</span></span></span></code></pre></div></details>
+<p><code>Microsoft::WRL::ComPtr&lt;&gt;</code>を省略するためのusing宣言</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//Utility.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="n">Microsoft</span><span class="o">::</span><span class="n">WRL</span><span class="o">::</span><span class="n">ComPtr</span><span class="p">;</span>
+</span></span></code></pre></div><br>
+<p><code>Utility.cpp</code>は以下のようにする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//Utility.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;Utility.h&#34;</span><span class="cp">
+</span></span></span></code></pre></div>
             </div>
         </article></main>
 </div>
