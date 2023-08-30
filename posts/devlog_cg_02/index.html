@@ -3,11 +3,11 @@
 <meta http-equiv="content-type" content="text/html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title itemprop="name">Posts | nishihi6</title>
-<meta property="og:title" content="Posts | nishihi6" />
-<meta name="twitter:title" content="Posts | nishihi6" />
-<meta itemprop="name" content="Posts | nishihi6" />
-<meta name="application-name" content="Posts | nishihi6" />
+<title itemprop="name">CG理論#2 グラフィクス処理 [Devlog #005] | nishihi6</title>
+<meta property="og:title" content="CG理論#2 グラフィクス処理 [Devlog #005] | nishihi6" />
+<meta name="twitter:title" content="CG理論#2 グラフィクス処理 [Devlog #005] | nishihi6" />
+<meta itemprop="name" content="CG理論#2 グラフィクス処理 [Devlog #005] | nishihi6" />
+<meta name="application-name" content="CG理論#2 グラフィクス処理 [Devlog #005] | nishihi6" />
 <meta property="og:site_name" content="nishihi6" />
 
 <meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
@@ -32,11 +32,6 @@
     
     
     
-    <link rel="first" href="/blog/posts/" />
-    <link rel="last" href="/blog/posts/" />
-    
-    
-    
 
     <meta property="og:type" content="article" />
     <meta property="og:article:published_time" content=2023-08-30T03:46:40&#43;0900 />
@@ -50,14 +45,14 @@
     {
         "@context": "http://schema.org",
         "@type": "Article",
-        "headline": "Posts",
+        "headline": "CG理論#2 グラフィクス処理 [Devlog #005]",
         "author": {
         "@type": "Person",
         "name": ""
         },
         "datePublished": "2023-08-30",
         "description": "",
-        "wordCount":  0 ,
+        "wordCount":  115 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-08-30",
         "image": {
@@ -76,9 +71,7 @@
 
     
 
-    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/">
-    <link href="/blog/posts/index.xml" rel="alternate" type="application/rss+xml" title="nishihi6">
-    <link href="/blog/posts/index.xml" rel="feed" type="application/rss+xml" title="nishihi6">
+    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/devlog_cg_02/">
     <link href="/blog/style.min.840eada6dfddec7b8ccfcf867f039bf80b1f16a265ec6e01dc553a3dddc9d509.css" rel="stylesheet">
     <link href="/blog/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
 
@@ -179,135 +172,128 @@ stroke-linejoin="round" class="feather feather-home">
         </div>
     </nav>
 </div>
-<div class="wrapper list-page">
-    <header class="header">
-        <h1 class="header-title center">Posts</h1>
-    </header>
+
+<div class="wrapper post">
     <main class="page-content" aria-label="Content">
-        
-        
-        <h2 class="post-year">2023</h2>
+        <article>
+            <header class="header">
+                <h1 class="header-title">CG理論#2 グラフィクス処理 [Devlog #005]</h1>
+                
+                
+                <div class="post-meta">
+                    <time datetime="2023-08-30T03:46:40&#43;09:00" itemprop="datePublished"> 30 Aug 2023 </time>
+                </div>
+                
+            </header>
+            <details class="toc">
+                <summary><b>Table of Contents</b></summary>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#データ並列アーキテクチャ">データ並列アーキテクチャ</a>
+      <ul>
+        <li><a href="#cpu">CPU</a></li>
+        <li><a href="#gpu">GPU</a>
+          <ul>
+            <li><a href="#実行の最適化">実行の最適化</a></li>
+            <li><a href="#効率を測る">効率を測る</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#gpuレンダリングパイプラインの実装方法">GPUレンダリングパイプラインの実装方法</a></li>
+    <li><a href="#プログラマブルシェーダー">プログラマブルシェーダー</a></li>
+    <li><a href="#プログラマブルシェーディングとapiの進化">プログラマブルシェーディングとAPIの進化</a></li>
+    <li><a href="#頂点シェーダー">頂点シェーダー</a></li>
+    <li><a href="#テッセレーション">テッセレーション</a></li>
+    <li><a href="#ジオメトリシェーダー">ジオメトリシェーダー</a></li>
+    <li><a href="#ストリーム出力">ストリーム出力</a></li>
+    <li><a href="#ピクセルシェーダー">ピクセルシェーダー</a></li>
+    <li><a href="#マージ">マージ</a></li>
+    <li><a href="#コンピュートシェーダー">コンピュートシェーダー</a></li>
+  </ul>
+</nav>
+            </details><div class="page-content">
+                <p>CG屋さんのバイブル：<a href="https://www.borndigital.co.jp/book/15291.html">Real Time Rendering Fourth Edition</a> を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します）</p>
+<h1 id="グラフィクス処理">グラフィクス処理</h1>
+<h1 id="グラフィクス処理ユニットgpu">グラフィクス処理ユニット（GPU）</h1>
+<hr>
+<p>グラフィクスを高速化する歴史は、三角形と重なる各ピクセルの色を補間することから始まった</p>
+<p>頂点処理を行う消費者用チップとして1999年に出荷されたGeForce 256が初めての<strong>グラフィクス処理ユニット（GPU）</strong>であり、ラスタライズ専用チップと差別化する目的でその言葉が生まれた</p>
+<p>GPUは<strong>特定のタスクに特化した複雑な固定機能パイプライン処理</strong>をもつものから、<strong>開発者が独自のアルゴリズムを実装できる</strong>柔軟性をもつものへと進化している<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
+<p>GPUの利点は、狭い範囲の高度に並列化可能なタスクのセットに集中することで、<strong>頂点変換</strong>や<strong>ピクセルの色計算</strong>の処理を高速化させることにある</p>
+<dl>
+  <dt>カスタムシリコンが行う並列処理の例</dt>
+  <dd>z-バッファの実装</dd>
+  <dd>テクスチャーイメージ、バッファーへの迅速なアクセス</dd>
+  <dd>三角形が重なるピクセルの探索</dd>
+</dl>
+<h2 id="データ並列アーキテクチャ">データ並列アーキテクチャ</h2>
+<h3 id="cpu">CPU</h3>
+<p>複数のプロセッサを持つことがあるが、それぞれがほぼ直列に処理を実行し、レイテンシーを最小化するためにチップの多くがメモリーで占められている</p>
+<p>ストール（命令の実行が遅れること）を避けるために、分岐予測や命令並べ替え、レジスタリネーミング、キャッシュプリフェッチなどを行う<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></p>
+<h3 id="gpu">GPU</h3>
+<p><strong>よく似たデータの順序つきセット（例えば頂点やピクセルのセット）</strong>を順番に並列処理するストリームプロセッサ</p>
+<p>それぞれのプロセッサは書き込み可能なメモリ位置の共有を行わず、可能な限り独立するように設計されているため、それぞれのプロセッサが別のプロセッサの作業の終了を待つことが無い</p>
+<p>シングルスレッドの性能ではなく、全スレッドの合計の処理性能（<strong>スループット</strong>）を重視して最適化したプロセッサであり<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>、<strong>ストール</strong>発生箇所（高速なローカルメモリではなく別のリソースへアクセスするテクスチャーアクセスなど）を考慮した仕組みになっている
+<br>（例えば、テクスチャフェッチ中に次のフラグメントの処理に移るなど）</p>
+<h4 id="実行の最適化">実行の最適化</h4>
+<p>GPUは、命令実行ロジックをデータから分離した方式<strong>SIMD（単一命令複数データ）</strong>を利用することで、ロックステップ（多数のデータ要素を同じ命令に従って処理）する</p>
+<p>同じシェーダープログラムによって処理される<strong>各フラグメントに対するピクセルシェーダーの呼び出し（<mark>スレッド</mark>）</strong>は<strong>ワープ/ウェーブフロント</strong>と呼ばれるグループに束ねられ、GPUシェーダーコアの実行（シェーダープロセス）にスケジュールされる
+<br>（例えば、32スレッドを束ねるNVIDIA GPUで2000フラグメントを処理すると、63のワープを割り当てることになる（2000/32=62.5））※本書P28 図3.1を参照</p>
+<p>各スレッドは個々のレジスタを持ち、ワープ単位で命令を追跡する</p>
+<p>ワープはストールする際に別のスレッドのワープと<strong>スワップ</strong>（スワップイン/アウト）を行う</p>
+<p>他にも実行の最適化に使われる技術はいくつかある<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
+<h4 id="効率を測る">効率を測る</h4>
+<p>シェーダープログラムの構造、特にスレッドごとに使われるレジスタの数が効率に影響し、各スレッドの処理に必要なレジスタが増えるほど、GPU上に常駐できるスレッド数は減るのでワープも減る（ストールをスワップで軽減できなくなる）</p>
+<p>参考論文↓
+<br>シェーダーが使うレジスタ数と共有メモリの占有率（常駐するワープの数）への影響<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>
+<br>シェーダーが行う操作の種類による理想的な占有率の変化<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup><sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup></p>
+<p>if文とループによる動的分岐は全体的な効率に影響するという<strong>スレッド発散</strong>問題がある
+<br>（１つでも別の経路をとるスレッドがあると、ワープは両方の分岐を実行してそれぞれのスレッドで不要な結果を捨てなければならない）<sup id="fnref:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup><sup id="fnref1:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
+<h2 id="gpuレンダリングパイプラインの実装方法">GPUレンダリングパイプラインの実装方法</h2>
+<h2 id="プログラマブルシェーダー">プログラマブルシェーダー</h2>
+<h2 id="プログラマブルシェーディングとapiの進化">プログラマブルシェーディングとAPIの進化</h2>
+<h2 id="頂点シェーダー">頂点シェーダー</h2>
+<h2 id="テッセレーション">テッセレーション</h2>
+<h2 id="ジオメトリシェーダー">ジオメトリシェーダー</h2>
+<h2 id="ストリーム出力">ストリーム出力</h2>
+<h2 id="ピクセルシェーダー">ピクセルシェーダー</h2>
+<h2 id="マージ">マージ</h2>
+<h2 id="コンピュートシェーダー">コンピュートシェーダー</h2>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://dl.acm.org/doi/10.1145/1141911.1141947">The Direct3D 10 system</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://www.amazon.co.jp/Computer-Architecture-Sixth-Quantitative-Approach/dp/0128119055">Computer Architecture: A Quantitative Approach (The Morgan Kaufmann Series in Computer Architecture and Design)</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="http://15418.courses.cs.cmu.edu/spring2017/">Parallel Computer Architecture and Programming course</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p><a href="https://developer.nvidia.com/content/life-triangle-nvidias-logical-pipeline">Life of a triangle - NVIDIA&rsquo;s logical pipeline</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref1:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5">
+<p><a href="https://www.ea.com/seed/news/seed-siggraph2017-compute-for-graphics">Future Directions for Compute-for-Graphics</a>&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6">
+<p><a href="https://www.gdcvault.com/play/1020397/Assassin-s-Creed-IV-Black">Assassin&rsquo;s Creed IV: Black Flag - Road to Next-Gen Graphics</a>&#160;<a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:7">
+<p><a href="https://bartwronski.com/2014/03/27/gcn-two-ways-of-latency-hiding-and-wave-occupancy/">GCN – two ways of latency hiding and wave occupancy</a>&#160;<a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:8">
+<p><a href="https://inzkyk.xyz/ttgp/welcome/">A trip through the Graphics Pipeline 2011（日本語訳）</a>&#160;<a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
 
-        
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_cg_02/">CG理論#2 グラフィクス処理 [Devlog #005]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-30T03:46:40&#43;0900">
-        30 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/memo_cmake_01/">CMakeについてのメモ [Memo #002]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-29T15:43:33&#43;0900">
-        29 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/memo_links_01/">メモリンク集 [Memo #001]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-28T21:43:10&#43;0900">
-        28 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_03/">DirectX12の描画処理 #3 [Devlog #004]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-27T21:44:55&#43;0900">
-        27 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_02/">DirectX12の描画処理 #2 [Devlog #003]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-26T18:46:37&#43;0900">
-        26 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_cg_01/">CG理論#1 レンダリングパイプライン [Devlog #002]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-24T15:22:11&#43;0900">
-        24 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_01/">DirectX12の描画処理 #1 [Devlog #001]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-23T01:19:34&#43;0900">
-        23 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/my-first-post/">My First Post（記事作成に関する備忘録）</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-22T06:05:10&#43;0900">
-        22 Aug 2023
-    </time>
-</article>
-
-
-         
-
-         
-
-    </main>
-</div><footer class="footer">
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
     <span class="footer_item"> </span>
     &nbsp;
 

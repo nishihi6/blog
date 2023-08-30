@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-08-26",
         "description": "",
-        "wordCount":  188 ,
+        "wordCount":  211 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-08-26",
         "image": {
@@ -293,7 +293,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;System/System.h&#34;</span><span class="cp">
 </span></span></span></code></pre></div><br>
-<p>どこでも使うプログラム（今回は<code>Utility.h</code>）は<code>System.h</code>でインクルード</p>
+<p><strong>どこでも使うプログラム</strong>（今回は<code>Utility.h</code>）は<code>System.h</code>でインクルード</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//System.h
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;Utility/Utility.h&#34;</span><span class="cp">
@@ -311,7 +311,26 @@ stroke-linejoin="round" class="feather feather-home">
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//Utility.cpp
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;Utility.h&#34;</span><span class="cp">
-</span></span></span></code></pre></div>
+</span></span></span></code></pre></div><br>
+<p>デバッグ時にメモリリークを自動検出するため、Visual C++のランタイムライブラリにあるデバッグルーチンと呼ばれるデバッグ専用の関数の中にある<code>_CrtSetDbgFlag</code>関数を利用してメモリリークを検出する
+<br>参考：<a href="http://marupeke296.sakura.ne.jp/TIPS_No7_SearchMemoryLeak.html">http://marupeke296.sakura.ne.jp/TIPS_No7_SearchMemoryLeak.html</a></p>
+<p>ComPtrの初期化関数<code>CoInitializeEx()</code>と解放関数<code>CoUninitialize()</code>を<code>Application.cpp</code>で呼び出す
+<br>参考：<a href="https://learn.microsoft.com/ja-jp/windows/win32/learnwin32/initializing-the-com-library">https://learn.microsoft.com/ja-jp/windows/win32/learnwin32/initializing-the-com-library
+</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//Application.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">WINAPI</span> <span class="nf">WinMain</span><span class="p">(</span><span class="n">HINSTANCE</span><span class="p">,</span> <span class="n">HINSTANCE</span><span class="p">,</span> <span class="n">LPSTR</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="n">_CrtSetDbgFlag</span><span class="p">(</span><span class="n">_CRTDBG_ALLOC_MEM_DF</span> <span class="o">|</span> <span class="n">_CRTDBG_LEAK_CHECK_DF</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   <span class="n">CoInitializeEx</span><span class="p">(</span><span class="k">nullptr</span><span class="p">,</span> <span class="n">COINIT_MULTITHREADED</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">   
+</span></span><span class="line"><span class="cl">   <span class="n">Application</span><span class="o">::</span><span class="n">Instance</span><span class="p">().</span><span class="n">Execute</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   <span class="n">CoUninitialize</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
             </div>
         </article></main>
 </div>

@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-08-27",
         "description": "",
-        "wordCount":  15 ,
+        "wordCount":  396 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-08-27",
         "image": {
@@ -195,6 +195,9 @@ stroke-linejoin="round" class="feather feather-home">
           <ul>
             <li><a href="#direct3d-d3d">Direct3D (D3D)</a></li>
             <li><a href="#directx-graphics-infrastructure-dxgi">DirectX Graphics Infrastructure (DXGI)</a></li>
+            <li><a href="#デバイスの初期化">デバイスの初期化</a></li>
+            <li><a href="#graphicsdeviceh">GraphicsDevice.h</a></li>
+            <li><a href="#graphicsdevicecpp">GraphicsDevice.cpp</a></li>
           </ul>
         </li>
       </ul>
@@ -211,8 +214,200 @@ stroke-linejoin="round" class="feather feather-home">
 <p><mark>D3D12Device</mark>は、D3D12(Direct3D 12)のインターフェースの一つで、グラフィクスハードウェアへの低レベルのアクセスを提供し、<strong>リソースの作成やコマンドのキューの管理</strong>などの主要な機能をもつ</p>
 <h4 id="directx-graphics-infrastructure-dxgi">DirectX Graphics Infrastructure (DXGI)</h4>
 <p><mark>DXGI</mark>とは、DirectXのコンポーネントの一つであり、アダプター（グラフィクスカード）、モニター、フレームバッファなどのリソース管理や、スワップチェーンの操作などのタスクを行う
-<br>またDXGIは、Direct3Dが多様なグラフィクスハードウェア上で一貫して動作するための基盤となる</p>
+<br>DXGIは、Direct3Dが多様なグラフィクスハードウェア上で一貫して動作するための基盤となる</p>
 <p><mark>DXGIFactory</mark>は、DXGIの中でも主要なインターフェースの一つで、<strong>アダプター（グラフィクスカード）やモニターの情報を取得</strong>したり、<strong>スワップチェーンを作成するためのメソッドを提供</strong>する</p>
+<h4 id="デバイスの初期化">デバイスの初期化</h4>
+<p>D3D12DeviceとDXGIFactoryは初期化に最低限必要になる</p>
+<p>リンクするライブラリファイル<code>d3d12.lib</code>と<code>dxgi.lib</code>をソースコード内の記述でリンクして、<code>d3d12.h</code>と<code>dxgi1_6.h</code>をインクルードする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// stdafx.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// D3D12
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp">#pragma comment(lib,&#34;d3d12.lib&#34;)
+</span></span></span><span class="line"><span class="cl"><span class="cp">#pragma comment(lib,&#34;dxgi.lib&#34;)
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;d3d12.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;dxgi1_6.h&gt;</span><span class="cp">
+</span></span></span></code></pre></div><p><code>Graphics</code>フォルダに<code>GraphicsDevice.h</code>と<code>GraphicsDevice.cpp</code>を追加</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">dev-dx12-202308（プロジェクト名）
+</span></span><span class="line"><span class="cl">└─ Source
+</span></span><span class="line"><span class="cl">   ├─ Application
+</span></span><span class="line"><span class="cl">   │  ├─ Application.h
+</span></span><span class="line"><span class="cl">   │  └─ Application.cpp
+</span></span><span class="line"><span class="cl">   ├─ Graphics
+</span></span><span class="line"><span class="cl">   │  ├─ GraphicsDevice.h
+</span></span><span class="line"><span class="cl">   │  └─ GraphicsDevice.cpp
+</span></span><span class="line"><span class="cl">   ├─ System
+</span></span><span class="line"><span class="cl">   │  ├─ Utility
+</span></span><span class="line"><span class="cl">   │  │  ├─ Utility.h
+</span></span><span class="line"><span class="cl">   │  │  └─ Utility.cpp
+</span></span><span class="line"><span class="cl">   │  ├─ Window
+</span></span><span class="line"><span class="cl">   │  │  ├─ Window.h
+</span></span><span class="line"><span class="cl">   │  │  └─ Window.cpp
+</span></span><span class="line"><span class="cl">   │  └─ System.h
+</span></span><span class="line"><span class="cl">   ├─ stdafx.h
+</span></span><span class="line"><span class="cl">   └─ stdafx.cpp
+</span></span></code></pre></div><h4 id="graphicsdeviceh">GraphicsDevice.h</h4>
+<h5 id="graphicsdeviceクラス">GraphicsDeviceクラス</h5>
+<p>初期化を行う<code>Init()</code>関数を宣言し、GraphicsDeviceクラスオブジェクトを生成する<code>Instance()</code>関数を定義する（シングルトン）</p>
+<p>ファクトリー関数<code>CreateFactory()</code>を宣言（DXGIFactoryの機能）</p>
+<p>デバイス関数<code>CreateDevice()</code>を宣言（D3D12Deviceの機能）</p>
+<p><code>ID3D12Device8</code>は仮想アタプターを表し、コマンド アロケーター、コマンド リスト、コマンド キュー、フェンス、リソース、パイプライン状態オブジェクト、ヒープ、ルート署名、サンプラー、および多くのリソース ビューを作成するために使用される
+<br>DirectX12のアプリケーションでのグラフィックスと計算タスクの中心的なインターフェース
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12device8">詳細</a></p>
+<p><code>IDXGIFactory6</code>は全画面表示の遷移を処理するDXGIオブジェクトを生成するためのメソッドを実装するなど、グラフィックリソースの管理や設定を行うためのインターフェース
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi1_6/nn-dxgi1_6-idxgifactory6">詳細</a></p>
+<p><code>IDXGISwapChain4</code>はダブルバッファリングのプロセス中のフロントバッファとバックバッファの間でのバッファ交換を管理するインターフェース
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi1_5/nn-dxgi1_5-idxgiswapchain4">詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//GraphicsDevice.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GraphicsDevice</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">bool</span> <span class="n">Init</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">static</span> <span class="n">GraphicsDevice</span><span class="o">&amp;</span> <span class="n">Instance</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">static</span> <span class="n">GraphicsDevice</span> <span class="n">instance</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="n">instance</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">bool</span> <span class="n">CreateFactory</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="kt">bool</span> <span class="nf">CreateDevice</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">enum</span> <span class="k">class</span> <span class="nc">GPUTier</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">NVIDIA</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="n">Amd</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="n">Intel</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="n">Arm</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="n">Qualcomm</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="n">Kind</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">ID3D12Device8</span><span class="o">&gt;</span>		<span class="n">m_pDevice</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">IDXGIFactory6</span><span class="o">&gt;</span>		<span class="n">m_pDxgiFactory</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">IDXGISwapChain4</span><span class="o">&gt;</span>		<span class="n">m_pSwapChain</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">GraphicsDevice</span><span class="p">()</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">	<span class="o">~</span><span class="n">GraphicsDevice</span><span class="p">()</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h4 id="graphicsdevicecpp">GraphicsDevice.cpp</h4>
+<h5 id="graphicsdeviceinit関数">GraphicsDevice::Init()関数</h5>
+<p><code>CreateFactory()</code>と<code>CreateDevice()</code>を実行</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//GraphicsDevice.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;GraphicsDevice.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Init</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">CreateFactory</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;ファクトリー作成失敗&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">CreateDevice</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;D3D12デバイス作成失敗&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="graphicsdevicecreatefactory関数">GraphicsDevice::CreateFactory()関数</h5>
+<p><code>CreateDXGIFactory2()</code>関数は、モニターやグラボのスペックを取得するなど、DirectXアプリケーションでのグラフィックスリソースの管理や操作を行うためのDXGIファクトリインスタンス（<code>IDXGIFactory2</code>）を作成する
+<br>第一引数はDXGIのデバッグレイヤーを有効にするためのフラグ、第二引数と第三引数はインターフェースへのポインタ（<code>IID_PPV_ARGS</code>マクロを使ってうまくやってる）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//GraphicsDevice.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">CreateFactory</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">UINT</span> <span class="n">flagsDXGI</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">flagsDXGI</span> <span class="o">|=</span> <span class="n">DXGI_CREATE_FACTORY_DEBUG</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">CreateDXGIFactory2</span><span class="p">(</span><span class="n">flagsDXGI</span><span class="p">,</span> <span class="n">IID_PPV_ARGS</span><span class="p">(</span><span class="n">m_pDxgiFactory</span><span class="p">.</span><span class="n">GetAddressOf</span><span class="p">()));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="graphicsdevicecreatedevice関数">GraphicsDevice::CreateDevice()関数</h5>
+<p><code>IDXGIAdapter</code>は、DXGIを通じてグラフィックスアダプタの情報取得や管理を行うためのインターフェース
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi/nn-dxgi-idxgiadapter">詳細</a></p>
+<p><code>DXGI_ADAPTER_DESC</code>はDXGIに関連する構造体で、グラフィックスアダプタ（グラボなど）に関する詳細な情報を提供する
+<br>IDXGIAdapterインターフェースのGetDescメソッドを通じて取得される情報を格納するために使用される
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi/ns-dxgi-dxgi_adapter_desc">詳細</a></p>
+<p>１回目のfor文ではGPUドライバーを検索して、あればその情報を格納する</p>
+<p>２回目のfor文では優先度の高いGPUドライバーを使用する</p>
+<p><code>D3D_FEATURE_LEVEL</code>は、Direct3Dで使用される列挙型で、グラフィクスハードウェアがサポートするDirect3Dの機能セットを識別する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3dcommon/ne-d3dcommon-d3d_feature_level">詳細</a></p>
+<p><code>D3D12CreateDevice()</code>は、指定されたアダプタと指定された機能レベルでDirect3D 12デバイスを作成する関数
+<br>第一引数はアダプタ（<code>IDXGIAdapter</code>）を指定するポインタ
+<br>第二引数はサポートすべき最小の機能レベル（<code>D3D_FEATURE_LEVEL</code>）を指定、
+<br>第三引数と第四引数は作成するインターフェースへのポインタ（<code>IID_PPV_ARGS</code>マクロを使ってうまくやってる）
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-d3d12createdevice">詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//GraphicsDevice.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">CreateDevice</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">IDXGIAdapter</span><span class="o">&gt;</span> <span class="n">pSelectAdapter</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">IDXGIAdapter</span><span class="o">&gt;&gt;</span> <span class="n">pAdapters</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DXGI_ADAPTER_DESC</span><span class="o">&gt;</span> <span class="n">descs</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="n">UINT</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">index</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pAdapters</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="k">nullptr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">HRESULT</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">m_pDxgiFactory</span><span class="o">-&gt;</span><span class="n">EnumAdapters</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pAdapters</span><span class="p">[</span><span class="n">index</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">ret</span> <span class="o">==</span> <span class="n">DXGI_ERROR_NOT_FOUND</span><span class="p">)</span> <span class="p">{</span> <span class="k">break</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">descs</span><span class="p">.</span><span class="n">push_back</span><span class="p">({});</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pAdapters</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetDesc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">descs</span><span class="p">[</span><span class="n">index</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">GPUTier</span> <span class="n">gpuTier</span> <span class="o">=</span> <span class="n">GPUTier</span><span class="o">::</span><span class="n">Kind</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">descs</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">wstring</span><span class="p">(</span><span class="n">descs</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">Description</span><span class="p">).</span><span class="n">find</span><span class="p">(</span><span class="sa">L</span><span class="s">&#34;NVIDIA&#34;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">wstring</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">pSelectAdapter</span> <span class="o">=</span> <span class="n">pAdapters</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">wstring</span><span class="p">(</span><span class="n">descs</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">Description</span><span class="p">).</span><span class="n">find</span><span class="p">(</span><span class="sa">L</span><span class="s">&#34;Amd&#34;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">wstring</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="n">gpuTier</span> <span class="o">&gt;</span> <span class="n">GPUTier</span><span class="o">::</span><span class="n">Amd</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="n">pSelectAdapter</span> <span class="o">=</span> <span class="n">pAdapters</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">				<span class="n">gpuTier</span> <span class="o">=</span> <span class="n">GPUTier</span><span class="o">::</span><span class="n">Amd</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">wstring</span><span class="p">(</span><span class="n">descs</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">Description</span><span class="p">).</span><span class="n">find</span><span class="p">(</span><span class="sa">L</span><span class="s">&#34;Intel&#34;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">wstring</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="n">gpuTier</span> <span class="o">&gt;</span> <span class="n">GPUTier</span><span class="o">::</span><span class="n">Intel</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="n">pSelectAdapter</span> <span class="o">=</span> <span class="n">pAdapters</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">				<span class="n">gpuTier</span> <span class="o">=</span> <span class="n">GPUTier</span><span class="o">::</span><span class="n">Intel</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">wstring</span><span class="p">(</span><span class="n">descs</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">Description</span><span class="p">).</span><span class="n">find</span><span class="p">(</span><span class="sa">L</span><span class="s">&#34;Arm&#34;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">wstring</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="n">gpuTier</span> <span class="o">&gt;</span> <span class="n">GPUTier</span><span class="o">::</span><span class="n">Arm</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="n">pSelectAdapter</span> <span class="o">=</span> <span class="n">pAdapters</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">				<span class="n">gpuTier</span> <span class="o">=</span> <span class="n">GPUTier</span><span class="o">::</span><span class="n">Arm</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">wstring</span><span class="p">(</span><span class="n">descs</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">Description</span><span class="p">).</span><span class="n">find</span><span class="p">(</span><span class="sa">L</span><span class="s">&#34;Qualcomm&#34;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">wstring</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="n">gpuTier</span> <span class="o">&gt;</span> <span class="n">GPUTier</span><span class="o">::</span><span class="n">Qualcomm</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="n">pSelectAdapter</span> <span class="o">=</span> <span class="n">pAdapters</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">				<span class="n">gpuTier</span> <span class="o">=</span> <span class="n">GPUTier</span><span class="o">::</span><span class="n">Qualcomm</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">D3D_FEATURE_LEVEL</span> <span class="n">levels</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">D3D_FEATURE_LEVEL_12_1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="n">D3D_FEATURE_LEVEL_12_0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="n">D3D_FEATURE_LEVEL_11_1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="n">D3D_FEATURE_LEVEL_11_0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">D3D_FEATURE_LEVEL</span> <span class="n">featureLevel</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">lv</span> <span class="p">:</span> <span class="n">levels</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">D3D12CreateDevice</span><span class="p">(</span><span class="n">pSelectAdapter</span><span class="p">.</span><span class="n">Get</span><span class="p">(),</span> <span class="n">lv</span><span class="p">,</span> <span class="n">IID_PPV_ARGS</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_pDevice</span><span class="p">))</span> <span class="o">==</span> <span class="n">S_OK</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">featureLevel</span> <span class="o">=</span> <span class="n">lv</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>※追記※
+<br><strong>ビルドは通るのにプリコンパイルヘッダーでの定義がコーディング中にエラー表示される問題の解決方法</strong>
+<br>プリコンパイルヘッダーがインクルード対象パスに入っていればよいので、<code>プロジェクトプロパティ</code>-&gt;<code>C/C++</code>-&gt;<code>全般</code>-&gt;<code>追加のインクルードディレクトリ</code>にプリコンパイルヘッダーがあるディレクトリ<code>$(PrjectDir)Source</code>を追加すれば解決する
+<br>参考記事１：<a href="https://freelifetech.com/memo-pre-compile-header/">https://freelifetech.com/memo-pre-compile-header/</a>
+<br>参考記事２：<a href="https://solid.kmckk.com/SOLID/doc/latest/user_guide/add-include-directory.html">https://solid.kmckk.com/SOLID/doc/latest/user_guide/add-include-directory.html</a></p>
 
             </div>
         </article></main>

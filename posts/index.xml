@@ -6,7 +6,67 @@
     <description>Recent content in Posts on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Sun, 27 Aug 2023 21:44:55 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 30 Aug 2023 03:46:40 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CG理論#2 グラフィクス処理 [Devlog #005]</title>
+      <link>https://nishihi6.github.io/blog/posts/devlog_cg_02/</link>
+      <pubDate>Wed, 30 Aug 2023 03:46:40 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/devlog_cg_02/</guid>
+      <description>CG屋さんのバイブル：Real Time Rendering Fourth Edition を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します）
+グラフィクス処理 グラフィクス処理ユニット（GPU） グラフィクスを高速化する歴史は、三角形と重なる各ピクセルの色を補間することから始まった
+頂点処理を行う消費者用チップとして1999年に出荷されたGeForce 256が初めてのグラフィクス処理ユニット（GPU）であり、ラスタライズ専用チップと差別化する目的でその言葉が生まれた
+GPUは特定のタスクに特化した複雑な固定機能パイプライン処理をもつものから、開発者が独自のアルゴリズムを実装できる柔軟性をもつものへと進化している1
+GPUの利点は、狭い範囲の高度に並列化可能なタスクのセットに集中することで、頂点変換やピクセルの色計算の処理を高速化させることにある
+カスタムシリコンが行う並列処理の例 z-バッファの実装 テクスチャーイメージ、バッファーへの迅速なアクセス 三角形が重なるピクセルの探索 データ並列アーキテクチャ CPU 複数のプロセッサを持つことがあるが、それぞれがほぼ直列に処理を実行し、レイテンシーを最小化するためにチップの多くがメモリーで占められている
+ストール（命令の実行が遅れること）を避けるために、分岐予測や命令並べ替え、レジスタリネーミング、キャッシュプリフェッチなどを行う2
+GPU よく似たデータの順序つきセット（例えば頂点やピクセルのセット）を順番に並列処理するストリームプロセッサ
+それぞれのプロセッサは書き込み可能なメモリ位置の共有を行わず、可能な限り独立するように設計されているため、それぞれのプロセッサが別のプロセッサの作業の終了を待つことが無い
+シングルスレッドの性能ではなく、全スレッドの合計の処理性能（スループット）を重視して最適化したプロセッサであり3、ストール発生箇所（高速なローカルメモリではなく別のリソースへアクセスするテクスチャーアクセスなど）を考慮した仕組みになっている （例えば、テクスチャフェッチ中に次のフラグメントの処理に移るなど）
+実行の最適化 GPUは、命令実行ロジックをデータから分離した方式SIMD（単一命令複数データ）を利用することで、ロックステップ（多数のデータ要素を同じ命令に従って処理）する
+同じシェーダープログラムによって処理される各フラグメントに対するピクセルシェーダーの呼び出し（スレッド）はワープ/ウェーブフロントと呼ばれるグループに束ねられ、GPUシェーダーコアの実行（シェーダープロセス）にスケジュールされる （例えば、32スレッドを束ねるNVIDIA GPUで2000フラグメントを処理すると、63のワープを割り当てることになる（2000/32=62.5））※本書P28 図3.1を参照
+各スレッドは個々のレジスタを持ち、ワープ単位で命令を追跡する
+ワープはストールする際に別のスレッドのワープとスワップ（スワップイン/アウト）を行う
+他にも実行の最適化に使われる技術はいくつかある4
+効率を測る シェーダープログラムの構造、特にスレッドごとに使われるレジスタの数が効率に影響し、各スレッドの処理に必要なレジスタが増えるほど、GPU上に常駐できるスレッド数は減るのでワープも減る（ストールをスワップで軽減できなくなる）
+参考論文↓ シェーダーが使うレジスタ数と共有メモリの占有率（常駐するワープの数）への影響5 シェーダーが行う操作の種類による理想的な占有率の変化67
+if文とループによる動的分岐は全体的な効率に影響するというスレッド発散問題がある （１つでも別の経路をとるスレッドがあると、ワープは両方の分岐を実行してそれぞれのスレッドで不要な結果を捨てなければならない）84
+GPUレンダリングパイプラインの実装方法 プログラマブルシェーダー プログラマブルシェーディングとAPIの進化 頂点シェーダー テッセレーション ジオメトリシェーダー ストリーム出力 ピクセルシェーダー マージ コンピュートシェーダー The Direct3D 10 system&amp;#160;&amp;#x21a9;&amp;#xfe0e;
+Computer Architecture: A Quantitative Approach (The Morgan Kaufmann Series in Computer Architecture and Design)&amp;#160;&amp;#x21a9;&amp;#xfe0e;</description>
+    </item>
+    
+    <item>
+      <title>CMakeについてのメモ [Memo #002]</title>
+      <link>https://nishihi6.github.io/blog/posts/memo_cmake_01/</link>
+      <pubDate>Tue, 29 Aug 2023 15:43:33 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/memo_cmake_01/</guid>
+      <description>CV・CG系のライブラリはCMakeを使って開発されていることが多く、今後CMakeを頻繁に利用することが考えられるため、その使い方をまとめておく
+CMakeの仕組み C/C++のビルドの仕組みとライブラリの使用方法 参考サイト（１）：https://qiita.com/seriru13/items/c2f5192615162c4c3f47 参考サイト（２）：https://kamino.hatenablog.com/entry/c%2B%2B-principle-of-build-library
+コマンドラインでのビルドとCMakeでのビルドを比較 参考サイト（３）：https://qiita.com/shohirose/items/45fb49c6b429e8b204ac
+実行ファイルの作成 静的・共有ライブラリの作成 サブディレクトリのソース 参考サイト（４）：https://qiita.com/shohirose/items/637f4b712893764a7ec1
+コンパイルオプションの設定 ビルドタイプの指定 ジェネレーター式 ライブラリのリンク 参考サイト（５）：https://qiita.com/shohirose/items/d2b9c595a37b27ece607
+他のライブラリの利用 実際にCMakeを利用する 参考サイト（６）：https://kamino.hatenablog.com/entry/cmake_tutorial1
+CMakeのインストール Configurate &amp;amp; Generate ビルド デバッグ 参考サイト（７）：https://kamino.hatenablog.com/entry/cmake_tutorial2
+階層化 参考サイト（８）：https://kamino.hatenablog.com/entry/cmake_tutorial3
+CMakeプロジェクトの設定 ビルドタイプの設定 参考サイト（９）：https://kamino.hatenablog.com/entry/cmake_tutorial4
+find_package 外部ライブラリの利用 外部ライブラリ利用の手順 例として、数理最適化ライブラリceres-solverとその依存ライブラリEigenとglogを利用
+Eigenのインストール EigenのGitHubリポジトリをクローン
+手動インストールのためC:\lib\eigen3.3.7にビルド
+（git clone https://github.com/eigenteam/eigen-git-mirror.git）※今回はsourcetreeを利用 cd eigen-git-mirror git checkout 3.3.7 mkdir build cd build cmake .. -DCMAKE_INSTALL_PREFIX=&amp;#39;C:/lib/eigen3.3.7&amp;#39; cmake --build . --target install Glogのインストール GlogのGitHubリポジトリをクローン
+手動インストールのためC:\lib\glog0.4.0にビルド
+（git clone https://github.com/eigenteam/eigen-git-mirror.git）※今回はsourcetreeを利用 cd eigen-git-mirror git checkout 3.3.7 mkdir build cd build cmake .</description>
+    </item>
+    
+    <item>
+      <title>メモリンク集 [Memo #001]</title>
+      <link>https://nishihi6.github.io/blog/posts/memo_links_01/</link>
+      <pubDate>Mon, 28 Aug 2023 21:43:10 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/memo_links_01/</guid>
+      <description>私用メモ CMakeについてのメモ [Memo #002] https://nishihi6.github.io/blog/posts/memo_links_01/</description>
+    </item>
+    
     <item>
       <title>DirectX12の描画処理 #3 [Devlog #004]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_dx12_03/</link>
@@ -15,8 +75,12 @@
       <guid>https://nishihi6.github.io/blog/posts/devlog_dx12_03/</guid>
       <description>DirectX12を使った描画処理 DirectX12の環境構築 初期化 Direct3D (D3D) Direct3D(D3D)とは、DirectXの中の3DグラフィクスAPIの一部であり、多様なグラフィクスハードウェア上でハードウェアアクセラレーションを活用したグラフィクスの表示や操作を行うことができる
 D3D12Deviceは、D3D12(Direct3D 12)のインターフェースの一つで、グラフィクスハードウェアへの低レベルのアクセスを提供し、リソースの作成やコマンドのキューの管理などの主要な機能をもつ
-DirectX Graphics Infrastructure (DXGI) DXGIとは、DirectXのコンポーネントの一つであり、アダプター（グラフィクスカード）、モニター、フレームバッファなどのリソース管理や、スワップチェーンの操作などのタスクを行う またDXGIは、Direct3Dが多様なグラフィクスハードウェア上で一貫して動作するための基盤となる
-DXGIFactoryは、DXGIの中でも主要なインターフェースの一つで、アダプター（グラフィクスカード）やモニターの情報を取得したり、スワップチェーンを作成するためのメソッドを提供する</description>
+DirectX Graphics Infrastructure (DXGI) DXGIとは、DirectXのコンポーネントの一つであり、アダプター（グラフィクスカード）、モニター、フレームバッファなどのリソース管理や、スワップチェーンの操作などのタスクを行う DXGIは、Direct3Dが多様なグラフィクスハードウェア上で一貫して動作するための基盤となる
+DXGIFactoryは、DXGIの中でも主要なインターフェースの一つで、アダプター（グラフィクスカード）やモニターの情報を取得したり、スワップチェーンを作成するためのメソッドを提供する
+デバイスの初期化 D3D12DeviceとDXGIFactoryは初期化に最低限必要になる
+リンクするライブラリファイルd3d12.libとdxgi.libをソースコード内の記述でリンクして、d3d12.hとdxgi1_6.hをインクルードする
+// stdafx.h // D3D12 #pragma comment(lib,&amp;#34;d3d12.lib&amp;#34;) #pragma comment(lib,&amp;#34;dxgi.lib&amp;#34;) #include &amp;lt;d3d12.h&amp;gt; #include &amp;lt;dxgi1_6.h&amp;gt; GraphicsフォルダにGraphicsDevice.hとGraphicsDevice.cppを追加
+dev-dx12-202308（プロジェクト名） └─ Source ├─ Application │ ├─ Application.h │ └─ Application.cpp ├─ Graphics │ ├─ GraphicsDevice.h │ └─ GraphicsDevice.cpp ├─ System │ ├─ Utility │ │ ├─ Utility.h │ │ └─ Utility.cpp │ ├─ Window │ │ ├─ Window.h │ │ └─ Window.</description>
     </item>
     
     <item>
