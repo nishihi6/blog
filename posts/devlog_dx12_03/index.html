@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-08-27",
         "description": "",
-        "wordCount":  396 ,
+        "wordCount":  559 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-08-27",
         "image": {
@@ -198,6 +198,9 @@ stroke-linejoin="round" class="feather feather-home">
             <li><a href="#デバイスの初期化">デバイスの初期化</a></li>
             <li><a href="#graphicsdeviceh">GraphicsDevice.h</a></li>
             <li><a href="#graphicsdevicecpp">GraphicsDevice.cpp</a></li>
+            <li><a href="#描画コマンドの初期化">描画コマンドの初期化</a></li>
+            <li><a href="#graphicsdeviceh-1">GraphicsDevice.h</a></li>
+            <li><a href="#graphicsdevicecpp-1">GraphicsDevice.cpp</a></li>
           </ul>
         </li>
       </ul>
@@ -408,7 +411,99 @@ stroke-linejoin="round" class="feather feather-home">
 <br>プリコンパイルヘッダーがインクルード対象パスに入っていればよいので、<code>プロジェクトプロパティ</code>-&gt;<code>C/C++</code>-&gt;<code>全般</code>-&gt;<code>追加のインクルードディレクトリ</code>にプリコンパイルヘッダーがあるディレクトリ<code>$(PrjectDir)Source</code>を追加すれば解決する
 <br>参考記事１：<a href="https://freelifetech.com/memo-pre-compile-header/">https://freelifetech.com/memo-pre-compile-header/</a>
 <br>参考記事２：<a href="https://solid.kmckk.com/SOLID/doc/latest/user_guide/add-include-directory.html">https://solid.kmckk.com/SOLID/doc/latest/user_guide/add-include-directory.html</a></p>
-
+<h4 id="描画コマンドの初期化">描画コマンドの初期化</h4>
+<h4 id="graphicsdeviceh-1">GraphicsDevice.h</h4>
+<h5 id="graphicsdeviceクラス-1">GraphicsDeviceクラス</h5>
+<p>コマンドリスト関数<code>CreateDevice()</code>を宣言（D3D12Deviceの機能）</p>
+<p><code>ID3D12CommandAllocator</code>はコマンドリストに必要なメモリ（コマンドの記録領域）を割り当てるオブジェクト
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12commandallocator">詳細</a></p>
+<p><code>ID3D12GraphicsCommandList6</code>はレンダリング用のコマンドリストをカプセル化し、コマンドを記述するオブジェクト
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12graphicscommandlist">詳細</a></p>
+<p><code>ID3D12CommandAllocator</code>はコマンドリストをGPUに送信するオブジェクト
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12commandqueue">詳細</a></p>
+<p>参考記事：<a href="https://tositeru.blogspot.com/2019/01/direct3d122gpu.html">https://tositeru.blogspot.com/2019/01/direct3d122gpu.html</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GraphicsDevice</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">bool</span> <span class="n">CreateCommandList</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">ID3D12CommandAllocator</span><span class="o">&gt;</span>			<span class="n">m_pCmdAllocator</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">ID3D12GraphicsCommandList6</span><span class="o">&gt;</span>		<span class="n">m_pCmdList</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">ID3D12CommandQueue</span><span class="o">&gt;</span>				<span class="n">m_pCmdQueue</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span></code></pre></div><h4 id="graphicsdevicecpp-1">GraphicsDevice.cpp</h4>
+<h5 id="graphicsdeviceinit関数-1">GraphicsDevice::Init()関数</h5>
+<p><code>CreateCommandList()</code>を実行</p>
+<h5 id="graphicsdevicecreatecommandlist関数">GraphicsDevice::CreateCommandList()関数</h5>
+<p><code>CreateCommandAllocator()</code>は、コマンドアロケータオブジェクトを作成する関数
+<br>第一引数は作成するコマンドアロケータの種類を指定
+<br>第二引数はコマンドアロケータへのインターフェースのGUIDを指定
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12device-createcommandallocator">詳細</a></p>
+<p><code>CreateCommandList()</code>は、コマンドリストを作成する関数
+<br>第一引数は複数のGPUアダプターを利用するときに利用する（単一GPUの場合は0）
+<br>第二引数は作成するコマンドリストの種類を指定
+<br>第三引数はコマンドアロケーターオブジェクトへのポインタを指定
+<br>第四引数はパイプライン状態オブジェクトへのポインタを指定
+<br>第五引数はコマンドリストインターフェースのGUIDを指定
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12device-createcommandlist">詳細</a></p>
+<p><code>D3D12_COMMAND_QUEUE_DESC</code>は、コマンドキューを記述する構造体
+<br><code>cmdQueueDesc.Flags</code>は<code>D3D12_COMMAND_QUEUE_FLAGS</code>列挙体のフラグを指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_command_queue_flags">詳細</a>）
+<br><code>cmdQueueDesc.NodeMask</code>は複数のGPUアダプターを利用するときに利用する（単一GPUの場合は0
+<br><code>cmdQueueDesc.Priority</code>は<code>D3D12_COMMAND_QUEUE_PRIORITY</code>列挙定数としてのコマンドキューの優先順位を指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_command_queue_priority">詳細</a>）
+<br><code>cmdQueueDesc.Type</code>は<code>D3D12_COMMAND_LIST_TYPE</code>の列挙定数を指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_command_list_type">詳細</a>）
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_command_queue_desc">詳細</a></p>
+<p><code>CreateCommandQueue()</code>は、コマンドキューを作成する関数
+<br>第一引数はコマンド キューを記述する<code>D3D12_COMMAND_QUEUE_DESC</code>を指定
+<br>第二引数はコマンドキューインターフェイスのGUIDを指定
+<br>第三引数はコマンドキューの<code>ID3D12CommandQueue</code>インターフェイスへのポインターを受け取るメモリ ブロックへのポインタを指定
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12device-createcommandqueue">詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Init</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">CreateCommandList</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;コマンドリストの作成失敗&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">CreateCommandList</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">auto</span> <span class="n">hr</span> <span class="o">=</span> <span class="n">m_pDevice</span><span class="o">-&gt;</span><span class="n">CreateCommandAllocator</span><span class="p">(</span><span class="n">D3D12_COMMAND_LIST_TYPE_DIRECT</span><span class="p">,</span> <span class="n">IID_PPV_ARGS</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_pCmdAllocator</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">FAILED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">hr</span> <span class="o">=</span> <span class="n">m_pDevice</span><span class="o">-&gt;</span><span class="n">CreateCommandList</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">D3D12_COMMAND_LIST_TYPE_DIRECT</span><span class="p">,</span> <span class="n">m_pCmdAllocator</span><span class="p">.</span><span class="n">Get</span><span class="p">(),</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">IID_PPV_ARGS</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_pCmdList</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">FAILED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_COMMAND_QUEUE_DESC</span> <span class="n">cmdQueueDesc</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cmdQueueDesc</span><span class="p">.</span><span class="n">Flags</span> <span class="o">=</span> <span class="n">D3D12_COMMAND_QUEUE_FLAG_NONE</span><span class="p">;</span>				<span class="c1">// タイムアウトなし
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cmdQueueDesc</span><span class="p">.</span><span class="n">NodeMask</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>										<span class="c1">// アダプターを1つしか使わないときは0でいい
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cmdQueueDesc</span><span class="p">.</span><span class="n">Priority</span> <span class="o">=</span> <span class="n">D3D12_COMMAND_QUEUE_PRIORITY_NORMAL</span><span class="p">;</span>	<span class="c1">// プライオリティは特に指定なし
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cmdQueueDesc</span><span class="p">.</span><span class="n">Type</span> <span class="o">=</span> <span class="n">D3D12_COMMAND_LIST_TYPE_DIRECT</span><span class="p">;</span>				<span class="c1">// コマンドリストと合わせる
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// キュー生成
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">hr</span> <span class="o">=</span> <span class="n">m_pDevice</span><span class="o">-&gt;</span><span class="n">CreateCommandQueue</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cmdQueueDesc</span><span class="p">,</span> <span class="n">IID_PPV_ARGS</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_pCmdQueue</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">FAILED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
             </div>
         </article></main>
 </div>
