@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-08-27",
         "description": "",
-        "wordCount":  559 ,
+        "wordCount":  795 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-08-27",
         "image": {
@@ -201,6 +201,11 @@ stroke-linejoin="round" class="feather feather-home">
             <li><a href="#描画コマンドの初期化">描画コマンドの初期化</a></li>
             <li><a href="#graphicsdeviceh-1">GraphicsDevice.h</a></li>
             <li><a href="#graphicsdevicecpp-1">GraphicsDevice.cpp</a></li>
+            <li><a href="#スワップチェーンの初期化">スワップチェーンの初期化</a></li>
+            <li><a href="#graphicsdeviceh-2">GraphicsDevice.h</a></li>
+            <li><a href="#graphicsdevicecpp-2">GraphicsDevice.cpp</a></li>
+            <li><a href="#applicationcpp">Application.cpp</a></li>
+            <li><a href="#windowh">Window.h</a></li>
           </ul>
         </li>
       </ul>
@@ -258,9 +263,9 @@ stroke-linejoin="round" class="feather feather-home">
 <br>DirectX12のアプリケーションでのグラフィックスと計算タスクの中心的なインターフェース
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12device8">詳細</a></p>
 <p><code>IDXGIFactory6</code>は全画面表示の遷移を処理するDXGIオブジェクトを生成するためのメソッドを実装するなど、グラフィックリソースの管理や設定を行うためのインターフェース
-<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi1_6/nn-dxgi1_6-idxgifactory6">詳細</a></p>
+<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi1_6/nn-dxgi1_6-idxgifactory6">詳細</a></p>
 <p><code>IDXGISwapChain4</code>はダブルバッファリングのプロセス中のフロントバッファとバックバッファの間でのバッファ交換を管理するインターフェース
-<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi1_5/nn-dxgi1_5-idxgiswapchain4">詳細</a></p>
+<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi1_5/nn-dxgi1_5-idxgiswapchain4">詳細</a></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//GraphicsDevice.h
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GraphicsDevice</span> <span class="p">{</span>
@@ -330,18 +335,18 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h5 id="graphicsdevicecreatedevice関数">GraphicsDevice::CreateDevice()関数</h5>
 <p><code>IDXGIAdapter</code>は、DXGIを通じてグラフィックスアダプタの情報取得や管理を行うためのインターフェース
-<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi/nn-dxgi-idxgiadapter">詳細</a></p>
+<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi/nn-dxgi-idxgiadapter">詳細</a></p>
 <p><code>DXGI_ADAPTER_DESC</code>はDXGIに関連する構造体で、グラフィックスアダプタ（グラボなど）に関する詳細な情報を提供する
 <br>IDXGIAdapterインターフェースのGetDescメソッドを通じて取得される情報を格納するために使用される
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi/ns-dxgi-dxgi_adapter_desc">詳細</a></p>
 <p>１回目のfor文ではGPUドライバーを検索して、あればその情報を格納する</p>
 <p>２回目のfor文では優先度の高いGPUドライバーを使用する</p>
 <p><code>D3D_FEATURE_LEVEL</code>は、Direct3Dで使用される列挙型で、グラフィクスハードウェアがサポートするDirect3Dの機能セットを識別する
-<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3dcommon/ne-d3dcommon-d3d_feature_level">詳細</a></p>
+<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3dcommon/ne-d3dcommon-d3d_feature_level">詳細</a></p>
 <p><code>D3D12CreateDevice()</code>は、指定されたアダプタと指定された機能レベルでDirect3D 12デバイスを作成する関数
-<br>第一引数はアダプタ（<code>IDXGIAdapter</code>）を指定するポインタ
-<br>第二引数はサポートすべき最小の機能レベル（<code>D3D_FEATURE_LEVEL</code>）を指定、
-<br>第三引数と第四引数は作成するインターフェースへのポインタ（<code>IID_PPV_ARGS</code>マクロを使ってうまくやってる）
+<br>▶ 第一引数はアダプタ（<code>IDXGIAdapter</code>）を指定するポインタ
+<br>▶ 第二引数はサポートすべき最小の機能レベル（<code>D3D_FEATURE_LEVEL</code>）を指定、
+<br>▶ 第三引数と第四引数は作成するインターフェースへのポインタ（<code>IID_PPV_ARGS</code>マクロを使ってうまくやってる）
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-d3d12createdevice">詳細</a></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//GraphicsDevice.cpp
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
@@ -412,22 +417,23 @@ stroke-linejoin="round" class="feather feather-home">
 <br>参考記事１：<a href="https://freelifetech.com/memo-pre-compile-header/">https://freelifetech.com/memo-pre-compile-header/</a>
 <br>参考記事２：<a href="https://solid.kmckk.com/SOLID/doc/latest/user_guide/add-include-directory.html">https://solid.kmckk.com/SOLID/doc/latest/user_guide/add-include-directory.html</a></p>
 <h4 id="描画コマンドの初期化">描画コマンドの初期化</h4>
+<p>GPUが実行する命令のリスト<strong>コマンドリスト</strong>を指定した順序でGPUに転送するための仕組みが<strong>コマンドキュー</strong></p>
 <h4 id="graphicsdeviceh-1">GraphicsDevice.h</h4>
 <h5 id="graphicsdeviceクラス-1">GraphicsDeviceクラス</h5>
-<p>コマンドリスト関数<code>CreateDevice()</code>を宣言（D3D12Deviceの機能）</p>
+<p>コマンドリスト関数<code>CreateCommandList()</code>を宣言（D3D12Deviceの機能）</p>
 <p><code>ID3D12CommandAllocator</code>はコマンドリストに必要なメモリ（コマンドの記録領域）を割り当てるオブジェクト
-<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12commandallocator">詳細</a></p>
+<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12commandallocator">詳細</a></p>
 <p><code>ID3D12GraphicsCommandList6</code>はレンダリング用のコマンドリストをカプセル化し、コマンドを記述するオブジェクト
-<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12graphicscommandlist">詳細</a></p>
+<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12graphicscommandlist">詳細</a></p>
 <p><code>ID3D12CommandAllocator</code>はコマンドリストをGPUに送信するオブジェクト
-<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12commandqueue">詳細</a></p>
+<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12commandqueue">詳細</a></p>
 <p>参考記事：<a href="https://tositeru.blogspot.com/2019/01/direct3d122gpu.html">https://tositeru.blogspot.com/2019/01/direct3d122gpu.html</a></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.h
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GraphicsDevice</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">bool</span> <span class="n">CreateCommandList</span><span class="p">();</span>
@@ -436,31 +442,32 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">ID3D12GraphicsCommandList6</span><span class="o">&gt;</span>		<span class="n">m_pCmdList</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	<span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">ID3D12CommandQueue</span><span class="o">&gt;</span>				<span class="n">m_pCmdQueue</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
-</span></span></span></code></pre></div><h4 id="graphicsdevicecpp-1">GraphicsDevice.cpp</h4>
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><h4 id="graphicsdevicecpp-1">GraphicsDevice.cpp</h4>
 <h5 id="graphicsdeviceinit関数-1">GraphicsDevice::Init()関数</h5>
 <p><code>CreateCommandList()</code>を実行</p>
 <h5 id="graphicsdevicecreatecommandlist関数">GraphicsDevice::CreateCommandList()関数</h5>
 <p><code>CreateCommandAllocator()</code>は、コマンドアロケータオブジェクトを作成する関数
-<br>第一引数は作成するコマンドアロケータの種類を指定
-<br>第二引数はコマンドアロケータへのインターフェースのGUIDを指定
+<br>▶ 第一引数は作成するコマンドアロケータの種類を指定
+<br>▶ 第二引数はコマンドアロケータへのインターフェースのGUIDを指定
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12device-createcommandallocator">詳細</a></p>
 <p><code>CreateCommandList()</code>は、コマンドリストを作成する関数
-<br>第一引数は複数のGPUアダプターを利用するときに利用する（単一GPUの場合は0）
-<br>第二引数は作成するコマンドリストの種類を指定
-<br>第三引数はコマンドアロケーターオブジェクトへのポインタを指定
-<br>第四引数はパイプライン状態オブジェクトへのポインタを指定
-<br>第五引数はコマンドリストインターフェースのGUIDを指定
+<br>▶ 第一引数は複数のGPUアダプターを利用するときに利用する（単一GPUの場合は0）
+<br>▶ 第二引数は作成するコマンドリストの種類を指定
+<br>▶ 第三引数はコマンドアロケーターオブジェクトへのポインタを指定
+<br>▶ 第四引数はパイプライン状態オブジェクトへのポインタを指定
+<br>▶ 第五引数はコマンドリストインターフェースのGUIDを指定
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12device-createcommandlist">詳細</a></p>
 <p><code>D3D12_COMMAND_QUEUE_DESC</code>は、コマンドキューを記述する構造体
-<br><code>cmdQueueDesc.Flags</code>は<code>D3D12_COMMAND_QUEUE_FLAGS</code>列挙体のフラグを指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_command_queue_flags">詳細</a>）
-<br><code>cmdQueueDesc.NodeMask</code>は複数のGPUアダプターを利用するときに利用する（単一GPUの場合は0
-<br><code>cmdQueueDesc.Priority</code>は<code>D3D12_COMMAND_QUEUE_PRIORITY</code>列挙定数としてのコマンドキューの優先順位を指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_command_queue_priority">詳細</a>）
-<br><code>cmdQueueDesc.Type</code>は<code>D3D12_COMMAND_LIST_TYPE</code>の列挙定数を指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_command_list_type">詳細</a>）
+<br>▶ <code>cmdQueueDesc.Flags</code>は<code>D3D12_COMMAND_QUEUE_FLAGS</code>列挙体のフラグを指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_command_queue_flags">詳細</a>）
+<br>▶ <code>cmdQueueDesc.NodeMask</code>は複数のGPUアダプターを利用するときに利用する（単一GPUの場合は0
+<br>▶ <code>cmdQueueDesc.Priority</code>は<code>D3D12_COMMAND_QUEUE_PRIORITY</code>列挙定数としてのコマンドキューの優先順位を指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_command_queue_priority">詳細</a>）
+<br>▶ <code>cmdQueueDesc.Type</code>は<code>D3D12_COMMAND_LIST_TYPE</code>の列挙定数を指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_command_list_type">詳細</a>）
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_command_queue_desc">詳細</a></p>
 <p><code>CreateCommandQueue()</code>は、コマンドキューを作成する関数
-<br>第一引数はコマンド キューを記述する<code>D3D12_COMMAND_QUEUE_DESC</code>を指定
-<br>第二引数はコマンドキューインターフェイスのGUIDを指定
-<br>第三引数はコマンドキューの<code>ID3D12CommandQueue</code>インターフェイスへのポインターを受け取るメモリ ブロックへのポインタを指定
+<br>▶ 第一引数はコマンド キューを記述する<code>D3D12_COMMAND_QUEUE_DESC</code>を指定
+<br>▶ 第二引数はコマンドキューインターフェイスのGUIDを指定
+<br>▶ 第三引数はコマンドキューの<code>ID3D12CommandQueue</code>インターフェイスへのポインターを受け取るメモリ ブロックへのポインタを指定
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12device-createcommandqueue">詳細</a></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.cpp
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
@@ -503,6 +510,112 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="スワップチェーンの初期化">スワップチェーンの初期化</h4>
+<p>フレームバッファの表示側と描画側を切り替えるための仕組みが<strong>スワップチェーン</strong></p>
+<h4 id="graphicsdeviceh-2">GraphicsDevice.h</h4>
+<h5 id="graphicsdeviceクラス-2">GraphicsDeviceクラス</h5>
+<p>スワップチェーン関数<code>CreateSwapChain()</code>を宣言（DXGIFactoryの機能）</p>
+<p><code>IDXGISwapChain4</code>はダブルバッファリングのプロセス中のフロントバッファとバックバッファの間でのバッファ交換を管理するインターフェース
+<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi1_5/nn-dxgi1_5-idxgiswapchain4">詳細</a></p>
+<p><code>Init()</code>関数に引数を追加（スワップチェーンの作成のために必要）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GraphicsDevice</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">bool</span> <span class="n">Init</span><span class="p">(</span><span class="n">HWND</span> <span class="n">hWnd</span><span class="p">,</span> <span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="kt">int</span> <span class="n">h</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">bool</span> <span class="n">CreateSwaphcain</span><span class="p">(</span><span class="n">HWND</span> <span class="n">hWnd</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">IDXGISwapChain4</span><span class="o">&gt;</span>		<span class="n">m_pSwapChain</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><h4 id="graphicsdevicecpp-2">GraphicsDevice.cpp</h4>
+<h5 id="graphicsdeviceinit関数-2">GraphicsDevice::Init()関数</h5>
+<p><code>GraphicsDevice::Init()</code>関数に引数を追加</p>
+<p><code>CreateSwapchain()</code>を実行</p>
+<h5 id="graphicsdevicecreateswapchain関数">GraphicsDevice::CreateSwapchain()関数</h5>
+<p><code>DXGI_SWAP_CHAIN_DESC1</code>はスワップチェーンについて説明する構造体
+<br>▶ <code>swapchainDesc.Width</code>は解像度の幅を表す値
+<br>▶ <code>swapchainDesc.Height</code>は解像度の高さを表す値
+<br>▶ <code>swapchainDesc.Format</code>はピクセルフォーマットを<code>DXGI_FORMAT</code>列挙で指定（<code>DXGI_FORMAT_R8G8B8A8_UNORM</code>はカラー チャネルごとに8ビットと8ビットアルファをサポートする4コンポーネントの32ビット符号なし正規化整数形式を表す）（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgiformat/ne-dxgiformat-dxgi_format">列挙の詳細</a>）
+<br>▶ <code>swapchainDesc.SampleDesc.Count</code>はピクセルあたりのマルチサンプル数をマルチサンプリングパラメーターを記述する<code>DXGI_SAMPLE_DESC</code>構造体で指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgicommon/ns-dxgicommon-dxgi_sample_desc">構造体の詳細</a>）
+<br>▶ <code>swapchainDesc.BufferUsage</code>はバックバッファの使用制限について（サーフェス使用量とCPUアクセスオプション）を<code>DXGI_USAGE</code>フラグで指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/direct3ddxgi/dxgi-usage">フラグの詳細</a>）
+<br>▶ <code>swapchainDesc.BufferCount</code>はスワップするバッファの数を指定
+<br>▶ <code>swapchainDesc.SwapEffect</code>はスワップ方法を指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi/ne-dxgi-dxgi_swap_effect">列挙の詳細</a>）
+<br>▶ <code>swapchainDesc.Flags</code>はスワップチェインの動作のオプションを指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi/ne-dxgi-dxgi_swap_chain_flag">列挙の詳細</a>）
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi1_2/ns-dxgi1_2-dxgi_swap_chain_desc1">詳細</a></p>
+<p><code>CreateSwapChainForHwnd()</code>は、スワップチェーンを作成する関数
+<br>▶ 第一引数は作成したコマンドキューのポインタ
+<br>▶ 第二引数はウィンドウハンドル
+<br>▶ 第三引数は<code>DXGI_SWAP_CHAIN_DESC1</code>構造体へのポインタ
+<br>▶ 第四引数は<code>DXGI_SWAP_CHAIN_FULLSCREEN_DESC</code>構造体のアドレス（オプション）
+<br>▶ 第五引数は<code>IDXGIOutput</code>インタフェースのポインタ（オプション）
+<br>▶ 第六引数は<code>DXGISwapChain1</code>インタフェースのポインタを格納する変数のアドレス
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi1_2/nf-dxgi1_2-idxgifactory2-createswapchainforhwnd">詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Init</span><span class="p">(</span><span class="n">HWND</span> <span class="n">hWnd</span><span class="p">,</span> <span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="kt">int</span> <span class="n">h</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">CreateSwapchain</span><span class="p">(</span><span class="n">hWnd</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;スワップチェインの作成失敗&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">CreateSwapchain</span><span class="p">(</span><span class="n">HWND</span> <span class="n">hWnd</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">DXGI_SWAP_CHAIN_DESC1</span> <span class="n">swapchainDesc</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">swapchainDesc</span><span class="p">.</span><span class="n">Width</span> <span class="o">=</span> <span class="n">width</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">swapchainDesc</span><span class="p">.</span><span class="n">Height</span> <span class="o">=</span> <span class="n">height</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">swapchainDesc</span><span class="p">.</span><span class="n">Format</span> <span class="o">=</span> <span class="n">DXGI_FORMAT_R8G8B8A8_UNORM</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">swapchainDesc</span><span class="p">.</span><span class="n">SampleDesc</span><span class="p">.</span><span class="n">Count</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">swapchainDesc</span><span class="p">.</span><span class="n">BufferUsage</span> <span class="o">=</span> <span class="n">DXGI_USAGE_BACK_BUFFER</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">swapchainDesc</span><span class="p">.</span><span class="n">BufferCount</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">swapchainDesc</span><span class="p">.</span><span class="n">SwapEffect</span> <span class="o">=</span> <span class="n">DXGI_SWAP_EFFECT_FLIP_DISCARD</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">swapchainDesc</span><span class="p">.</span><span class="n">Flags</span> <span class="o">=</span> <span class="n">DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">auto</span> <span class="n">hr</span> <span class="o">=</span> <span class="n">m_pDxgiFactory</span><span class="o">-&gt;</span><span class="n">CreateSwapChainForHwnd</span><span class="p">(</span><span class="n">m_pCmdQueue</span><span class="p">.</span><span class="n">Get</span><span class="p">(),</span> <span class="n">hWnd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">swapchainDesc</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="p">(</span><span class="n">IDXGISwapChain1</span><span class="o">**</span><span class="p">)</span><span class="n">m_pSwapChain</span><span class="p">.</span><span class="n">GetAddressOf</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">FAILED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="applicationcpp">Application.cpp</h4>
+<h5 id="applicationexecute関数">Application::Execute()関数</h5>
+<p><code>GraphicsDevice::Init()</code>関数に引数を追加</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Application.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Application</span><span class="o">::</span><span class="n">Execute</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Instance</span><span class="p">().</span><span class="n">Init</span><span class="p">(</span><span class="n">m_window</span><span class="p">.</span><span class="n">GetWndHandle</span><span class="p">(),</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;グラフィックスデバイス初期化失敗。&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><h4 id="windowh">Window.h</h4>
+<h5 id="applicationexecute関数-1">Application::Execute()関数</h5>
+<p><code>GetWndHandle()</code>関数でウィンドウハンドルを取得</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Window.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Window</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="n">HWND</span> <span class="n">GetWndHandle</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="n">m_hWnd</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
 </span></span></code></pre></div>
             </div>
         </article></main>
