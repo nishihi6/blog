@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-08-30",
         "description": "",
-        "wordCount":  148 ,
+        "wordCount":  341 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-08-30",
         "image": {
@@ -202,7 +202,22 @@ stroke-linejoin="round" class="feather feather-home">
     </li>
     <li><a href="#gpuレンダリングパイプラインの実装方法">GPUレンダリングパイプラインの実装方法</a></li>
     <li><a href="#プログラマブルシェーダー">プログラマブルシェーダー</a></li>
-    <li><a href="#プログラマブルシェーディングとapiの進化">プログラマブルシェーディングとAPIの進化</a></li>
+    <li><a href="#プログラマブルシェーディングとapiの進化">プログラマブルシェーディングとAPIの進化</a>
+      <ul>
+        <li><a href="#進化の過程">進化の過程</a>
+          <ul>
+            <li><a href="#1996年">1996年~</a></li>
+            <li><a href="#2001年">2001年</a></li>
+            <li><a href="#2002年">2002年~</a></li>
+            <li><a href="#2004年">2004年~</a></li>
+            <li><a href="#2007年">2007年~</a></li>
+            <li><a href="#2009年">2009年~</a></li>
+            <li><a href="#2013年">2013年~</a></li>
+            <li><a href="#モバイルデバイス">モバイルデバイス</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
     <li><a href="#頂点シェーダー">頂点シェーダー</a></li>
     <li><a href="#テッセレーション">テッセレーション</a></li>
     <li><a href="#ジオメトリシェーダー">ジオメトリシェーダー</a></li>
@@ -263,7 +278,7 @@ stroke-linejoin="round" class="feather feather-home">
 <li><strong>マージ</strong>はプログラマブルではないが高度に設定可能<br>（色、z-バッファ、ブレンド、ステンシルなどのバッファの修正）</li>
 </ol>
 <h2 id="プログラマブルシェーダー">プログラマブルシェーダー</h2>
-<p><strong>統合型シェーダーデザイン</strong>は、「頂点、ピクセル、ジオメトリ、テッセレーション」に関するシェーダーが共通のプログラミングモデルを共有することを意味する（内部で同じ<strong>命令セットアーキテクチャ（ISA）</strong>をもつ）</p>
+<p><strong>統合型シェーダーデザイン</strong>は、「頂点、ピクセル、ジオメトリ、テッセレーション」に関するシェーダーが共通のプログラミングモデルを共有することを意味する（内部で同じ<strong>命令セットアーキテクチャ（ISA : Instruction Set Architecture）</strong>をもつ）</p>
 <p>DirectXでは<strong>共通シェーダーコア</strong>が統合シェーダーアーキテクチャをもつ</p>
 <p>シェーダープロセッサが様々な役割に使用可能であり、GPUは統合シェーダーコアによって負荷のバランスを調整することができる
 <br>（例：四角形ポリゴンセットよりも三角形ポリゴンセットのほうが多くの頂点シェーダー処理が必要）</p>
@@ -282,10 +297,63 @@ stroke-linejoin="round" class="feather feather-home">
 <li>出力レジスタ：頂点やピクセルごとに別々に格納する</li>
 </ul>
 <p>シェーディング言語はグラフィクスの操作でよく使われる計算を演算子やGPUに最適化された組み込み関数で表現する（ベクトル正規化、反射、外積、行列転置、固有値の計算などのための関数もある）</p>
-<p>分岐命令（&ldquo;if&quot;や&quot;case&rdquo;）などのコード実行のフローを変える<strong>フロー制御</strong>に関する命令も用意されている
+<p>分岐命令（&ldquo;if&quot;や&quot;case&rdquo;）などの、コード実行のフローを変える<strong>フロー制御</strong>に関する命令も用意されている
 <br><strong>静的なフロー制御</strong>：一様入力の値に基づく制御でスレッド発散はなく、同じシェーダーを異なる状況（可変数のライトなど）で使うときなどに使う
 <br><strong>動的なフロー制御</strong>：可変入力の値に基づく制御で、フラグメントごとにコードの実行が異なるときなどに使う</p>
 <h2 id="プログラマブルシェーディングとapiの進化">プログラマブルシェーディングとAPIの進化</h2>
+<p>単純なシェーダーとそれに対応するCookの<strong>シェードツリー</strong><sup id="fnref:9"><a href="#fn:9" class="footnote-ref" role="doc-noteref">9</a></sup>は以下のように表される</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">float</span> <span class="n">ka</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span> <span class="c1">// アンビエント要素の重み
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">float</span> <span class="n">ks</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span> <span class="c1">// スペキュラ要素の重み
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">float</span> <span class="n">roughness</span> <span class="mf">0.1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">float</span> <span class="n">intensity</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">color</span> <span class="n">copper</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">);</span> <span class="c1">// 銅カラー
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">intensity</span> <span class="o">=</span> <span class="n">ka</span><span class="o">*</span><span class="n">ambient</span><span class="p">()</span> <span class="o">+</span> <span class="n">ks</span><span class="o">*</span><span class="n">specular</span><span class="p">(</span><span class="n">normal</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">roughness</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">final_color</span> <span class="o">=</span> <span class="n">intensity</span><span class="o">*</span><span class="n">copper</span><span class="p">;</span> <span class="c1">// 最終カラー
+</span></span></span></code></pre></div><p>この考え方を元にRenderManシェーディング言語<sup id="fnref:10"><a href="#fn:10" class="footnote-ref" role="doc-noteref">10</a></sup><sup id="fnref:11"><a href="#fn:11" class="footnote-ref" role="doc-noteref">11</a></sup>は開発され、今でも<strong>Openシェーディング言語（OSL）</strong>プロジェクト<sup id="fnref:12"><a href="#fn:12" class="footnote-ref" role="doc-noteref">12</a></sup>で使われている
+<br>（OSLはソニー・ピクチャーズ・イメージワークスがArnold Rendererで使用するために開発したシェーディング言語であり、Blender等でも利用されている）</p>
+<h3 id="進化の過程">進化の過程</h3>
+<h4 id="1996年">1996年~</h4>
+<p>グラフィックスカード「sdfx Voodoo」はあらゆる箇所で固定機能パイプラインを実装していた</p>
+<p>ゲーム「Quake III Arena」において、リアルタイムでのプログラマブルシェーディング操作が実装された</p>
+<h4 id="2001年">2001年</h4>
+<p>プログラマブル頂点シェーダーをサポートする最初のGPU「NVIDIA GeForce3」がDirectX 8.0とOpenGLの拡張機能を通じて公開された<sup id="fnref:13"><a href="#fn:13" class="footnote-ref" role="doc-noteref">13</a></sup></p>
+<p>ピクセルシェーダーは実際のプログラム性に達成していなかったり、重要な機能が欠けていたりした（RenderManの研究から、従属テクスチャー読み込みと浮動小数点データが真のプログラム性に不可欠であることを明らかにした<sup id="fnref:14"><a href="#fn:14" class="footnote-ref" role="doc-noteref">14</a></sup>）</p>
+<h4 id="2002年">2002年~</h4>
+<p>DirectXがシェーダーの能力の違いでハードウェアを区別する<strong>シェーダーモデル（SM）</strong>の概念を定義</p>
+<p>SM 2.0を含むDirectX 9.0がリリースされ、真にプログラマブルな頂点とピクセルのシェーダーを実装（任意の従属テクスチャ読み込みと16ビット浮動小数点値の格納をサポート）</p>
+<p>OpenGLからも同様な機能が公開</p>
+<p>フロー制御のサポートも加わった</p>
+<p>シェーダーが複雑化し始めた頃に、シェーディング言語の<strong>HLSL</strong>（MicrosoftがNVIDIAと共同開発）と<strong>GLSL</strong>（OpenGL ARBが開発）がリリースされた</p>
+<h4 id="2004年">2004年~</h4>
+<p>SM 3.0で<strong>動的なフロー制御</strong>をサポートするなど、シェーダーが大きく強化された</p>
+<p>Xbox360やPS3でSM 3.0レベルのGPUを装備（Nintendo Wiiは固定機能GPUを装備）</p>
+<h4 id="2007年">2007年~</h4>
+<p>SM 4.0を含むDirectX 10.0がリリース<sup id="fnref:15"><a href="#fn:15" class="footnote-ref" role="doc-noteref">15</a></sup>され、<strong>ジオメトリシェーダー</strong>や<strong>ストリーム出力</strong>を実装</p>
+<p>頂点、ピクセル、ジオメトリーシェーダーに対する<strong>共通のプログラミングモデル（統合型シェーダーデザイン）</strong>を実装</p>
+<p><strong>整数データ型</strong>をサポート</p>
+<p>OpenGL 3.3（GLSL3.30）でも同様のシェーダーモデルを実装</p>
+<h4 id="2009年">2009年~</h4>
+<p>SM 5.0を含むDirectX 11がリリースされ、<strong>テッセレーションステージシェーダー</strong>と<strong>コンピュートシェーダー（DirectCompute）</strong>を実装</p>
+<p>OpenGL 4.0でテッセレーション、OpenGL 4.3でコンピュートシェーダーを実装</p>
+<h4 id="2013年">2013年~</h4>
+<p>AMDのMantle APIでの効率的な実装（2013年）を学び、MicrosoftはDirectX 12をリリース（2015年）</p>
+<p>グラフィクスドライバのオーバーヘッド（処理を行う際の手続き、システムの負荷、処理時間など）を開発者が制御可能、CPUマルチプロセッシングをサポート</p>
+<p>CPUドライバのコストがボトルネックになったり、グラフィクスに使うCPUプロセッサを増やすことに性能の恩恵があるアプリケーションに有用<sup id="fnref:16"><a href="#fn:16" class="footnote-ref" role="doc-noteref">16</a></sup></p>
+<p>Appleは独自の低オーバーヘッドAPI「Metal」をリリース（2014年）</p>
+<p>Khronos Groupは複数のOS上で動作する独自の新API「Vulkan」をリリース（2016年）<sup id="fnref:17"><a href="#fn:17" class="footnote-ref" role="doc-noteref">17</a></sup></p>
+<h4 id="モバイルデバイス">モバイルデバイス</h4>
+<p>モバイルデバイスではOpenGL ES（Embedded System）の使用が標準
+<br>●2003年 OpenGL ES 1.0：固定機能パイプラインを記述するOpenGL 1.3の簡素版
+<br>●2007年 OpenGL ES 2.0：プログラマブルなシェーディングを提供
+<br>※2010年 Apple iPadはOpenGL ES 1.1を実装
+<br>●2012年 OpenGL ES 3.0：複数レンダーターゲット、テクスチャ圧縮、トランスフォームフィードバック、インスタンス化、幅広いテクスチャフォーマットとモードなどの機能を提供し、シェーダー言語も改善
+<br>●OpenGL ES 3.1：コンピュートシェーダを実装
+<br>●OpenGL ES 3.2：ジオメトリとテッセレーションシェーダーを実装</p>
+<p>OpenGL ESから派生したブラウザーベースの（JavaScriptを通じて呼び出される
+）APIの<strong>WebGL</strong>がリリース（2011年）
+<br>●WebGL：OpenGL ES 2.0と同じ機能
+<br>●WebGL 2：OpenGL ES 3.0のサポート</p>
+<p><strong>three.js</strong><sup id="fnref:18"><a href="#fn:18" class="footnote-ref" role="doc-noteref">18</a></sup>などの上位レベルのシーングラフとエフェクトのライブラリにより、影のアルゴリズム、後処理効果、物理ベースのシェーディング、遅延レンダリングなどの様々なコードにアクセスできる</p>
 <h2 id="頂点シェーダー">頂点シェーダー</h2>
 <h2 id="テッセレーション">テッセレーション</h2>
 <h2 id="ジオメトリシェーダー">ジオメトリシェーダー</h2>
@@ -319,6 +387,36 @@ stroke-linejoin="round" class="feather feather-home">
 </li>
 <li id="fn:8">
 <p><a href="https://inzkyk.xyz/ttgp/welcome/">A trip through the Graphics Pipeline 2011（日本語訳）</a>&#160;<a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:9">
+<p><a href="https://dl.acm.org/doi/10.1145/964965.808602">Shade trees</a>&#160;<a href="#fnref:9" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:10">
+<p><a href="https://www.amazon.co.jp/Advanced-RenderMan-Creating-Pictures-1999-12-22/dp/B01JXO8TIS">Advanced RenderMan: Creating CGI for Motion Pictures</a>&#160;<a href="#fnref:10" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:11">
+<p><a href="https://www.amazon.com/RenderMan-Companion-Programmers-Realistic-Computer/dp/0201508680">The Renderman Companion: A Programmer&rsquo;s Guide to Realistic Computer Graphics</a>&#160;<a href="#fnref:11" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:12">
+<p><a href="https://itn-web.it.liu.se/~stegu76/TNM084-2019/osl-languagespec.pdf">Open Shading Language 1.9</a>&#160;<a href="#fnref:12" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:13">
+<p><a href="https://seblagarde.wordpress.com/2013/04/29/memo-on-fresnel-equations/">Sebastien Lagarde, &ldquo;Memo on Fresnel equations&rdquo;, Blog post</a>&#160;<a href="#fnref:13" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:14">
+<p><a href="https://dl.acm.org/doi/10.1145/344779.344976">Interactive multi-pass programmable shading</a>&#160;<a href="#fnref:14" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:15">
+<p><a href="https://dl.acm.org/doi/10.1145/1141911.1141947">The Direct3D 10 system</a>&#160;<a href="#fnref:15" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:16">
+<p><a href="https://developer.nvidia.com/transitioning-opengl-vulkan">Transitioning from OpenGL to Vulkan</a>&#160;<a href="#fnref:16" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:17">
+<p><a href="https://www.amazon.co.jp/OpenGL-Programming-Guide-Official-Learning/dp/0134495497">OpenGL Programming Guide: The Official Guide to Learning OpenGL, Version 4.5 with SPIR-V</a>&#160;<a href="#fnref:17" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:18">
+<p><a href="https://threejs.org/">https://threejs.org/</a>&#160;<a href="#fnref:18" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
