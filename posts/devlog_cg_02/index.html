@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-08-30",
         "description": "",
-        "wordCount":  341 ,
+        "wordCount":  517 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-08-30",
         "image": {
@@ -219,7 +219,13 @@ stroke-linejoin="round" class="feather feather-home">
       </ul>
     </li>
     <li><a href="#頂点シェーダー">頂点シェーダー</a></li>
-    <li><a href="#テッセレーション">テッセレーション</a></li>
+    <li><a href="#テッセレーション">テッセレーション</a>
+      <ul>
+        <li><a href="#ハルシェーダー">ハルシェーダー</a></li>
+        <li><a href="#テッセレーター">テッセレーター</a></li>
+        <li><a href="#ドメインシェーダー">ドメインシェーダー</a></li>
+      </ul>
+    </li>
     <li><a href="#ジオメトリシェーダー">ジオメトリシェーダー</a></li>
     <li><a href="#ストリーム出力">ストリーム出力</a></li>
     <li><a href="#ピクセルシェーダー">ピクセルシェーダー</a></li>
@@ -355,9 +361,96 @@ stroke-linejoin="round" class="feather feather-home">
 <br>●WebGL 2：OpenGL ES 3.0のサポート</p>
 <p><strong>three.js</strong><sup id="fnref:18"><a href="#fn:18" class="footnote-ref" role="doc-noteref">18</a></sup>などの上位レベルのシーングラフとエフェクトのライブラリにより、影のアルゴリズム、後処理効果、物理ベースのシェーディング、遅延レンダリングなどの様々なコードにアクセスできる</p>
 <h2 id="頂点シェーダー">頂点シェーダー</h2>
+<p>三角形メッシュは位置、色、テクスチャ座標などに関連する頂点のセットで表現され、<strong>面法線はメッシュの頂点で定義される</strong>（レンダリング時に三角形メッシュの滑らかな曲面の表現を可能にするため、頂点法線を使って定義される）</p>
+<p>頂点シェーダーは各三角形の頂点に関する<strong>色、法線、テクスチャ座標、位置</strong>などを修正、作成、無視する手段を提供する</p>
+<p>すべての頂点が頂点シェーダーで処理され、三角形や直線上で補間される値が出力される</p>
+<p>頂点シェーダーは頂点の作成や破棄はできず、１つの頂点の処理結果を別の頂点にわたすこともできない</p>
+<p>頂点シェーダーは各頂点を独立して扱うため、GPU上のシェーダープロセッサを頂点のストリームに並列に適用できる</p>
+<p><strong>入力アセンブラー（IA : InputAssembler）</strong><sup id="fnref1:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup><sup id="fnref1:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup>は、ユーザ入力（データのストリーム）を読み取り、三角形、線、点などのプリミティブデータのセットを形成し、これによりシェーダを動かすための情報が取得され、描画を始めることができる</p>
+<p>入力アセンブラーの<strong>インスタンス化</strong>実行のサポートにより、１つのドローコールで、インスタンス単位の可変データと合わせてオブジェクトを複数描画できる</p>
+<p><strong>頂点シェーダーを使って行う頂点シェーダー効果の例</strong></p>
+<ul>
+<li>頂点ブレンドによる関節のアニメーション</li>
+<li>シルエットレンダリング</li>
+<li>メッシュを一度だけ作成し、それを頂点シェーダーで変形してオブジェクトを生成する</li>
+<li>スキニングとモーフィングテクニックを使ったキャラクターの体と顔のアニメーション</li>
+<li>手続き的変形や<sup id="fnref:19"><a href="#fn:19" class="footnote-ref" role="doc-noteref">19</a></sup><sup id="fnref:20"><a href="#fn:20" class="footnote-ref" role="doc-noteref">20</a></sup>、旗、布、水の動きなど<sup id="fnref:21"><a href="#fn:21" class="footnote-ref" role="doc-noteref">21</a></sup><sup id="fnref:22"><a href="#fn:22" class="footnote-ref" role="doc-noteref">22</a></sup></li>
+<li>縮退（領域のない）メッシュをパイプラインに送り、必要に応じて領域を与えることでパーティクルを作成する</li>
+<li>フレームバッファ全体の内容を、手続き的変形を行う画面並行メッシュのテクスチャとして使うレンズティストーション、かげろう、水の波紋、ページの丸めなどの効果</li>
+<li>頂点テクスチャフェッチを使う地形の高さフィールドの適用<sup id="fnref:23"><a href="#fn:23" class="footnote-ref" role="doc-noteref">23</a></sup><sup id="fnref:24"><a href="#fn:24" class="footnote-ref" role="doc-noteref">24</a></sup></li>
+</ul>
+<p>頂点シェーダーの出力</p>
+<ul>
+<li>普通の経路では、生成した三角形がラスタライズされ、個々のピクセルフラグメントがピクセルシェーダーに送られる</li>
+<li>データをテッセレーションやジオメトリシェーダーに送ったり、メモリーに格納して処理を行うことができるGPUもある</li>
+</ul>
 <h2 id="テッセレーション">テッセレーション</h2>
+<p>テッセレーションでは、頂点のセットで作られるパッチのセットで表現される曲面サーフェイスから三角形のセットに変換する（DirectX 11, OpenGL 4.0, OpenGL ES 3.2でサポート）</p>
+<p><strong>テッセレーションの利点</strong></p>
+<ul>
+<li>曲面の記述は相当する三角形そのものを供給するよりもコンパクト
+<ul>
+<li>メモリーを節約できる</li>
+<li>形が毎フレーム変化するアニメートキャラクターやオブジェクトで、CPUとGPUの間のボトルネックの発生を防ぐ</li>
+</ul>
+</li>
+<li>ビューに適切な数の三角形を生成（詳細レベルを制御）することができる
+<ul>
+<li>遠いオブジェクトの三角形を少数に、近いオブジェクトの三角形を多数にして見栄えを向上できる</li>
+<li>低速のCPUでは低品質のメッシュを使うなどの性能に応じた制御が可能になる</li>
+</ul>
+</li>
+</ul>
+<p>例：望みに応じてフラットサーフェイスから細かい三角形のメッシュに変換して曲げる<sup id="fnref:25"><a href="#fn:25" class="footnote-ref" role="doc-noteref">25</a></sup>
+例：テッセレートして高価なシェーディング計算を行う頻度を減らす<sup id="fnref:26"><a href="#fn:26" class="footnote-ref" role="doc-noteref">26</a></sup><sup id="fnref:27"><a href="#fn:27" class="footnote-ref" role="doc-noteref">27</a></sup></p>
+<p><strong>テッセレーションを構成する３つの要素</strong> ※本書P40 図3.9を参照</p>
+<ul>
+<li>ハルシェーダー（テッセレーション制御シェーダー）</li>
+<li>テッセレーター</li>
+<li>ドメインシェーダー（テッセレーション評価シェーダー）</li>
+</ul>
+<h3 id="ハルシェーダー">ハルシェーダー</h3>
+<p>入力はパッチプリミティブで、サブディビジョンサーフェイスを定義するいくつかの制御点と、ベジエパッチや他のタイプの曲線要素で構成される</p>
+<p>テッセレーターに生成すべき三角形の数とその設定を伝える（三角形、四辺形、等値線：髪のレンダリング<sup id="fnref:28"><a href="#fn:28" class="footnote-ref" role="doc-noteref">28</a></sup>）</p>
+<p>制御点ごとに処理を行う（オプションで入力パッチを修正して、制御点を追加・除去することが可能）</p>
+<p>制御点のセットをテッセレーション制御データと合わせてドメインシェーダーに出力する</p>
+<h3 id="テッセレーター">テッセレーター</h3>
+<p>ドメインシェーダーが処理する新たな頂点を追加する役割をもつ固定機能ステージ（メッシュを生成してドメインシェーダーに送る）</p>
+<p>ハルシェーダーから送られるテッセレーション係数（テッセレーションレベル）</p>
+<ul>
+<li>インナー係数：テッセレーションが三角形や四辺形の内側で起こる頻度</li>
+<li>アウター係数：外側のエッジの分割数（0、NaNの指定でパッチを破棄）</li>
+</ul>
+<p>制御を別にすることで、パッチが出会う場所での割れ目などのシェーディングアーティファクトを回避できる（内部のテッセレーションによらずして隣接する曲面の辺をテッセレーションで一致させることができる）</p>
+<p>与えられた位置とそれらが形成する三角形や直線の指定から、固定機能の頂点生成処理を行う</p>
+<h3 id="ドメインシェーダー">ドメインシェーダー</h3>
+<p>呼び出しごとにハルシェーダーから送られる曲面の制御点を使って各頂点の出力値を計算</p>
+<p>テッセレーターからの各入力頂点を処理して対応する出力頂点を生成</p>
+<p>重心座標を使い、頂点ごとに位置、法線、テクスチャ座標などの頂点情報を生成</p>
 <h2 id="ジオメトリシェーダー">ジオメトリシェーダー</h2>
+<p>ジオメトリシェーダーはオプションでプリミティブを他のプリミティブに変更する処理（テッセレーションでは行えない処理）を行う（DirectX 10、OpenGL 3.2、OpenGL ES 3.2でサポートし、SM 4.0では必須）
+<br>例：三角形の辺ごとに直線を作り、三角形メッシュをワイヤフレームビューに変換
+<br>例：直線を視点を向く四辺形で置き換え、ワイヤフレームレンダリングのエッジを太くする<sup id="fnref:29"><a href="#fn:29" class="footnote-ref" role="doc-noteref">29</a></sup></p>
+<p>入力は１つのオブジェクト（ストリップ形式の三角形、線分、点）と関連する頂点で、拡張されたプリミティブを定義して処理できる ※本書P41 図3.12を参照</p>
+<p>頂点を編集してプリミティブを追加、除去するといったメッシュの選択的な修正が可能（プリミティブを処理して0個以上の頂点を出力し、点、ポリライン、三角形のストリップとして扱う）</p>
+<p>ジオメトリシェーダーの使い方の例</p>
+<ul>
+<li>変換されたデータのコピーを生成して、キューブマップの6面を同時にレンダーする</li>
+<li>視点からの距離に応じて異なる解像度のシャドウマップを使用するカスケードシャドウマップを作る</li>
+<li>点からの可変サイズのパーティクルの作成</li>
+<li>毛皮のレンダリングでのシルエットに沿ったフィンの押し出し</li>
+<li>影のアルゴリズムでのオブジェクトのエッジの探索</li>
+</ul>
+<p>ジオメトリシェーダーをインスタンス化して、任意のプリミティブでジオメトリシェーダーを指定回数実行できる（DirectX 11、OpenGL 4.0でサポート）<sup id="fnref2:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup><sup id="fnref:30"><a href="#fn:30" class="footnote-ref" role="doc-noteref">30</a></sup></p>
+<p>ジオメトリシェーダーは複数の出力ストリームをサポートしており、異なるレンダリングターゲット（バッファ）に異なるデータを送信することができる</p>
+<p>ドローコール中にGPUの作業を作成できるステージはラスタライズ、テッセレーション、ジオメトリシェーダーの3つのみ</p>
+<p>ジオメトリシェーダーはリソースとメモリーを考慮すると挙動が予測困難であり、GPUの強みにうまく合わないため、一部のモバイルデバイス<sup id="fnref:31"><a href="#fn:31" class="footnote-ref" role="doc-noteref">31</a></sup>は使わないことを推奨する</p>
 <h2 id="ストリーム出力">ストリーム出力</h2>
+<p>ストリーム出力（トランスフォームフィードバック）の考え方はSM 4.0で導入された</p>
+<p>頂点シェーダー（オプションでテッセレーションとジオメトリシェーダー）が頂点を処理したあと、それらをラスタライズに送ることに加えて、<strong>ストリーム（順序つき配列のバッファ）に出力</strong>できる</p>
+<p>この方法で処理するデータは、パイプラインを前に送り戻せるので反復処理（データの再利用）が可能であり、流水のシミュレーションや、パーティクルシステムの更新、テクスチャの生成、モデルのスキニングでの応用に役立つ</p>
+<p>一般的に、変換した頂点をさらなる処理用に戻すことを目的として、頂点を点のセットのプリミティブとしてパイプラインに送ることをする</p>
+<p>プリミティブは入力と同じ順番でストリーム出力ターゲットに送られることが保証される<sup id="fnref3:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup></p>
 <h2 id="ピクセルシェーダー">ピクセルシェーダー</h2>
 <h2 id="マージ">マージ</h2>
 <h2 id="コンピュートシェーダー">コンピュートシェーダー</h2>
@@ -365,7 +458,7 @@ stroke-linejoin="round" class="feather feather-home">
 <hr>
 <ol>
 <li id="fn:1">
-<p><a href="https://dl.acm.org/doi/10.1145/1141911.1141947">The Direct3D 10 system</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p><a href="https://dl.acm.org/doi/10.1145/1141911.1141947">The Direct3D 10 system</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref1:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2">
 <p><a href="https://www.amazon.co.jp/Computer-Architecture-Sixth-Quantitative-Approach/dp/0128119055">Computer Architecture: A Quantitative Approach (The Morgan Kaufmann Series in Computer Architecture and Design)</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
@@ -386,7 +479,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p><a href="https://bartwronski.com/2014/03/27/gcn-two-ways-of-latency-hiding-and-wave-occupancy/">GCN – two ways of latency hiding and wave occupancy</a>&#160;<a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:8">
-<p><a href="https://inzkyk.xyz/ttgp/welcome/">A trip through the Graphics Pipeline 2011（日本語訳）</a>&#160;<a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p><a href="https://inzkyk.xyz/ttgp/welcome/">A trip through the Graphics Pipeline 2011（日本語訳）</a>&#160;<a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref1:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref2:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref3:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:9">
 <p><a href="https://dl.acm.org/doi/10.1145/964965.808602">Shade trees</a>&#160;<a href="#fnref:9" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
@@ -417,6 +510,45 @@ stroke-linejoin="round" class="feather feather-home">
 </li>
 <li id="fn:18">
 <p><a href="https://threejs.org/">https://threejs.org/</a>&#160;<a href="#fnref:18" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:19">
+<p><a href="https://blog.selfshadow.com/2011/07/22/specular-showdown/">Specular Showdown in the Wild West</a>&#160;<a href="#fnref:19" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:20">
+<p><a href="https://users.cs.utah.edu/~ladislav/kavan07skinning/kavan07skinning.pdf">Skinning with Dual Quaternions</a>&#160;<a href="#fnref:20" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:21">
+<p><a href="https://www.realtimerendering.com/resources/shaderx/Direct3D.ShaderX.Vertex.and.Pixel.Shader.Tips.and.Tricks_Wolfgang.F.Engel_Wordware.Pub_2002.pdf">Direct3d ShaderX : vertex and pixel shader tips and tricks pp.347-356</a>&#160;<a href="#fnref:21" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:22">
+<p><a href="https://developer.nvidia.com/gpugems/gpugems2/part-ii-shading-lighting-and-shadows/chapter-18-using-vertex-texture-displacement">Using Vertex Texture Displacement for Realistic Water Rendering</a>&#160;<a href="#fnref:22" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:23">
+<p><a href="https://dl.acm.org/doi/10.1145/1281500.1281668">Terrain rendering in frostbite using procedural shader splatting</a>&#160;<a href="#fnref:23" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:24">
+<p><a href="https://dl.acm.org/doi/10.1145/1281500.1281671">Finding next gen: CryEngine 2</a>&#160;<a href="#fnref:24" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:25">
+<p><a href="https://www.amazon.co.jp/OpenGL-Insights-Patrick-Cozzi/dp/0367659212">OpenGL Insights</a>&#160;<a href="#fnref:25" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:26">
+<p><a href="https://www.gdcvault.com/play/1020626/Advanced-Visual-Effects-with-DirectX">From Terrain to Godrays - Better Use of DirectX11（GDC Vault 2014）</a>&#160;<a href="#fnref:26" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:27">
+<p><a href="https://developer.nvidia.com/content/terrain-godrays-better-use-dx11-tessellation">From Terrain to Godrays: Better Use of DX11 Tessellation</a>&#160;<a href="#fnref:27" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:28">
+<p><a href="http://www.cemyuksel.com/courses/conferences/siggraph2010-hair/">Advanced Techniques in Real-time Hair Rendering and Simulation</a>&#160;<a href="#fnref:28" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:29">
+<p><a href="https://prideout.net/blog/old/blog/index.html@p=54.html">Silhouette Extraction</a>&#160;<a href="#fnref:29" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:30">
+<p><a href="https://www.amazon.co.jp/-/en/Jason-Zink/dp/1568817207">Practical Rendering and Computation with Direct3D 11</a>&#160;<a href="#fnref:30" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:31">
+<p><a href="https://developer.arm.com/documentation/101897/latest/">Arm® GPU Best Practices Developer Guide</a>&#160;<a href="#fnref:31" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
