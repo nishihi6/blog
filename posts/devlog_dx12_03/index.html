@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-08-27",
         "description": "",
-        "wordCount":  795 ,
+        "wordCount":  1208 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-08-27",
         "image": {
@@ -206,6 +206,12 @@ stroke-linejoin="round" class="feather feather-home">
             <li><a href="#graphicsdevicecpp-2">GraphicsDevice.cpp</a></li>
             <li><a href="#applicationcpp">Application.cpp</a></li>
             <li><a href="#windowh">Window.h</a></li>
+            <li><a href="#スワップチェーンのレンダーターゲットビュー">スワップチェーンのレンダーターゲットビュー</a></li>
+            <li><a href="#rtvheaph">RTVHeap.h</a></li>
+            <li><a href="#rtvheapcpp">RTVHeap.cpp</a></li>
+            <li><a href="#systemh">System.h</a></li>
+            <li><a href="#graphicsdeviceh-3">GraphicsDevice.h</a></li>
+            <li><a href="#graphicsdevicecpp-3">GraphicsDevice.cpp</a></li>
           </ul>
         </li>
       </ul>
@@ -616,6 +622,213 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></code></pre></div><h4 id="スワップチェーンのレンダーターゲットビュー">スワップチェーンのレンダーターゲットビュー</h4>
+<p>スワップチェーンのバッファをどのように使うのかを指示するビューを作成する</p>
+<p>ビューを作成するためにはディスクリプタヒープが必要となる</p>
+<p>ディスクリプタは、リソース（テクスチャ、バッファなど）やビュー（レンダーターゲットビュー、デプスステンシルビューなど）に関する情報を格納するためのデータ構造</p>
+<p>ヒープ領域を確保し、ビューの情報を書き込んでいく</p>
+<p><code>Graphics</code>フォルダに<code>RTVHeap</code>フォルダを作成し、<code>RTVHeap.h</code>と<code>RTVHeap.cpp</code>を追加</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">dev-dx12-202308（プロジェクト名）
+</span></span><span class="line"><span class="cl">└─ Source
+</span></span><span class="line"><span class="cl">   ├─ Application
+</span></span><span class="line"><span class="cl">   │  ├─ Application.h
+</span></span><span class="line"><span class="cl">   │  └─ Application.cpp
+</span></span><span class="line"><span class="cl">   ├─ Graphics
+</span></span><span class="line"><span class="cl">   │  ├─ GraphicsDevice.h
+</span></span><span class="line"><span class="cl">   │  ├─ GraphicsDevice.cpp
+</span></span><span class="line"><span class="cl">   │  └─ RTVHeap
+</span></span><span class="line"><span class="cl">   │     ├─ RTVHeap.h
+</span></span><span class="line"><span class="cl">   │     └─ RTVHeap.cpp
+</span></span><span class="line"><span class="cl">   ├─ System
+</span></span><span class="line"><span class="cl">   │  ├─ Utility
+</span></span><span class="line"><span class="cl">   │  │  ├─ Utility.h
+</span></span><span class="line"><span class="cl">   │  │  └─ Utility.cpp
+</span></span><span class="line"><span class="cl">   │  ├─ Window
+</span></span><span class="line"><span class="cl">   │  │  ├─ Window.h
+</span></span><span class="line"><span class="cl">   │  │  └─ Window.cpp
+</span></span><span class="line"><span class="cl">   │  └─ System.h
+</span></span><span class="line"><span class="cl">   ├─ stdafx.h
+</span></span><span class="line"><span class="cl">   └─ stdafx.cpp
+</span></span></code></pre></div><h4 id="rtvheaph">RTVHeap.h</h4>
+<h5 id="rtvheapクラス">RTVHeapクラス</h5>
+<p>ヒープを作成する関数<code>Create()</code>を宣言
+<br>▶ 第一引数はデバイスのポインタ
+<br>▶ 第二引数は使用個数</p>
+<p>レンダーターゲットビューを作成する関数<code>CreateRTV()</code>を宣言
+<br>▶ 第一引数はバッファーのポインタ</p>
+<p><code>D3D12_CPU_DESCRIPTOR_HANDLE</code>は<strong>CPUディスクリプターハンドル</strong>（CPUからアクセスできるディスクリプタの位置を示すために使用される）について説明する構造体で、リソースやパイプラインステートオブジェクトなどのグラフィックスオブジェクトを参照するために使用されるハンドルを表す
+<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_cpu_descriptor_handle">詳細</a></p>
+<p>レンダーターゲットビューのCPU側アドレスを返す関数<code>GetRTVCPUHandle()</code>を宣言
+<br>▶ 第一引数は登録番号</p>
+<p><code>ID3D12Device</code>は仮想アタプターを表し、コマンド アロケーター、コマンド リスト、コマンド キュー、フェンス、リソース、パイプライン状態オブジェクト、ヒープ、ルート署名、サンプラー、および多くのリソース ビューを作成するために使用される
+<br>DirectX12のアプリケーションでのグラフィックスと計算タスクの中心的なインターフェース
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12device8">詳細</a></p>
+<p><code>ID3D12DescriptorHeap</code>はディスクリプタヒープを表すインターフェースで、DirectX 12ではこれを使用してリソースとビューを効率的に管理してレンダリングパイプラインを設定する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12descriptorheap">詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// RTVHeap.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">RTVHeap</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">bool</span> <span class="n">Create</span><span class="p">(</span><span class="n">ID3D12Device</span><span class="o">*</span> <span class="n">pDevice</span><span class="p">,</span> <span class="kt">int</span> <span class="n">useCount</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="nf">CreateRTV</span><span class="p">(</span><span class="n">ID3D12Resource</span><span class="o">*</span> <span class="n">pBuffer</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_CPU_DESCRIPTOR_HANDLE</span> <span class="nf">GetRTVCPUHandle</span><span class="p">(</span><span class="kt">int</span> <span class="n">number</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ID3D12Device</span><span class="o">*</span> <span class="n">m_pDevice</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">ID3D12DescriptorHeap</span><span class="o">&gt;</span> <span class="n">m_pHeap</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">m_useCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">m_incrementSize</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">m_nextRegistNumber</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h4 id="rtvheapcpp">RTVHeap.cpp</h4>
+<h5 id="rtvheapcreate関数">RTVHeap::Create()関数</h5>
+<p><code>D3D12_DESCRIPTOR_HEAP_DESC</code>はディスクリプタヒープについて説明する構造体
+<br>▶ <code>heapDesc.Type</code>はヒープ内のディスクリプタの種類を指定
+<br>▶ <code>heapDesc.NodeMask</code>は<a href="https://learn.microsoft.com/ja-jp/windows/win32/direct3d12/multi-engine">マルチアダプターシステム</a>への対応（単一アダプター操作の場合は0に設定）
+<br>▶ <code>heapDesc.NumDescriptors</code>はヒープ内のディスクリプタの数
+<br>▶ <code>heapDesc.Flags</code>はヒープのオプションを指定する（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_descriptor_heap_flags">列挙の詳細</a>）
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_descriptor_heap_desc">詳細</a></p>
+<p><code>CreateDescriptorHeap()</code>はディスクリプタヒープオブジェクトを作成する関数
+<br>▶ 第一引数はヒープを記述する<code>D3D12_DESCRIPTOR_HEAP_DESC</code>構造体へのポインタ
+<br>▶ 第二引数はディスクリプタヒープインターフェイスのGUID（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/combaseapi/nf-combaseapi-iid_ppv_args">IID_PPV_ARGSの詳細</a>）
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12device-createdescriptorheap">詳細</a></p>
+<p><code>GetDescriptorHandleIncrementSize()</code>は指定された種類のディスクリプタヒープのハンドルインクリメントのサイズを取得する
+<br>▶ 第一引数はハンドルインクリメントのサイズを取得するディスクリプタヒープの種類を指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_descriptor_heap_type">列挙の詳細</a>）
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12device-getdescriptorhandleincrementsize">詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// RTVHeap.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">RTVHeap</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="n">ID3D12Device</span><span class="o">*</span> <span class="n">pDevice</span><span class="p">,</span> <span class="kt">int</span> <span class="n">useCount</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_DESCRIPTOR_HEAP_DESC</span> <span class="n">heapDesc</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">heapDesc</span><span class="p">.</span><span class="n">Type</span> <span class="o">=</span> <span class="n">D3D12_DESCRIPTOR_HEAP_TYPE_RTV</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">heapDesc</span><span class="p">.</span><span class="n">NodeMask</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">heapDesc</span><span class="p">.</span><span class="n">NumDescriptors</span> <span class="o">=</span> <span class="n">useCount</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">heapDesc</span><span class="p">.</span><span class="n">Flags</span> <span class="o">=</span> <span class="n">D3D12_DESCRIPTOR_HEAP_FLAG_NONE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">auto</span> <span class="n">hr</span> <span class="o">=</span> <span class="n">pDevice</span><span class="o">-&gt;</span><span class="n">CreateDescriptorHeap</span><span class="p">(</span><span class="o">&amp;</span><span class="n">heapDesc</span><span class="p">,</span> <span class="n">IID_PPV_ARGS</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_pHeap</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">FAILED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">m_useCount</span> <span class="o">=</span> <span class="n">useCount</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_incrementSize</span> <span class="o">=</span> <span class="n">pDevice</span><span class="o">-&gt;</span><span class="n">GetDescriptorHandleIncrementSize</span><span class="p">(</span><span class="n">D3D12_DESCRIPTOR_HEAP_TYPE_RTV</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pDevice</span> <span class="o">=</span> <span class="n">pDevice</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="rtvheapcreatertv関数">RTVHeap::CreateRTV()関数</h5>
+<p><code>GetCPUDescriptorHandleForHeapStart()</code>関数はヒープの開始を表すCPUディスクリプタハンドルを取得する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12descriptorheap-getcpudescriptorhandleforheapstart">詳細</a></p>
+<p><code>D3D12_RENDER_TARGET_VIEW_DESC</code>はレンダーターゲットビューを使用してアクセスできるリソースのサブリソースについてを説明する
+<br>▶ <code>rtvDesc.Format</code>は表示形式を指定する<code>DXGI_FORMA</code>型指定された値（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgiformat/ne-dxgiformat-dxgi_format">列挙の詳細</a>）
+<br>▶ <code>rtvDesc.ViewDimension</code>はリソースへのアクセス方法を指定する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_render_target_view_desc">詳細</a></p>
+<p><code>CreateRenderTargetView()</code>はリソースデータにアクセスするためのレンダーターゲットビューを作成する
+<br>▶ 第一引数はレンダーターゲットを表す<code>ID3D12Resource</code>オブジェクトへのポインタ（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12resource">インターフェースの詳細</a>）
+<br>▶ 第二引数はレンダーターゲットビューを記述する<code>D3D12_RENDER_TARGET_VIEW_DESC</code>構造体へのポインタ
+<br>▶ 第三引数は新しく作成されたレンダーターゲットビューが存在する宛先を表すCPUディスクリプタハンドル
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12device-createrendertargetview">詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// RTVHeap.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">RTVHeap</span><span class="o">::</span><span class="n">CreateRTV</span><span class="p">(</span><span class="n">ID3D12Resource</span><span class="o">*</span> <span class="n">pBuffer</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">m_useCount</span> <span class="o">&lt;</span> <span class="n">m_nextRegistNumber</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;確保済みのヒープ領域を超えました。&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_CPU_DESCRIPTOR_HANDLE</span> <span class="n">handle</span> <span class="o">=</span> <span class="n">m_pHeap</span><span class="o">-&gt;</span><span class="n">GetCPUDescriptorHandleForHeapStart</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">handle</span><span class="p">.</span><span class="n">ptr</span> <span class="o">+=</span> <span class="p">(</span><span class="n">UINT64</span><span class="p">)</span><span class="n">m_nextRegistNumber</span> <span class="o">*</span> <span class="n">m_incrementSize</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_RENDER_TARGET_VIEW_DESC</span> <span class="n">rtvDesc</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">rtvDesc</span><span class="p">.</span><span class="n">Format</span> <span class="o">=</span> <span class="n">DXGI_FORMAT_B8G8R8A8_UNORM</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">rtvDesc</span><span class="p">.</span><span class="n">ViewDimension</span> <span class="o">=</span> <span class="n">D3D12_RTV_DIMENSION_TEXTURE2D</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pDevice</span><span class="o">-&gt;</span><span class="n">CreateRenderTargetView</span><span class="p">(</span><span class="n">pBuffer</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rtvDesc</span><span class="p">,</span> <span class="n">handle</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">m_nextRegistNumber</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="rtvheapgetrtvcpuhandle関数">RTVHeap::GetRTVCPUHandle()関数</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// RTVHeap.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">D3D12_CPU_DESCRIPTOR_HANDLE</span> <span class="n">RTVHeap</span><span class="o">::</span><span class="n">GetRTVCPUHandle</span><span class="p">(</span><span class="kt">int</span> <span class="n">number</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_CPU_DESCRIPTOR_HANDLE</span> <span class="n">handle</span> <span class="o">=</span> <span class="n">m_pHeap</span><span class="o">-&gt;</span><span class="n">GetCPUDescriptorHandleForHeapStart</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">handle</span><span class="p">.</span><span class="n">ptr</span> <span class="o">+=</span> <span class="p">(</span><span class="n">UINT64</span><span class="p">)</span><span class="n">m_incrementSize</span> <span class="o">*</span> <span class="n">number</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">handle</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="systemh">System.h</h4>
+<p>レンダーターゲットビューの作成に必要な<code>RTVHeap.h</code>をインクルード
+<br>※依存関係を考慮して<code>GraphicsDevice.h</code>よりも先にインクルードする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// System.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp">#pragma once
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;Utility/Utility.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;../Graphics/RTVHeap/RTVHeap.h&#34;	// GraphicsDevice.hよりも先にインクルード</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;../Graphics/GraphicsDevice.h&#34;</span><span class="cp">
+</span></span></span></code></pre></div><h4 id="graphicsdeviceh-3">GraphicsDevice.h</h4>
+<p>RTVHeapの変数とスワップチェーンレンダーターゲットビューの作成関数を追加と、レンダーターゲットビューの作成</p>
+<h5 id="graphicsdeviceクラス-3">GraphicsDeviceクラス</h5>
+<p>スワップチェーンレンダーターゲットビューを作成する関数<code>CreateSwapchainRTV()</code>を宣言</p>
+<p>スマートポインタ<code>unique_ptr</code>を用いてRTVHeapの変数を定義
+<br><a href="https://learn.microsoft.com/ja-jp/cpp/cpp/how-to-create-and-use-unique-ptr-instances?view=msvc-170">スマートポインタの詳細</a></p>
+<p><code>ID3D12Resource</code>はCPUとGPUの一般化された機能をカプセル化して、物理メモリまたはヒープの読み取りと書き込みを行うインターフェース
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12resource">インターフェースの詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GraphicsDevice</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">bool</span> <span class="n">CreateSwapchainRTV</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">ID3D12Resource</span><span class="o">&gt;</span><span class="p">,</span> <span class="mi">2</span><span class="o">&gt;</span>	<span class="n">m_pSwapchainBuffers</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">RTVHeap</span><span class="o">&gt;</span>	<span class="n">m_pRTVHeap</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><h4 id="graphicsdevicecpp-3">GraphicsDevice.cpp</h4>
+<h5 id="graphicsdeviceinit関数-3">GraphicsDevice::Init()関数</h5>
+<p><code>m_pRTVHeap-&gt;Create()</code>を実行</p>
+<p><code>CreateSwapchainRTV()</code>を実行</p>
+<h5 id="graphicsdevicecreateswapchainrtv関数">GraphicsDevice::CreateSwapchainRTV()関数</h5>
+<p><code>m_pSwapChain-&gt;GetBuffer()</code>はスワップチェーンのバックバッファのいずれかにアクセスする関数
+<br>▶ 第一引数は0から始まるバッファインデックス
+<br>▶ 第二引数はバッファの操作に使用されるインターフェイスの型
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-getbuffer">詳細</a></p>
+<p><code>m_pRTVHeap-&gt;CreateRTV()</code>はレンダーターゲットビューを作成する関数
+<br>▶ 第一引数はバッファーのポインタ</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Init</span><span class="p">(</span><span class="n">HWND</span> <span class="n">hWnd</span><span class="p">,</span> <span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="kt">int</span> <span class="n">h</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">m_pRTVHeap</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">RTVHeap</span><span class="o">&gt;</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">m_pRTVHeap</span><span class="o">-&gt;</span><span class="n">Create</span><span class="p">(</span><span class="n">m_pDevice</span><span class="p">.</span><span class="n">Get</span><span class="p">(),</span> <span class="mi">100</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;RTVヒープの作成失敗&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">CreateSwapchainRTV</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;スワップチェーンRTVの作成失敗&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">CreateSwapchainRTV</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">m_pSwapchainBuffers</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">auto</span> <span class="n">hr</span> <span class="o">=</span> <span class="n">m_pSwapChain</span><span class="o">-&gt;</span><span class="n">GetBuffer</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">IID_PPV_ARGS</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_pSwapchainBuffers</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">FAILED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">m_pRTVHeap</span><span class="o">-&gt;</span><span class="n">CreateRTV</span><span class="p">(</span><span class="n">m_pSwapchainBuffers</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">Get</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div>
             </div>
         </article></main>
