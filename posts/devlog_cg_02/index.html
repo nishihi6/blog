@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-08-30",
         "description": "",
-        "wordCount":  517 ,
+        "wordCount":  700 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-08-30",
         "image": {
@@ -452,8 +452,56 @@ stroke-linejoin="round" class="feather feather-home">
 <p>一般的に、変換した頂点をさらなる処理用に戻すことを目的として、頂点を点のセットのプリミティブとしてパイプラインに送ることをする</p>
 <p>プリミティブは入力と同じ順番でストリーム出力ターゲットに送られることが保証される<sup id="fnref3:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup></p>
 <h2 id="ピクセルシェーダー">ピクセルシェーダー</h2>
+<p>ジオメトリ処理を行ったあと、固定機能であるラスタライズが行われる</p>
+<p>そこでは三角形と重なる部分のピクセルにフラグメントを生成する三角形トラバースを行われ、z-バッファで使われるz-値も含めたシェーディングデータが三角形のサーフェス上で補間される</p>
+<p>その補間された値は、フラグメントを処理する<strong>ピクセルシェーダー（フラグメントシェーダー）</strong>に渡される</p>
+<p>ピクセルシェーダーでは補間の種類を指定し、遠近補正補間（ワールド空間距離の増減）も行う</p>
+<p>ピクセルシェーダーはフラグメントの色（場合によって不透明度も含めた色）を計算して出力し、オプションでz-深度を修正する</p>
+<p>ステンシルバッファの値は修正されずそのままマージステージに渡されていたが、DirectX 11.3から変更できるようになり、SM 4.0からはマージ操作だったフォグ計算やアルファテストなどの操作が可能となった<sup id="fnref1:15"><a href="#fn:15" class="footnote-ref" role="doc-noteref">15</a></sup></p>
+<p>クリップ平面の機能を頂点シェーダーで指定し、クリッピングボリュームをANDするかORするかの決定などをピクセルシェーダーでプログラムすることが可能<sup id="fnref1:18"><a href="#fn:18" class="footnote-ref" role="doc-noteref">18</a></sup></p>
+<p>ピクセルシェーダープログラムの結果の値をzバッファだけに送るのではなく、値の複数のセットを各フラグメントで生成して、レンダーターゲット（別のバッファ）に保存することができる（マルチレンダーターゲット（MRT）の機能）</p>
+<p><strong>遅延シェーディング</strong>はマルチレンダーターゲット（MRT）の機能を用いて、レンダリングプロセスをいくつかのステップに分割することを意味し、最初のステップではオブジェクトの位置とマテリアルについてのデータ（Gバッファ：位置、法線、アルベドなど）をピクセルごとに格納し、次のステップでは照明や他の効果の計算を行い、続くステップでは最終的なレンダリング結果を合成する処理を行うことでより高速なレンダリングを可能にする</p>
+<p>ピクセルシェーダーには、画面のxとy軸沿いに補間されるピクセルごとに変化する<strong>勾配</strong>が供給され、テクスチャアドレッシングやテクスチャフィルタリングなどの操作に利用される</p>
+<p>GPUはクワッド（2×2のグループ）でフラグメントを処理する機能をもち、ピクセルシェーダーが勾配の値を要求すると、統合コアは（同じワープの異なるスレッドのデータにアクセスして）隣接フラグメント間の差の値を返す ※本書P45 図3.15を参照
+<br>グループの中の全てのフラグメントを同じ命令セットで処理しなければならず、動的なフロー制御の影響を受けるシェーダーの中では勾配情報にアクセスできない<sup id="fnref:32"><a href="#fn:32" class="footnote-ref" role="doc-noteref">32</a></sup></p>
+<p>DirectX 11で導入された<strong>順序なしアクセスビュー（UAV）</strong>は任意の位置への書き込みアクセスを行う（DirectX 11.1でUAVへのアクセスが全てのシェーダーに拡大された<sup id="fnref:33"><a href="#fn:33" class="footnote-ref" role="doc-noteref">33</a></sup>）（OpenGL 4.3ではこれを<strong>sシェーダーストレージバッファオブジェクト（SSBO）</strong>と呼ぶ）</p>
+<p><strong>データ競合条件（データハザード）</strong>（2つのピクセルシェーダー呼び出しが同じ値へ同時に加算しようとすると発生するエラーなど）を回避するため、GPUはシェーダーがアクセスできるアトミックユニットを利用する（アクセスの待機を行う）（ストールが発生する可能性がある）<sup id="fnref4:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup></p>
+<p>標準のパイプラインでは、フラグメントの結果は処理の前にマージステージでソートされる（例えば、遠くの三角形と手前の三角形を重ねてブレンドする）が、実行の順番を強制するため、DirectX 11.3で<strong>ラスタライザーオーダービュー（ROV）</strong>が導入された</p>
+<p>UAVと同様にシェーダーで読み書きでき、データの正しい順番でのアクセスを保証するROV<sup id="fnref:34"><a href="#fn:34" class="footnote-ref" role="doc-noteref">34</a></sup><sup id="fnref:35"><a href="#fn:35" class="footnote-ref" role="doc-noteref">35</a></sup>によってピクセルシェーダーは独自のブレンド方法で書き込むことができる（ストールが発生する可能性がある）<sup id="fnref:36"><a href="#fn:36" class="footnote-ref" role="doc-noteref">36</a></sup></p>
 <h2 id="マージ">マージ</h2>
+<p>ピクセルシェーダーで生成した個々のフラグメントの深度と色がフレームバッファに書き込まれるマージステージは、出力マージャー（DirectX）、サンプル単位の操作（OpenGL）と呼ばれる</p>
+<p>一般的に、このステージでステンシルバッファr（ステンシルテスト）とz-バッファ（深度テスト）の操作が行われ、不透明なサーフェスの場合を除いて色のブレンド操作が行われる</p>
+<p>ラスタライズで生成したフラグメントがピクセルシェーダーを通過し、z-バッファを適用したときに、何らかのレンダー済みのフラグメントで隠れることがわかったときの処理の無駄を避けるため、多くのGPUはピクセルシェーダーの実行前に何らかのマージテストを行う<sup id="fnref5:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup></p>
+<p><strong>早期Z</strong>はフラグメントのz-深度で可視性のテストを行うことで不必要なシェーダーの計算を避けるが、フラグメントのz-深度が変更されたりフラグメントを破棄されると、早期Zは無効化されるかその効果が減少する可能性がある<sup id="fnref:37"><a href="#fn:37" class="footnote-ref" role="doc-noteref">37</a></sup><sup id="fnref:38"><a href="#fn:38" class="footnote-ref" role="doc-noteref">38</a></sup>（DirectX 11とOpenGL 4.2では制限はあるもののピクセルシェーダーで早期z-テストを強制的にオンにできる<sup id="fnref2:15"><a href="#fn:15" class="footnote-ref" role="doc-noteref">15</a></sup>）</p>
+<p>マージはプログラマブルではないがその操作は高度に設定可能</p>
+<p>色のブレンド</p>
+<ul>
+<li>アルファの値を含む色の乗算、加算、減算、最小と最大、ビット単位の論理操作など</li>
+<li>ピクセルシェーダーから2つの色をフレームバッファの色とブレンドするデュアルソースカラーブレンド（DirectX 10から実装）（マルチレンダーターゲットと同時に使えない）</li>
+<li>別々のバッファに異なるブレンド操作を行うマルチレンダーターゲットによるサポート（DirectX 10.1）</li>
+<li>マージステージと同様に、ROVも描画の順番を保証する（DirectX 11.3）（ピクセルシェーダーの結果を生成する順番に関係なく結果をソートして、オブジェクト単位、三角形単位の順番にマージステージに送る）</li>
+</ul>
 <h2 id="コンピュートシェーダー">コンピュートシェーダー</h2>
+<p>GPUのグラフィック以外の用途として<strong>GPUコンピューティング</strong>があり、ディープラーニング分野でのニューラルネットの訓練などに利用される</p>
+<p>グラフィクス固有の機能にアクセスする必要がない大規模並列プロセッサーとしてのGPUの制御には、<strong>CUDA</strong>や<strong>OpenCL</strong>といったプラットフォームを利用する（CやC++を拡張した言語と、そのGPU用に作られたライブラリを使う）</p>
+<p>DirectX 11で導入された<strong>コンピュートシェーダー</strong>は、グラフィクスパイプラインの1つの位置にロックされず、グラフィクスAPIで呼び出せるという点でレンダリングの処理と密接に結びつく（頂点シェーダーやピクセルシェーダーと並列して使われる）</p>
+<p>他のシェーダーと同様に、統合シェーダープロセッサーのプールを利用し、入力データのセットを持ち、入力と出力のバッファ（テクスチャなど）にアクセスできる</p>
+<p>ワープとスレッドがより顕になる例でもある、DirectX 11の<strong>スレッドグループ</strong>はx-、y-、z-座標で指定され、スレッド間で共有される少量のメモリを持つ（DirectX 11では32KB）</p>
+<p>グループ中のすべてのスレッドが並行して動作することを保証するため、コンピュートシェーダーはスレッドグループで実行される<sup id="fnref:39"><a href="#fn:39" class="footnote-ref" role="doc-noteref">39</a></sup></p>
+<p>GPU上で生成されるデータにアクセスできることがコンピュートシェーダーの利点であり、処理と結果をGPU上に維持することができれば、GPUからCPUのデータ転送の遅れを改善できる<sup id="fnref:40"><a href="#fn:40" class="footnote-ref" role="doc-noteref">40</a></sup></p>
+<p>レンダーしたイメージを何らかの方法で修正する後処理もコンピュートシェーダーの一般的な使い方である</p>
+<p>共有メモリを使えば、イメージピクセルをサンプリングした中間結果を隣のスレッドと共有することができ、例えばイメージの分布や平均照度をコンピュートシェーダーを使って計算するとピクセルシェーダーで行うよりも速度が2倍になる<sup id="fnref6:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup></p>
+<p>コンピュートシェーダーが使われる場面</p>
+<ul>
+<li>パーティクルシステム</li>
+<li>顔のアニメーションなどのメッシュ処理<sup id="fnref:41"><a href="#fn:41" class="footnote-ref" role="doc-noteref">41</a></sup></li>
+<li>カリング<sup id="fnref:42"><a href="#fn:42" class="footnote-ref" role="doc-noteref">42</a></sup><sup id="fnref:43"><a href="#fn:43" class="footnote-ref" role="doc-noteref">43</a></sup></li>
+<li>イメージフィルタリング<sup id="fnref:44"><a href="#fn:44" class="footnote-ref" role="doc-noteref">44</a></sup><sup id="fnref:45"><a href="#fn:45" class="footnote-ref" role="doc-noteref">45</a></sup></li>
+<li>深度精度の改善<sup id="fnref:46"><a href="#fn:46" class="footnote-ref" role="doc-noteref">46</a></sup></li>
+<li>影<sup id="fnref:47"><a href="#fn:47" class="footnote-ref" role="doc-noteref">47</a></sup></li>
+<li>被写界深度<sup id="fnref:48"><a href="#fn:48" class="footnote-ref" role="doc-noteref">48</a></sup></li>
+</ul>
+<p>コンピュートシェーダーがテッセレーション ハルシェーダーよりも効率的になると論じられていたりもする<sup id="fnref1:43"><a href="#fn:43" class="footnote-ref" role="doc-noteref">43</a></sup></p>
 <div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
@@ -479,7 +527,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p><a href="https://bartwronski.com/2014/03/27/gcn-two-ways-of-latency-hiding-and-wave-occupancy/">GCN – two ways of latency hiding and wave occupancy</a>&#160;<a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:8">
-<p><a href="https://inzkyk.xyz/ttgp/welcome/">A trip through the Graphics Pipeline 2011（日本語訳）</a>&#160;<a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref1:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref2:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref3:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p><a href="https://inzkyk.xyz/ttgp/welcome/">A trip through the Graphics Pipeline 2011（日本語訳）</a>&#160;<a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref1:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref2:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref3:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref4:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref5:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref6:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:9">
 <p><a href="https://dl.acm.org/doi/10.1145/964965.808602">Shade trees</a>&#160;<a href="#fnref:9" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
@@ -500,7 +548,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p><a href="https://dl.acm.org/doi/10.1145/344779.344976">Interactive multi-pass programmable shading</a>&#160;<a href="#fnref:14" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:15">
-<p><a href="https://dl.acm.org/doi/10.1145/1141911.1141947">The Direct3D 10 system</a>&#160;<a href="#fnref:15" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p><a href="https://dl.acm.org/doi/10.1145/1141911.1141947">The Direct3D 10 system</a>&#160;<a href="#fnref:15" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref1:15" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref2:15" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:16">
 <p><a href="https://developer.nvidia.com/transitioning-opengl-vulkan">Transitioning from OpenGL to Vulkan</a>&#160;<a href="#fnref:16" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
@@ -509,7 +557,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p><a href="https://www.amazon.co.jp/OpenGL-Programming-Guide-Official-Learning/dp/0134495497">OpenGL Programming Guide: The Official Guide to Learning OpenGL, Version 4.5 with SPIR-V</a>&#160;<a href="#fnref:17" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:18">
-<p><a href="https://threejs.org/">https://threejs.org/</a>&#160;<a href="#fnref:18" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p><a href="https://threejs.org/">https://threejs.org/</a>&#160;<a href="#fnref:18" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref1:18" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:19">
 <p><a href="https://blog.selfshadow.com/2011/07/22/specular-showdown/">Specular Showdown in the Wild West</a>&#160;<a href="#fnref:19" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
@@ -549,6 +597,57 @@ stroke-linejoin="round" class="feather feather-home">
 </li>
 <li id="fn:31">
 <p><a href="https://developer.arm.com/documentation/101897/latest/">Arm® GPU Best Practices Developer Guide</a>&#160;<a href="#fnref:31" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:32">
+<p><a href="http://www.cs.cmu.edu/afs/cs/academic/class/15869-f11/www/readings/advancedprman_ch6.pdf">How PhotoRealistic RenderMan Works</a>&#160;<a href="#fnref:32" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:33">
+<p><a href="https://www.gdcvault.com/play/1020624/Advanced-Visual-Effects-with-DirectX">Vertex Shader Tricks - New Ways to Use the Vertex Shader to Improve Performance（GDC Vault 2014）</a>&#160;<a href="#fnref:33" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:34">
+<p><a href="https://www.createursdemondes.fr/wp-content/uploads/2015/03/OIT-to-Volumetric-Shadow-Mapping.pdf">OIT to Volumetric Shadow. Mapping, 101 Uses for. Raster Ordered Views using. DirectX 12）</a>&#160;<a href="#fnref:34" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:35">
+<p><a href="https://www.intel.com/content/www/us/en/developer/articles/technical/rasterizer-order-views-101-a-primer.html">Rasterizer Order Views 101: a Primer</a>&#160;<a href="#fnref:35" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:36">
+<p><a href="https://dl.acm.org/doi/10.1145/360349.360353">Texture and reflection in computer generated images）</a>&#160;<a href="#fnref:36" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:37">
+<p><a href="http://www.pixelmaven.com/jason/articles/SIGGRAPH05/ATINotes.pdf">Applications of Explicit Early-Z Culling）</a>&#160;<a href="#fnref:37" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:38">
+<p><a href="http://www.pixelmaven.com/jason/articles/ATI/Sander-EarlyZ_Fluid_Flow(ATITR_Aug04).pdf">Explicit Early-Z Culling for Efficient Fluid Flow Simulation）</a>&#160;<a href="#fnref:38" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:39">
+<p><a href="https://www.amazon.co.jp/-/en/Jason-Zink/dp/1568817207">Practical Rendering and Computation with Direct3D 11）</a>&#160;<a href="#fnref:39" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:40">
+<p><a href="https://therealmjp.github.io/posts/shadow-maps/">A Sampling of Shadow Techniques</a>&#160;<a href="#fnref:40" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:41">
+<p><a href="https://hanecci.hatenadiary.org/entry/20140406/p1">inFAMOUS Second Son:Engine PostMortem（GDC 2014）</a>&#160;<a href="#fnref:41" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:42">
+<p><a href="https://www.gdcvault.com/play/1023109/Optimizing-the-Graphics-Pipeline-With">Optimizing the Graphics Pipeline With Compute</a>&#160;<a href="#fnref:42" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:43">
+<p><a href="https://www.amazon.co.jp/GPU-Zen-Advanced-Rendering-Techniques/dp/0998822892">Optimizing the Graphics Pipeline With Compute（GPU Zen: Advanced Rendering Techniques）</a>&#160;<a href="#fnref:43" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref1:43" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:44">
+<p><a href="https://www.gdcvault.com/play/1017624/Advanced-Visual-Effects-with-DirectX">DirectCompute for Gaming : Supercharge your engine with Compute Shaders（GDC 2013）</a>&#160;<a href="#fnref:44" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:45">
+<p><a href="https://slideplayer.com/slide/2772565/">DirectCompute Accelerated Separable Filtering（GDC 2011）</a>&#160;<a href="#fnref:45" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:46">
+<p><a href="https://dl.acm.org/doi/10.1145/1944745.1944761">Sample distribution shadow maps</a>&#160;<a href="#fnref:46" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:47">
+<p><a href="https://www.realtimeshadows.com/sites/default/files/Playing%20with%20Real-Time%20Shadows_0.pdf">Playing with Real-Time Shadows（SIGGRAPH 2013）</a>&#160;<a href="#fnref:47" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:48">
+<p><a href="https://www.nvidia.com/content/pdf/gdc2011/nathan_hoobler.pdf">High Performance. Post-Processing（GDC 2011）</a>&#160;<a href="#fnref:48" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
