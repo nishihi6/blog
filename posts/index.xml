@@ -6,9 +6,26 @@
     <description>Recent content in Posts on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Wed, 30 Aug 2023 03:46:40 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 06 Sep 2023 17:42:09 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>CG理論#2 グラフィクス処理 [Devlog #005]</title>
+      <title>Unity-VR 備忘録 #1 [Devlog #006]</title>
+      <link>https://nishihi6.github.io/blog/posts/devlog_unity-vr_01/</link>
+      <pubDate>Wed, 06 Sep 2023 17:42:09 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/devlog_unity-vr_01/</guid>
+      <description>動作確認 開発環境 Windows10 Unity2022.3.8f1(LTS) MetaQuest2（QuestLink） 環境設定 プロジェクトの設定 レンダリングパイプライン レンダリングパイプラインにはSRP（スクリプタブルレンダーパイプライン）の中でも汎用性の高いURPを使用 URPの詳細
+テンプレート 手動でVR周りの設定をするため、テンプレートはVRではなく3D（URP）を使用
+パッケージ InputSystem 1.6.3 XR Interaction Toolkit 2.4.3 XR Plugin Management 4.3.3 プロジェクトセッティング Project Settings-&amp;gt;XR Plug-in ManagementのPlug-in ProvidersのOpen XRにチェックを入れる
+Project Settings-&amp;gt;XR Plug-in Management-&amp;gt;OpenXRのInteraction ProfilesにOculus Touch Controller Profileを追加
+StarterAssetsの追加 Package Manager-&amp;gt;XR Interaction Toolkit-&amp;gt;SamplesからStarterAssetsをインポート
+シーンの設定 SampleSceneのMainCameraはVRで利用しないので消去
+HierarchyにXR-&amp;gt;XR Origin(VR)を追加
+XR OriginコンポーネントがアタッチされたGameObjectのXR Originに、Packages&amp;gt;XR Interaction Toolkit&amp;gt;Runtime&amp;gt;Inputs&amp;gt;InputActionManager.csをアタッチして、 Action AssetsのElement 0に、Assets&amp;gt;Samples&amp;gt;XR Interaction Toolkit&amp;gt;2.4.3&amp;gt;Starter Assets&amp;gt;XRI Default Input Actions.inputactionsを設定する ※設定されてなければ手動で設定
+コントローラーの設定 ~Starter Assets&amp;gt;XRI Default Left ControllerをHierarchyのXR Origin&amp;gt;Camera Offset&amp;gt;Left ControllerのXR Controller(Action-based)コンポーネントにドラッグアンドドロップ</description>
+    </item>
+    
+    <item>
+      <title>CG理論 #2 グラフィクス処理 [Devlog #005]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_cg_02/</link>
       <pubDate>Wed, 30 Aug 2023 03:46:40 +0900</pubDate>
       
@@ -108,7 +125,7 @@ dev-dx12-202308（プロジェクト名） └─ Source ├─ Application │ 
     </item>
     
     <item>
-      <title>CG理論#1 レンダリングパイプライン [Devlog #002]</title>
+      <title>CG理論 #1 レンダリングパイプライン [Devlog #002]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_cg_01/</link>
       <pubDate>Thu, 24 Aug 2023 15:22:11 +0900</pubDate>
       

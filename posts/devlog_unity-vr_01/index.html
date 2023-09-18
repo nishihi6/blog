@@ -1,12 +1,13 @@
-<!DOCTYPE html><html lang="ja-jp" class="dark"><head><meta charset="utf-8">
+<!DOCTYPE html>
+<html lang="ja-jp"><head><meta charset="utf-8">
 <meta http-equiv="content-type" content="text/html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title itemprop="name">Home | nishihi6</title>
-<meta property="og:title" content="Home | nishihi6" />
-<meta name="twitter:title" content="Home | nishihi6" />
-<meta itemprop="name" content="Home | nishihi6" />
-<meta name="application-name" content="Home | nishihi6" />
+<title itemprop="name">Unity-VR 備忘録 #1 [Devlog #006] | nishihi6</title>
+<meta property="og:title" content="Unity-VR 備忘録 #1 [Devlog #006] | nishihi6" />
+<meta name="twitter:title" content="Unity-VR 備忘録 #1 [Devlog #006] | nishihi6" />
+<meta itemprop="name" content="Unity-VR 備忘録 #1 [Devlog #006] | nishihi6" />
+<meta name="application-name" content="Unity-VR 備忘録 #1 [Devlog #006] | nishihi6" />
 <meta property="og:site_name" content="nishihi6" />
 
 <meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
@@ -27,14 +28,50 @@
 
 
 
+    
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2023-09-06T17:42:09&#43;0900 />
+    <meta property="article:published_time" content=2023-09-06T17:42:09&#43;0900 />
+
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "Unity-VR 備忘録 #1 [Devlog #006]",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2023-09-06",
+        "description": "",
+        "wordCount":  131 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2023-09-06",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "nishihi6"
+        }
+    }
+    </script>
+
 
 <meta name="generator" content="Hugo 0.117.0">
 
     
 
-    <link rel="canonical" href="https://nishihi6.github.io/blog/">
-    <link href="/blog/index.xml" rel="alternate" type="application/rss+xml" title="nishihi6">
-    <link href="/blog/index.xml" rel="feed" type="application/rss+xml" title="nishihi6">
+    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/devlog_unity-vr_01/">
     <link href="/blog/style.min.840eada6dfddec7b8ccfcf867f039bf80b1f16a265ec6e01dc553a3dddc9d509.css" rel="stylesheet">
     <link href="/blog/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
 
@@ -75,7 +112,7 @@
     });"></script>
 
     </head>
-<body data-theme="dark" class="notransition">
+<body data-theme = "dark" class="notransition">
 
 <script src="/blog/js/theme.min.8961c317c5b88b953fe27525839672c9343f1058ab044696ca225656c8ba2ab0.js" integrity="sha256-iWHDF8W4i5U/4nUlg5ZyyTQ/EFirBEaWyiJWVsi6KrA="></script>
 
@@ -102,14 +139,14 @@ stroke-linejoin="round" class="feather feather-home">
                 
                 
                 <li>
-                    <a class="menu-link active" href="/blog/">
+                    <a class="menu-link " href="/blog/">
                         Home
                     </a>
                     
                 </li>
                 
                 <li>
-                    <a class="menu-link " href="/blog/posts/">
+                    <a class="menu-link active" href="/blog/posts/">
                         Posts
                     </a>
                     
@@ -135,95 +172,113 @@ stroke-linejoin="round" class="feather feather-home">
         </div>
     </nav>
 </div>
-<div class="wrapper">
-        
 
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">Unity-VR 備忘録 #1 [Devlog #006]</h1>
+                
+                
+                <div class="post-meta">
+                    <time datetime="2023-09-06T17:42:09&#43;09:00" itemprop="datePublished"> 6 Sep 2023 </time>
+                </div>
+                
+            </header>
+            <details class="toc">
+                <summary><b>Table of Contents</b></summary>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#開発環境">開発環境</a></li>
+    <li><a href="#環境設定">環境設定</a>
+      <ul>
+        <li><a href="#プロジェクトの設定">プロジェクトの設定</a>
+          <ul>
+            <li><a href="#レンダリングパイプライン">レンダリングパイプライン</a></li>
+            <li><a href="#テンプレート">テンプレート</a></li>
+            <li><a href="#パッケージ">パッケージ</a></li>
+            <li><a href="#プロジェクトセッティング">プロジェクトセッティング</a></li>
+            <li><a href="#starterassetsの追加">StarterAssetsの追加</a></li>
+          </ul>
+        </li>
+        <li><a href="#シーンの設定">シーンの設定</a></li>
+        <li><a href="#コントローラーの設定">コントローラーの設定</a>
+          <ul>
+            <li><a href="#コントローラーモデルを追加オプション">コントローラーモデルを追加（オプション）</a></li>
+          </ul>
+        </li>
+        <li><a href="#移動の設定">移動の設定</a></li>
+        <li><a href="#スナップ回転の設定">スナップ回転の設定</a></li>
+        <li><a href="#確認">確認</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+            </details><div class="page-content">
+                <h1 id="動作確認">動作確認</h1>
+<hr>
+<h2 id="開発環境">開発環境</h2>
+<hr>
+<ul>
+<li>Windows10</li>
+<li>Unity2022.3.8f1(LTS)</li>
+<li>MetaQuest2（QuestLink）</li>
+</ul>
+<h2 id="環境設定">環境設定</h2>
+<hr>
+<h3 id="プロジェクトの設定">プロジェクトの設定</h3>
+<hr>
+<h4 id="レンダリングパイプライン">レンダリングパイプライン</h4>
+<p>レンダリングパイプラインにはSRP（スクリプタブルレンダーパイプライン）の中でも汎用性の高い<strong>URP</strong>を使用
+<br><a href="https://learning.unity3d.jp/tag/urp/">URPの詳細</a></p>
+<h4 id="テンプレート">テンプレート</h4>
+<p>手動でVR周りの設定をするため、テンプレートはVRではなく<strong>3D（URP）</strong>を使用</p>
+<h4 id="パッケージ">パッケージ</h4>
+<ul>
+<li>InputSystem 1.6.3</li>
+<li>XR Interaction Toolkit 2.4.3</li>
+<li>XR Plugin Management 4.3.3</li>
+</ul>
+<h4 id="プロジェクトセッティング">プロジェクトセッティング</h4>
+<p><code>Project Settings</code>-&gt;<code>XR Plug-in Management</code>の<code>Plug-in Providers</code>の<code>Open XR</code>にチェックを入れる</p>
+<p><code>Project Settings</code>-&gt;<code>XR Plug-in Management</code>-&gt;<code>OpenXR</code>の<code>Interaction Profiles</code>に<code>Oculus Touch Controller Profile</code>を追加</p>
+<h4 id="starterassetsの追加">StarterAssetsの追加</h4>
+<p><code>Package Manager</code>-&gt;<code>XR Interaction Toolkit</code>-&gt;<code>Samples</code>から<code>StarterAssets</code>をインポート</p>
+<h3 id="シーンの設定">シーンの設定</h3>
+<hr>
+<p>SampleSceneの<code>MainCamera</code>はVRで利用しないので消去</p>
+<p>Hierarchyに<code>XR</code>-&gt;<code>XR Origin(VR)</code>を追加</p>
+<p>XR OriginコンポーネントがアタッチされたGameObjectの<code>XR Origin</code>に、<code>Packages</code>&gt;<code>XR Interaction Toolkit</code>&gt;<code>Runtime</code>&gt;<code>Inputs</code>&gt;<code>InputActionManager.cs</code>をアタッチして、
+<br>Action AssetsのElement 0に、<code>Assets</code>&gt;<code>Samples</code>&gt;<code>XR Interaction Toolkit</code>&gt;<code>2.4.3</code>&gt;<code>Starter Assets</code>&gt;<code>XRI Default Input Actions.inputactions</code>を設定する
+<br>※設定されてなければ手動で設定</p>
+<h3 id="コントローラーの設定">コントローラーの設定</h3>
+<hr>
+<p>~<code>Starter Assets</code>&gt;<code>XRI Default Left Controller</code>をHierarchyの<code>XR Origin</code>&gt;<code>Camera Offset</code>&gt;<code>Left Controller</code>のXR Controller(Action-based)コンポーネントに<strong>ドラッグアンドドロップ</strong></p>
+<p>同様に、~<code>Starter Assets</code>&gt;<code>XRI Default Right Controller</code>をHierarchyの<code>XR Origin</code>&gt;<code>Camera Offset</code>&gt;<code>Right Controller</code>のXR Controller(Action-based)コンポーネントに<strong>ドラッグアンドドロップ</strong></p>
+<h4 id="コントローラーモデルを追加オプション">コントローラーモデルを追加（オプション）</h4>
+<hr>
+<p><code>XR Origin</code>&gt;<code>Camera Offset</code>&gt;<code>Left Controller</code>のXR Controller(Action-based)コンポーネントのModel-&gt;Model Prefabに<strong>Questのコントローラーモデル（Prefab）</strong>を設定
+<br><a href="https://developer.oculus.com/downloads/package/oculus-controller-art/#oculus-touch-for-quest-2">Quest2のコントローラーモデル</a></p>
+<p>同様に、<code>XR Origin</code>&gt;<code>Camera Offset</code>&gt;<code>Right Controller</code>のXR Controller(Action-based)コンポーネントのModel-&gt;Model Prefabに<strong>Questのコントローラーモデル（Prefab）</strong>を設定</p>
+<h3 id="移動の設定">移動の設定</h3>
+<p><code>XR Origin</code>に<strong>Locomotion Systemコンポーネント</strong>と<strong>Continuous Move Provider (Action Based)コンポーネント</strong>をアタッチ</p>
+<p>~<code>Starter Assets</code>&gt;<code>XRI Default Continuous Move</code>を<code>XR Origin</code>のContinuous Move Provider (Action Based)コンポーネントに<strong>ドラッグアンドドロップ</strong></p>
+<h3 id="スナップ回転の設定">スナップ回転の設定</h3>
+<p><code>XR Origin</code>に<strong>Snap Turn Driver (Action Based)コンポーネント</strong>をアタッチ</p>
+<p>~<code>Starter Assets</code>&gt;<code>XRI Default Snap Turn</code>を<code>XR Origin</code>のSnap Turn Driver (Action Based)コンポーネントに<strong>ドラッグアンドドロップ</strong></p>
+<h3 id="確認">確認</h3>
 
-<div class="author">
-    
-    
-    <img class="author-avatar" src="/blog/avatar_hua482c13146070e7c1a389f9b830d9831_60230_100x100_fill_q75_h2_box_smart1.webp" alt="nishihi6" width="956"
-        height="956" />
-    
-    <h2 class="author-name">nishihi6</h2>
-    <p class="author-bio">Computer Vision and Graphics</p>
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube.com/embed/VkrCuv8gviU" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
 </div>
 
-        <main aria-label="Content">
-            <h3 class="posts-item-note" aria-label="Recent Posts">Recent Posts</h3>
-            
-            
-            
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_unity-vr_01/">Unity-VR 備忘録 #1 [Devlog #006]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-09-06T17:42:09&#43;0900">
-        6 Sep 2023
-    </time>
-</article>
-
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_cg_02/">CG理論 #2 グラフィクス処理 [Devlog #005]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-30T03:46:40&#43;0900">
-        30 Aug 2023
-    </time>
-</article>
-
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/memo_cmake_01/">CMakeについてのメモ [Memo #002]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-29T15:43:33&#43;0900">
-        29 Aug 2023
-    </time>
-</article>
-
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/memo_links_01/">メモリンク集 [Memo #001]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-28T21:43:10&#43;0900">
-        28 Aug 2023
-    </time>
-</article>
-
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_03/">DirectX12の描画処理 #3 [Devlog #004]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-27T21:44:55&#43;0900">
-        27 Aug 2023
-    </time>
-</article>
-
-            
-            
-            <p>
-                
-                <a href="https://nishihi6.github.io/blog/posts/">See all posts</a>
-                
-            </p>
-            
-        </main>
-    </div><footer class="footer">
+<!--
+<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/865079488?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="video01（Devlog #006）"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
+-->
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
     <span class="footer_item"> </span>
     &nbsp;
 
@@ -312,5 +367,4 @@ stroke-linejoin="round" class="feather feather-home">
     
 
 </body>
-
 </html>
