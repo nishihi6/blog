@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-08-27",
         "description": "",
-        "wordCount":  1208 ,
+        "wordCount":  1632 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-08-27",
         "image": {
@@ -212,6 +212,13 @@ stroke-linejoin="round" class="feather feather-home">
             <li><a href="#systemh">System.h</a></li>
             <li><a href="#graphicsdeviceh-3">GraphicsDevice.h</a></li>
             <li><a href="#graphicsdevicecpp-3">GraphicsDevice.cpp</a></li>
+            <li><a href="#デバッグレイヤーの実装">デバッグレイヤーの実装</a></li>
+            <li><a href="#graphocsdeviceh">GraphocsDevice.h</a></li>
+            <li><a href="#graphicsdevicecpp-4">GraphicsDevice.cpp</a></li>
+            <li><a href="#バックバッファの描画">バックバッファの描画</a></li>
+            <li><a href="#graphicsdeviceh-4">GraphicsDevice.h</a></li>
+            <li><a href="#graphicsdevicecpp-5">GraphicsDevice.cpp</a></li>
+            <li><a href="#applicationcpp-1">Application.cpp</a></li>
           </ul>
         </li>
       </ul>
@@ -740,12 +747,13 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="n">D3D12_CPU_DESCRIPTOR_HANDLE</span> <span class="n">handle</span> <span class="o">=</span> <span class="n">m_pHeap</span><span class="o">-&gt;</span><span class="n">GetCPUDescriptorHandleForHeapStart</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">	<span class="n">handle</span><span class="p">.</span><span class="n">ptr</span> <span class="o">+=</span> <span class="p">(</span><span class="n">UINT64</span><span class="p">)</span><span class="n">m_nextRegistNumber</span> <span class="o">*</span> <span class="n">m_incrementSize</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	<span class="n">D3D12_RENDER_TARGET_VIEW_DESC</span> <span class="n">rtvDesc</span> <span class="o">=</span> <span class="p">{};</span>
-</span></span><span class="line"><span class="cl">	<span class="n">rtvDesc</span><span class="p">.</span><span class="n">Format</span> <span class="o">=</span> <span class="n">DXGI_FORMAT_B8G8R8A8_UNORM</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">rtvDesc</span><span class="p">.</span><span class="n">Format</span> <span class="o">=</span> <span class="n">DXGI_FORMAT_R8G8B8A8_UNORM</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	<span class="n">rtvDesc</span><span class="p">.</span><span class="n">ViewDimension</span> <span class="o">=</span> <span class="n">D3D12_RTV_DIMENSION_TEXTURE2D</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	<span class="n">m_pDevice</span><span class="o">-&gt;</span><span class="n">CreateRenderTargetView</span><span class="p">(</span><span class="n">pBuffer</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rtvDesc</span><span class="p">,</span> <span class="n">handle</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">m_nextRegistNumber</span><span class="o">++</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h5 id="rtvheapgetrtvcpuhandle関数">RTVHeap::GetRTVCPUHandle()関数</h5>
+<p><code>m_pHeap-&gt;GetCPUDescriptorHandleForHeapStart()</code>はヒープの開始を表すCPUディスクリプタハンドルを取得</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// RTVHeap.cpp
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="n">D3D12_CPU_DESCRIPTOR_HANDLE</span> <span class="n">RTVHeap</span><span class="o">::</span><span class="n">GetRTVCPUHandle</span><span class="p">(</span><span class="kt">int</span> <span class="n">number</span><span class="p">)</span> <span class="p">{</span>
@@ -828,6 +836,245 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="デバッグレイヤーの実装">デバッグレイヤーの実装</h4>
+<p>エラー内容を出力するデバッグレイヤーを実装する</p>
+<h4 id="graphocsdeviceh">GraphocsDevice.h</h4>
+<h5 id="graphicsdeviceクラス-4">GraphicsDeviceクラス</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GraphicsDevice</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">void</span> <span class="n">EnableDebugLayer</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><h4 id="graphicsdevicecpp-4">GraphicsDevice.cpp</h4>
+<h5 id="graphicsdeviceinit">GraphicsDevice::Init()</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Init</span><span class="p">(</span><span class="n">HWND</span> <span class="n">hWnd</span><span class="p">,</span> <span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="kt">int</span> <span class="n">h</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">CreateFactory</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;ファクトリー作成失敗&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="cp">#ifdef _DEBUG
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>	<span class="n">EnableDebugLayer</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#endif
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">CreateDevice</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;D3D12デバイス作成失敗&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><h5 id="graphicsdeviceenabledebuglayer">GraphicsDevice::EnableDebugLayer()</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">EnableDebugLayer</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ID3D12Debug</span><span class="o">*</span> <span class="n">pDebugLayer</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12GetDebugInterface</span><span class="p">(</span><span class="n">IID_PPV_ARGS</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pDebugLayer</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">	<span class="n">pDebugLayer</span><span class="o">-&gt;</span><span class="n">EnableDebugLayer</span><span class="p">();</span>		<span class="c1">// デバッグレイヤーを有効にする
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">pDebugLayer</span><span class="o">-&gt;</span><span class="n">Release</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="バックバッファの描画">バックバッファの描画</h4>
+<p>バックバッファはオフスクリーンのメモリ領域で、ダブルバッファリングやトリプルバッファリングといったテクニックを使用して画面のちらつきや遅延を減らすことができる</p>
+<h4 id="graphicsdeviceh-4">GraphicsDevice.h</h4>
+<h5 id="graphicsdeviceクラス-5">GraphicsDeviceクラス</h5>
+<p>画面の切り替えを行う<code>ScreenFlip()</code>関数を宣言</p>
+<p>コマンドキューの同期待ちを行う<code>WaitForCommandQueue()</code>関数を宣言</p>
+<p>コマンドキューとリソースの同期を管理するFenceの作成を行う<code>CreateFence()</code>関数を宣言</p>
+<p>リソースとして引数に渡したバッファの扱いを変更する<code>SetResourceBarrier()</code>関数を宣言
+<br>▶ 第一引数は指定バッファ（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12resource">インターフェースの詳細</a>）
+<br>▶ 第二引数は現在の状況（<code>D3D12_RESOURCE_STATES</code><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_resource_states">列挙の詳細</a>）
+<br>▶ 第三引数は新しい状況（<code>D3D12_RESOURCE_STATES</code><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_resource_states">列挙の詳細</a>）</p>
+<p><code>ID3D12Fence</code>はフェンスを表し、CPUと1つ以上のGPUの同期に使用されるオブジェクト
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12fence">詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GraphicsDevice</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">void</span> <span class="n">ScreenFlip</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="kt">void</span> <span class="nf">WaitForCommandQueue</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">bool</span> <span class="n">CreateFence</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="kt">void</span> <span class="nf">SetResourceBarrier</span><span class="p">(</span><span class="n">ID3D12Resource</span><span class="o">*</span> <span class="n">pResource</span><span class="p">,</span> <span class="n">D3D12_RESOURCE_STATES</span> <span class="n">before</span><span class="p">,</span> <span class="n">D3D12_RESOURCE_STATES</span> <span class="n">after</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">ID3D12Fence</span><span class="o">&gt;</span>		<span class="n">m_pFence</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">UINT64</span>		<span class="n">m_fenceVal</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><h4 id="graphicsdevicecpp-5">GraphicsDevice.cpp</h4>
+<h5 id="graphicsdeviceinit-1">GraphicsDevice::Init()</h5>
+<p><code>CreateFence()</code>を実行</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Init</span><span class="p">(</span><span class="n">HWND</span> <span class="n">hWnd</span><span class="p">,</span> <span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="kt">int</span> <span class="n">h</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">CreateFence</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;フェンスの作成失敗&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><h5 id="graphicsdevicescreenflip">GraphicsDevice::ScreenFlip()</h5>
+<h6 id="リソースバリアのステートをレンダーターゲットに変更">リソースバリアのステートをレンダーターゲットに変更</h6>
+<p><code>m_pSwapChain-&gt;GetCurrentBackBufferIndex()</code>はスワップチェーンの現在のバックバッファーのインデックスを取得する
+<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi1_4/nf-dxgi1_4-idxgiswapchain3-getcurrentbackbufferindex">詳細</a></p>
+<p><code>SetResourceBarrier()</code>を実行</p>
+<h6 id="レンダーターゲットをセット">レンダーターゲットをセット</h6>
+<p><code>m_pRTVHeap-&gt;GetRTVCPUHandle()</code>を実行</p>
+<p><code>m_pCmdList-&gt;OMSetRenderTargets()</code>はレンダーターゲットと深度ステンシルのCPUディスクリプタハンドルを設定する
+<br>▶ 第一引数は<code>rtvH</code>配列内のエントリの数
+<br>▶ 第二引数はレンダーターゲットディスクリプタのヒープの開始を表すCPUディスクリプタハンドルを記述する<code>D3D12_CPU_DESCRIPTOR_HANDLE</code>構造体の配列を指定
+<br>▶ 第三引数について、<code>False</code>はハンドルが第一引数のハンドルの配列の最初であることを意味する
+<br>▶ 第四引数は深度ステンシルディスクリプタを保持するヒープの開始を表すCPUディスクリプタハンドル
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-omsetrendertargets">詳細</a></p>
+<h6 id="セットしたレンダーターゲットの画面をクリア">セットしたレンダーターゲットの画面をクリア</h6>
+<p><code>m_pCmdList-&gt;ClearRenderTargetView()</code>はレンダーターゲット内のすべての要素を1つの値に設定する
+<br>▶ 第一引数はレンダーターゲットがクリアされるヒープの開始を表すCPUディスクリプタハンドルを記述
+<br>▶ 第二引数は塗りつぶす色を表す4成分配列
+<br>▶ 第三引数は第四引数のパラメーターが指定する配列内の四角形の数を指定
+<br>▶ 第四引数はリソースビューでクリアする四角形の<code>D3D12_RECT</code>構造体の配列を指定し、NULLの場合はリソースビュー全体をクリアする
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-clearrendertargetview">詳細</a></p>
+<h6 id="リソースバリアのステートをプレゼントに戻す">リソースバリアのステートをプレゼントに戻す</h6>
+<p><code>SetResourceBarrier()</code>を実行</p>
+<h6 id="コマンドリストを閉じて実行">コマンドリストを閉じて実行</h6>
+<p><code>m_pCmdList-&gt;Close()</code>はコマンドリストへの記録が完了したことを示す
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-close">詳細</a></p>
+<p><code>ID3D12CommandList</code>はGPUが実行するコマンドの順序付きセットを表すインタフェース
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12commandlist">詳細</a></p>
+<p><code>m_pCmdQueue-&gt;ExecuteCommandLists()</code>は実行するコマンドリストの配列を送信する
+<br>▶ 第一引数は実行するコマンドの数
+<br>▶ 第二引数は実行する<code>ID3D12CommandList</code>コマンドリストの配列
+<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12commandqueue-executecommandlists">詳細</a></p>
+<h6 id="コマンドリストの同期を待つ">コマンドリストの同期を待つ</h6>
+<p><code>WaitForCommandQueue()</code>を実行</p>
+<h6 id="コマンドアロケータとコマンドリストを初期化">コマンドアロケータとコマンドリストを初期化</h6>
+<p><code>m_pCmdAllocator-&gt;Reset()</code>はコマンドアロケーターに関連付けられているメモリを再利用することを示す</p>
+<p><code>m_pCmdList-&gt;Reset()</code>は新しいコマンドリストが作成されたかのように、コマンドリストを初期状態に戻す</p>
+<h6 id="スワップチェーンにプレゼント">スワップチェーンにプレゼント</h6>
+<p><code>m_pSwapChain-&gt;Present()</code>はレンダリングされたイメージをユーザーに表示する
+<br>▶ 第一引数はフレームのプレゼンテーションを垂直空白と同期する方法を指定する整数値
+<br>▶ 第二引数はスワップチェーンプレゼンテーションオプションを含む整数値
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-present">詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">ScreenFlip</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">auto</span> <span class="n">bbIdx</span> <span class="o">=</span> <span class="n">m_pSwapChain</span><span class="o">-&gt;</span><span class="n">GetCurrentBackBufferIndex</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">SetResourceBarrier</span><span class="p">(</span><span class="n">m_pSwapchainBuffers</span><span class="p">[</span><span class="n">bbIdx</span><span class="p">].</span><span class="n">Get</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">		<span class="n">D3D12_RESOURCE_STATE_PRESENT</span><span class="p">,</span> <span class="n">D3D12_RESOURCE_STATE_RENDER_TARGET</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">auto</span> <span class="n">rtvH</span> <span class="o">=</span> <span class="n">m_pRTVHeap</span><span class="o">-&gt;</span><span class="n">GetRTVCPUHandle</span><span class="p">(</span><span class="n">bbIdx</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pCmdList</span><span class="o">-&gt;</span><span class="n">OMSetRenderTargets</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rtvH</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">clearColor</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mf">1.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">,</span> <span class="mf">1.0f</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pCmdList</span><span class="o">-&gt;</span><span class="n">ClearRenderTargetView</span><span class="p">(</span><span class="n">rtvH</span><span class="p">,</span> <span class="n">clearColor</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">SetResourceBarrier</span><span class="p">(</span><span class="n">m_pSwapchainBuffers</span><span class="p">[</span><span class="n">bbIdx</span><span class="p">].</span><span class="n">Get</span><span class="p">(),</span> <span class="n">D3D12_RESOURCE_STATE_RENDER_TARGET</span><span class="p">,</span> <span class="n">D3D12_RESOURCE_STATE_PRESENT</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">m_pCmdList</span><span class="o">-&gt;</span><span class="n">Close</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ID3D12CommandList</span><span class="o">*</span> <span class="n">cmdlists</span><span class="p">[]{</span> <span class="n">m_pCmdList</span><span class="p">.</span><span class="n">Get</span><span class="p">()</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pCmdQueue</span><span class="o">-&gt;</span><span class="n">ExecuteCommandLists</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmdlists</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">WaitForCommandQueue</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">m_pCmdAllocator</span><span class="o">-&gt;</span><span class="n">Reset</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pCmdList</span><span class="o">-&gt;</span><span class="n">Reset</span><span class="p">(</span><span class="n">m_pCmdAllocator</span><span class="p">.</span><span class="n">Get</span><span class="p">(),</span> <span class="k">nullptr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">m_pSwapChain</span><span class="o">-&gt;</span><span class="n">Present</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="graphicsdevicewaitforcommandqueue">GraphicsDevice::WaitForCommandQueue()</h5>
+<p><code>m_pCmdQueue-&gt;Signal()</code>は指定した値にフェンスを更新する
+<br>▶ 第一引数は<code>ID3D12Fence</code>オブジェクトへのポインタ
+<br>▶ 第二引数はフェンスを設定する値を指定
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12commandqueue-signal">詳細</a></p>
+<p><code>m_pFence-&gt;GetCompletedValue()</code>はフェンスの現在の値を取得する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12fence-getcompletedvalue">詳細</a></p>
+<p><code>CreateEvent()</code>はイベントハンドルを取得する</p>
+<p><code>m_pFence-&gt;SetEventOnCompletion()</code>はフェンスが特定の値に達したときに発生するイベントを指定する
+<br>▶ 第一引数はイベントが通知される場合のフェンス値を指定
+<br>▶ 第二引数はイベントオブジェクトへのハンドルを指定
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12fence-seteventoncompletion">詳細</a></p>
+<p><code>WaitForSingleObject()</code>は指定したオブジェクトがシグナル状態であるか、タイムアウト間隔が経過するまで待機してイベントが発生するまで待つ
+<br>▶ 第一引数はオブジェクトへのハンドルを指定
+<br>▶ 第二引数はタイムアウト間隔(ミリ秒単位)を指定
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject">詳細</a></p>
+<p><code>CloseHandle()</code>は開いているオブジェクトハンドルを閉じる
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/handleapi/nf-handleapi-closehandle">詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">WaitForCommandQueue</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pCmdQueue</span><span class="o">-&gt;</span><span class="n">Signal</span><span class="p">(</span><span class="n">m_pFence</span><span class="p">.</span><span class="n">Get</span><span class="p">(),</span> <span class="o">++</span><span class="n">m_fenceVal</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">m_pFence</span><span class="o">-&gt;</span><span class="n">GetCompletedValue</span><span class="p">()</span> <span class="o">!=</span> <span class="n">m_fenceVal</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">auto</span> <span class="n">event</span> <span class="o">=</span> <span class="n">CreateEvent</span><span class="p">(</span><span class="k">nullptr</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>		<span class="c1">// イベントハンドルの取得
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">event</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;イベントエラー、アプリケーションを終了します&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="n">m_pFence</span><span class="o">-&gt;</span><span class="n">SetEventOnCompletion</span><span class="p">(</span><span class="n">m_fenceVal</span><span class="p">,</span> <span class="n">event</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">WaitForSingleObject</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">INFINITE</span><span class="p">);</span>		<span class="c1">// イベントが発生するまで待ち続ける
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">CloseHandle</span><span class="p">(</span><span class="n">event</span><span class="p">);</span>							<span class="c1">// イベントハンドルを閉じる
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="graphicsdevicecreatefence">GraphicsDevice::CreateFence()</h5>
+<p><code>m_pDevice-&gt;CreateFence()</code>はフェンスオブジェクトを作成する
+<br>▶ 第一引数はフェンスの初期値を指定
+<br>▶ 第二引数はフェンスのオプションを指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_fence_flags">列挙の詳細</a>）
+<br>▶ 第三引数はフェンスインターフェイス<code>ID3D12Fence</code>のGUIDを指定
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12device-createfence">詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">CreateFence</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">auto</span> <span class="n">hr</span> <span class="o">=</span> <span class="n">m_pDevice</span><span class="o">-&gt;</span><span class="n">CreateFence</span><span class="p">(</span><span class="n">m_fenceVal</span><span class="p">,</span> <span class="n">D3D12_FENCE_FLAG_NONE</span><span class="p">,</span> <span class="n">IID_PPV_ARGS</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_pFence</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">FAILED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="graphicsdevicesetresourcebarrier">GraphicsDevice::SetResourceBarrier()</h5>
+<p><code>D3D12_RESOURCE_BARRIER</code>はリソースバリア(リソース使用の遷移)について説明する構造体
+<br>▶ <code>barrier.Transition</code>はサブリソースの使用の前後を指定する（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_transition_barrier">構造体の詳細</a>）
+<br>▶ <code>barrier.Transition.pResource</code>は遷移で使用されるリソースを表す<code>ID3D12Resource</code>オブジェクトへのポインタを指定
+<br>▶ <code>barrier.Transition.StateAfter</code>はサブリソースの&quot;after&quot;使用法指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_resource_states">列挙の詳細</a>）
+<br>▶ <code>barrier.Transition.StateBefore</code>はサブリソースの&quot;before&quot;使用法を指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_resource_states">列挙の詳細</a>）
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_barrier">詳細</a></p>
+<p><code>m_pCmdList-&gt;ResourceBarrier()</code>はリソースへの複数のアクセスを同期する必要があることをドライバーに通知する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-resourcebarrier">詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">SetResourceBarrier</span><span class="p">(</span><span class="n">ID3D12Resource</span><span class="o">*</span> <span class="n">pResource</span><span class="p">,</span> <span class="n">D3D12_RESOURCE_STATES</span> <span class="n">before</span><span class="p">,</span> <span class="n">D3D12_RESOURCE_STATES</span> <span class="n">after</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_RESOURCE_BARRIER</span> <span class="n">barrier</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">barrier</span><span class="p">.</span><span class="n">Transition</span><span class="p">.</span><span class="n">pResource</span> <span class="o">=</span> <span class="n">pResource</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">barrier</span><span class="p">.</span><span class="n">Transition</span><span class="p">.</span><span class="n">StateAfter</span> <span class="o">=</span> <span class="n">after</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">barrier</span><span class="p">.</span><span class="n">Transition</span><span class="p">.</span><span class="n">StateBefore</span> <span class="o">=</span> <span class="n">before</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pCmdList</span><span class="o">-&gt;</span><span class="n">ResourceBarrier</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">barrier</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="applicationcpp-1">Application.cpp</h4>
+<h5 id="applicationexecute">Application::Execute()</h5>
+<p>while文の中で<code>GraphicsDevice::Instance().ScreenFlip()</code>を実行</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Application.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Application</span><span class="o">::</span><span class="n">Execute</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Instance</span><span class="p">().</span><span class="n">ScreenFlip</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div>
             </div>
