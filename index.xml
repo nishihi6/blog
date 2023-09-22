@@ -13,7 +13,12 @@
       <pubDate>Wed, 20 Sep 2023 22:48:58 +0900</pubDate>
       
       <guid>https://nishihi6.github.io/blog/posts/devlog_dx12_04/</guid>
-      <description></description>
+      <description>DirectX12を使った描画処理 ポリゴンの描画 ライブラリの導入 DirectXMath DirectXMath APIは、DirextXアプリケーションに共通する一般的な線形代数およびグラフィックス演算用のSIMD対応のC++関数を提供するライブラリで、ユニバーサルWindowsプラットフォームアプリ、Xboxゲーム開発者向けに設計されている 詳細
+DirectXTK DirectXTK(DirectX Tool Kit)は、マイクロソフト社が提供するDirectX 11と12に対応したゲーム開発を行うためのオープンソースのクラスライブラリであり、XNA Game Framework（2006年に発表）がC++に移植されたもの DirextXTKの詳細 ユニバーサルWindowsプラットフォーム(UWP)用ゲーム開発の詳細
+NuGet NuGetは、Microsoft .NET環境で使用されるパッケージマネージャーであり、拡張子が.nupkgのzipファイルにはコンパイル済みのコード（DLL）、そのコードに関連する他のファイル、パッケージのバージョン番号などの情報が記述されているマニフェストが含まれる 詳細
+DirectXMathの導入 Visual Studioのツール-&amp;gt;NuGetパッケージマネージャー-&amp;gt;ソリューションのNuGetパッケージの管理で「directxtk12_uwp」を検索して選択、プロジェクト（frameworkDX12を含む）にチェックしてインストール
+stdafx.h // stdafx.h // ~ // // DirectX Took Kit #pragma comment(lib, &amp;#34;DirectXTK12.lib&amp;#34;) #include &amp;lt;SimpleMath.h&amp;gt; // ~ // Utility.h // Utility.h // ~ // namespace Math = DirectX::SimpleMath; メッシュ GraphicsフォルダにMeshフォルダを追加し、Mesh.hとMesh.cppを追加
+dev-dx12-202308（プロジェクト名） └─ Source ├─ Application │ ├─ Application.h │ └─ Application.cpp ├─ Graphics │ ├─ Mesh │ │ ├─ Mesh.</description>
     </item>
     
     <item>
