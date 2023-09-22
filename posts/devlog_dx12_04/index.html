@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-09-20",
         "description": "",
-        "wordCount":  0 ,
+        "wordCount":  403 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-09-20",
         "image": {
@@ -187,9 +187,244 @@ stroke-linejoin="round" class="feather feather-home">
             </header>
             <details class="toc">
                 <summary><b>Table of Contents</b></summary>
-                <nav id="TableOfContents"></nav>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#ポリゴンの描画">ポリゴンの描画</a>
+      <ul>
+        <li><a href="#ライブラリの導入">ライブラリの導入</a>
+          <ul>
+            <li><a href="#directxmath">DirectXMath</a></li>
+            <li><a href="#directxtk">DirectXTK</a></li>
+            <li><a href="#nuget">NuGet</a></li>
+            <li><a href="#directxmathの導入">DirectXMathの導入</a></li>
+            <li><a href="#stdafxh">stdafx.h</a></li>
+            <li><a href="#utilityh">Utility.h</a></li>
+          </ul>
+        </li>
+        <li><a href="#メッシュ">メッシュ</a>
+          <ul>
+            <li><a href="#graphicsdeviceh">GraphicsDevice.h</a></li>
+            <li><a href="#meshh">Mesh.h</a></li>
+            <li><a href="#meshcpp">Mesh.cpp</a></li>
+            <li><a href="#systemh">System.h</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
             </details><div class="page-content">
-                
+                <h1 id="directx12を使った描画処理">DirectX12を使った描画処理</h1>
+<hr>
+<h2 id="ポリゴンの描画">ポリゴンの描画</h2>
+<h3 id="ライブラリの導入">ライブラリの導入</h3>
+<h4 id="directxmath">DirectXMath</h4>
+<p>DirectXMath APIは、DirextXアプリケーションに共通する一般的な線形代数およびグラフィックス演算用のSIMD対応のC++関数を提供するライブラリで、ユニバーサルWindowsプラットフォームアプリ、Xboxゲーム開発者向けに設計されている
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/dxmath/directxmath-portal">詳細</a></p>
+<h4 id="directxtk">DirectXTK</h4>
+<p>DirectXTK(DirectX Tool Kit)は、マイクロソフト社が提供するDirectX 11と12に対応したゲーム開発を行うためのオープンソースのクラスライブラリであり、XNA Game Framework（2006年に発表）がC++に移植されたもの
+<br><a href="https://note.com/shozotanaka/n/ncd9f1d406a32">DirextXTKの詳細</a>
+<br><a href="https://learn.microsoft.com/ja-jp/windows/uwp/gaming/e2e">ユニバーサルWindowsプラットフォーム(UWP)用ゲーム開発の詳細</a></p>
+<h4 id="nuget">NuGet</h4>
+<p>NuGetは、Microsoft .NET環境で使用されるパッケージマネージャーであり、拡張子が.nupkgのzipファイルにはコンパイル済みのコード（DLL）、そのコードに関連する他のファイル、パッケージのバージョン番号などの情報が記述されているマニフェストが含まれる
+<br><a href="https://learn.microsoft.com/ja-jp/nuget/what-is-nuget">詳細</a></p>
+<h4 id="directxmathの導入">DirectXMathの導入</h4>
+<p>Visual Studioの<code>ツール</code>-&gt;<code>NuGetパッケージマネージャー</code>-&gt;<code>ソリューションのNuGetパッケージの管理</code>で「directxtk12_uwp」を検索して選択、<code>プロジェクト</code>（<code>frameworkDX12</code>を含む）にチェックしてインストール</p>
+<h4 id="stdafxh">stdafx.h</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// stdafx.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// DirectX Took Kit
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp">#pragma comment(lib, &#34;DirectXTK12.lib&#34;)
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;SimpleMath.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// ~ //
+</span></span></span></code></pre></div><h4 id="utilityh">Utility.h</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Utility.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">namespace</span> <span class="n">Math</span> <span class="o">=</span> <span class="n">DirectX</span><span class="o">::</span><span class="n">SimpleMath</span><span class="p">;</span>
+</span></span></code></pre></div><h3 id="メッシュ">メッシュ</h3>
+<p><code>Graphics</code>フォルダに<code>Mesh</code>フォルダを追加し、<code>Mesh.h</code>と<code>Mesh.cpp</code>を追加</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">dev-dx12-202308（プロジェクト名）
+</span></span><span class="line"><span class="cl">└─ Source
+</span></span><span class="line"><span class="cl">   ├─ Application
+</span></span><span class="line"><span class="cl">   │  ├─ Application.h
+</span></span><span class="line"><span class="cl">   │  └─ Application.cpp
+</span></span><span class="line"><span class="cl">   ├─ Graphics
+</span></span><span class="line"><span class="cl">   │  ├─ Mesh
+</span></span><span class="line"><span class="cl">   │  │  ├─ Mesh.h
+</span></span><span class="line"><span class="cl">   │  │  └─ Mesh.cpp
+</span></span><span class="line"><span class="cl">   │  ├─ GraphicsDevice.h
+</span></span><span class="line"><span class="cl">   │  └─ GraphicsDevice.cpp
+</span></span><span class="line"><span class="cl">   ├─ System
+</span></span><span class="line"><span class="cl">   │  ├─ Utility
+</span></span><span class="line"><span class="cl">   │  │  ├─ Utility.h
+</span></span><span class="line"><span class="cl">   │  │  └─ Utility.cpp
+</span></span><span class="line"><span class="cl">   │  ├─ Window
+</span></span><span class="line"><span class="cl">   │  │  ├─ Window.h
+</span></span><span class="line"><span class="cl">   │  │  └─ Window.cpp
+</span></span><span class="line"><span class="cl">   │  └─ System.h
+</span></span><span class="line"><span class="cl">   ├─ stdafx.h
+</span></span><span class="line"><span class="cl">   └─ stdafx.cpp
+</span></span></code></pre></div><h4 id="graphicsdeviceh">GraphicsDevice.h</h4>
+<h5 id="graphicsdeviceクラス">GraphicsDeviceクラス</h5>
+<p>仮想アダプターを返す<code>GetDevice</code>関数を定義</p>
+<p>コマンドリストを返す<code>GetCmdList</code>関数を定義</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GraphicsDevice</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">ID3D12Device8</span><span class="o">*</span> <span class="n">GetDevice</span><span class="p">()</span><span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="n">m_pDevice</span><span class="p">.</span><span class="n">Get</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">ID3D12GraphicsCommandList6</span><span class="o">*</span> <span class="nf">GetCmdList</span><span class="p">()</span><span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="n">m_pCmdList</span><span class="p">.</span><span class="n">Get</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span></code></pre></div><h4 id="meshh">Mesh.h</h4>
+<h5 id="meshクラス">Meshクラス</h5>
+<p>メッシュの作成を行う関数<code>Create()</code>を宣言（グラフィクスデバイスのポインタを渡す）</p>
+<p>インスタンス描画を行う<code>DrawInstanced()</code>を宣言</p>
+<p><code>D3D12_VERTEX_BUFFER_VIEW</code>構造体は頂点バッファービューについて説明する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_vertex_buffer_view">詳細</a></p>
+<p><code>D3D12_INDEX_BUFFER_VIEW</code>構造体は表示するインデックスバッファーについて説明する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_index_buffer_view">詳細</a></p>
+<p><code>SimpleMath::Vector3</code>の<a href="https://github.com/Microsoft/DirectXTK/wiki/SimpleMath">詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//Mesh.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Mesh</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">void</span> <span class="n">Create</span><span class="p">(</span><span class="n">GraphicsDevice</span><span class="o">*</span> <span class="n">pGraphicsDevice</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="kt">void</span> <span class="nf">DrawInstanced</span><span class="p">()</span><span class="k">const</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="n">GraphicsDevice</span><span class="o">*</span> <span class="n">m_pDevice</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">ID3D12Resource</span><span class="o">&gt;</span>		<span class="n">m_pVBuffer</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">ID3D12Resource</span><span class="o">&gt;</span>		<span class="n">m_pIBuffer</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_VERTEX_BUFFER_VIEW</span>	<span class="n">m_vbView</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_INDEX_BUFFER_VIEW</span>		<span class="n">m_ibView</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">Math</span><span class="o">::</span><span class="n">Vector3</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">m_vertices</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h4 id="meshcpp">Mesh.cpp</h4>
+<h5 id="meshcreate関数">Mesh::Create()関数</h5>
+<p><code>D3D12_HEAP_PROPERTIES</code>構造体はヒープのプロパティについて説明する
+<br>▶ <code>heapProp.Type</code>はヒープの種類を指定する値（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_heap_type">列挙の詳細</a>）
+<br>▶ <code>heapProp.CPUPageProperty</code>はヒープのCPU ページプロパティを指定する値（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_cpu_page_property">列挙の詳細</a>）
+<br>▶ <code>heapProp.MemoryPoolPreference</code>はヒープのメモリプールを指定する値（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_memory_pool">列挙の詳細</a>）
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_heap_properties">詳細</a></p>
+<p><code>D3D12_RESOURCE_DESC</code>構造体はテクスチャなどのリソースについて説明する
+<br>▶ <code>resDesc.Dimension</code>はリソースのディメンションかバッファーかを指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_resource_dimension">列挙の詳細</a>）
+<br>▶ <code>resDesc.Width</code>はリソースの幅を指定する
+<br>▶ <code>resDesc.Height</code>はリソースの高さを指定する
+<br>▶ <code>resDesc.DepthOrArraySize</code>は3Dの場合はリソースの深さを指定し、1Dまたは2Dリソースの配列の場合は配列サイズを指定する
+<br>▶ <code>resDesc.MipLevels</code>はMIPレベルの数を指定する
+<br>▶ <code>resDesc.Format</code>は<code>DXGI_FORMAT</code>の1つのメンバーを指定する（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgiformat/ne-dxgiformat-dxgi_format">列挙の詳細</a>）
+<br>▶ <code>resDesc.SampleDesc</code>はリソースのマルチサンプリングパラメーターについて説明する（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgicommon/ns-dxgicommon-dxgi_sample_desc">構造体の詳細</a>）
+<br>▶ <code>resDesc.SampleDesc.Count</code>はピクセルあたりのマルチサンプルの数を指定する
+<br>▶ <code>resDesc.Flags</code>はリソースを操作するためのオプションを指定する（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_resource_flags">列挙の詳細</a>）
+<br>▶ <code>resDesc.Layout</code>はテクスチャレイアウトオプションを指定する（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_texture_layout">列挙の詳細</a>）
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_resource_desc">詳細</a></p>
+<p><code>m_pDevice-&gt;GetDevice()-&gt;CreateCommittedResource()</code>は、リソースがリソース全体を格納するのに十分な大きさのヒープにマップされるように、リソースと暗黙的なヒープの両方を作成する
+<br>▶ 第一引数はリソースのヒープのプロパティを提供する<code>D3D12_HEAP_PROPERTIES</code>構造体へのポインタ
+<br>▶ 第二引数は<code>D3D12_HEAP_FLAGS</code>で表すヒープオプション
+<br>▶ 第三引数はリソースを記述する<code>D3D12_RESOURCE_DESC</code>構造体へのポインタ
+<br>▶ 第四引数は<code>D3D12_RESOURCE_STATES</code>で表すリソースの初期状態（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_resource_states">列挙の詳細</a>）
+<br>▶ 第五引数はクリアカラーの既定値を記述する<code>D3D12_CLEAR_VALUE</code>構造体を指定する（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_clear_value">構造体の詳細</a>）
+<br>▶ 第六引数はリソースインターフェイスのGUID
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12device-createcommittedresource">詳細</a></p>
+<p><code>m_pVBuffer-&gt;GetGPUVirtualAddress()</code>は、バッファーリソースのGPU仮想アドレスを返す
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12resource-getgpuvirtualaddress">詳細</a></p>
+<p><code>m_pVBuffer-&gt;Map()</code>は、リソース内の指定されたサブリソースへのCPUポインタを取得する（ポインタ値をアプリケーションに公開することはできない）
+<br>▶ 第一引数はサブリソースのインデックス番号を指定する
+<br>▶ 第二引数はアクセスするメモリの範囲を記述する<code>D3D12_RANGE</code>構造体へのポインタ（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_range">構造体の詳細</a>）
+<br>▶ 第三引数はリソースデータへのポインタを受け取るメモリブロックへのポインタ
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12resource-map">詳細</a></p>
+<p><code>m_pVBuffer-&gt;Unmap()</code>は、リソース内の指定したサブリソースへのCPUポインタを無効にする
+<br>▶ 第一引数はサブリソースのインデックスを指定する
+<br>▶ 第二引数はマップ解除するメモリの範囲を記述する<code>D3D12_RANGE</code>構造体へのポインタ
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12resource-unmap">詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//Mesh.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Mesh</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="n">GraphicsDevice</span><span class="o">*</span> <span class="n">pGraphicsDevice</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pDevice</span> <span class="o">=</span> <span class="n">pGraphicsDevice</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">m_vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="o">-</span><span class="mf">1.0f</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0f</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_vertices</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>  <span class="mf">1.0f</span><span class="p">,</span>  <span class="mf">1.0f</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_vertices</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>  <span class="mf">0.0f</span><span class="p">,</span>  <span class="mf">1.0f</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_HEAP_PROPERTIES</span> <span class="n">heapProp</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">heapProp</span><span class="p">.</span><span class="n">Type</span> <span class="o">=</span> <span class="n">D3D12_HEAP_TYPE_UPLOAD</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">heapProp</span><span class="p">.</span><span class="n">CPUPageProperty</span> <span class="o">=</span> <span class="n">D3D12_CPU_PAGE_PROPERTY_UNKNOWN</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">heapProp</span><span class="p">.</span><span class="n">MemoryPoolPreference</span> <span class="o">=</span> <span class="n">D3D12_MEMORY_POOL_UNKNOWN</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_RESOURCE_DESC</span> <span class="n">resDesc</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">resDesc</span><span class="p">.</span><span class="n">Dimension</span> <span class="o">=</span> <span class="n">D3D12_RESOURCE_DIMENSION_BUFFER</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">resDesc</span><span class="p">.</span><span class="n">Width</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Math</span><span class="o">::</span><span class="n">Vector3</span><span class="p">)</span> <span class="o">*</span> <span class="n">m_vertices</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">resDesc</span><span class="p">.</span><span class="n">Height</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">resDesc</span><span class="p">.</span><span class="n">DepthOrArraySize</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">resDesc</span><span class="p">.</span><span class="n">MipLevels</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">resDesc</span><span class="p">.</span><span class="n">Format</span> <span class="o">=</span> <span class="n">DXGI_FORMAT_UNKNOWN</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">resDesc</span><span class="p">.</span><span class="n">SampleDesc</span><span class="p">.</span><span class="n">Count</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">resDesc</span><span class="p">.</span><span class="n">Flags</span> <span class="o">=</span> <span class="n">D3D12_RESOURCE_FLAG_NONE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">resDesc</span><span class="p">.</span><span class="n">Layout</span> <span class="o">=</span> <span class="n">D3D12_TEXTURE_LAYOUT_ROW_MAJOR</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">auto</span> <span class="n">hr</span> <span class="o">=</span> <span class="n">m_pDevice</span><span class="o">-&gt;</span><span class="n">GetDevice</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">CreateCommittedResource</span><span class="p">(</span><span class="o">&amp;</span><span class="n">heapProp</span><span class="p">,</span> <span class="n">D3D12_HEAP_FLAG_NONE</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">resDesc</span><span class="p">,</span> <span class="n">D3D12_RESOURCE_STATE_GENERIC_READ</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">IID_PPV_ARGS</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_pVBuffer</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">FAILED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;頂点バッファー作成失敗&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">m_vbView</span><span class="p">.</span><span class="n">BufferLocation</span> <span class="o">=</span> <span class="n">m_pVBuffer</span><span class="o">-&gt;</span><span class="n">GetGPUVirtualAddress</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_vbView</span><span class="p">.</span><span class="n">SizeInBytes</span> <span class="o">=</span> <span class="p">(</span><span class="n">UINT</span><span class="p">)</span><span class="n">resDesc</span><span class="p">.</span><span class="n">Width</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_vbView</span><span class="p">.</span><span class="n">StrideInBytes</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Math</span><span class="o">::</span><span class="n">Vector3</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">Math</span><span class="o">::</span><span class="n">Vector3</span> <span class="o">*</span> <span class="n">vbMap</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">m_pVBuffer</span><span class="o">-&gt;</span><span class="n">Map</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">vbMap</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">begin</span><span class="p">(</span><span class="n">m_vertices</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">end</span><span class="p">(</span><span class="n">m_vertices</span><span class="p">),</span> <span class="n">vbMap</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">m_pVBuffer</span><span class="o">-&gt;</span><span class="n">Unmap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="meshdrawinstanced関数">Mesh::DrawInstanced()関数</h5>
+<p><code>m_pDevice-&gt;GetCmdList()-&gt;IASetVertexBuffers()</code>は、頂点バッファーのCPUディスクリプタハンドルを設定する
+<br>▶ 第一引数（頂点バッファーの設定を開始するには、デバイスの0から始まる配列にインデックスを作成）
+<br>▶ 第二引数は第三引数の<code>m_vbView</code>配列内のビューの数
+<br>▶ 第三引数は<code>D3D12_VERTEX_BUFFER_VIEW</code>構造体の配列内の頂点バッファービューを指定する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-iasetvertexbuffers">詳細</a></p>
+<p><code>m_pDevice-&gt;GetCmdList()-&gt;DrawInstanced()</code>は、インデックスのないインスタンス化されたプリミティブを描画する
+<br>▶ 第一引数は描画する頂点の数
+<br>▶ 第二引数は描画するインスタンスの数
+<br>▶ 第三引数は最初の頂点のインデックス
+<br>▶ 第四引数は頂点バッファーからインスタンスごとのデータを読み取る前に、各インデックスに追加された値
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-drawinstanced">詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//Mesh.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Mesh</span><span class="o">::</span><span class="n">DrawInstanced</span><span class="p">()</span><span class="k">const</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pDevice</span><span class="o">-&gt;</span><span class="n">GetCmdList</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">IASetVertexBuffers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m_vbView</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pDevice</span><span class="o">-&gt;</span><span class="n">GetCmdList</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">DrawInstanced</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="systemh">System.h</h4>
+<p>System.hにMesh.hをインクルード</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//System.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;Utility/Utility.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;../Graphics/RTVHeap/RTVHeap.h&#34;	// GraphicsDevice.hよりも先にインクルード</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;../Graphics/GraphicsDevice.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;../Graphics/Mesh/Mesh.h&#34;</span><span class="cp">
+</span></span></span></code></pre></div>
             </div>
         </article></main>
 </div>
