@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-09-20",
         "description": "",
-        "wordCount":  403 ,
+        "wordCount":  2316 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-09-20",
         "image": {
@@ -209,6 +209,26 @@ stroke-linejoin="round" class="feather feather-home">
             <li><a href="#systemh">System.h</a></li>
           </ul>
         </li>
+        <li><a href="#シェーダー">シェーダー</a>
+          <ul>
+            <li><a href="#simpleshader_vshlsl頂点シェーダー">SimpleShader_VS.hlsl（頂点シェーダー）</a></li>
+            <li><a href="#simpleshader_pshlslピクセルシェーダー">SimpleShader_PS.hlsl（ピクセルシェーダー）</a></li>
+            <li><a href="#rootsignatureh">RootSignature.h</a></li>
+            <li><a href="#rootsignaturecpp">RootSignature.cpp</a></li>
+            <li><a href="#pipelineh">Pipeline.h</a></li>
+            <li><a href="#pipelinecpp">Pipeline.cpp</a></li>
+            <li><a href="#shaderh">Shader.h</a></li>
+            <li><a href="#shadercpp">Shader.cpp</a></li>
+            <li><a href="#systemh-1">System.h</a></li>
+          </ul>
+        </li>
+        <li><a href="#ポリゴンの描画-1">ポリゴンの描画</a>
+          <ul>
+            <li><a href="#graphicsdeviceh-1">GraphicsDevice.h</a></li>
+            <li><a href="#graphicsdevicecpp">GraphicsDevice.cpp</a></li>
+            <li><a href="#applicationcpp">Application.cpp</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -218,6 +238,7 @@ stroke-linejoin="round" class="feather feather-home">
 <hr>
 <h2 id="ポリゴンの描画">ポリゴンの描画</h2>
 <h3 id="ライブラリの導入">ライブラリの導入</h3>
+<hr>
 <h4 id="directxmath">DirectXMath</h4>
 <p>DirectXMath APIは、DirextXアプリケーションに共通する一般的な線形代数およびグラフィックス演算用のSIMD対応のC++関数を提供するライブラリで、ユニバーサルWindowsプラットフォームアプリ、Xboxゲーム開発者向けに設計されている
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/dxmath/directxmath-portal">詳細</a></p>
@@ -247,6 +268,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="k">namespace</span> <span class="n">Math</span> <span class="o">=</span> <span class="n">DirectX</span><span class="o">::</span><span class="n">SimpleMath</span><span class="p">;</span>
 </span></span></code></pre></div><h3 id="メッシュ">メッシュ</h3>
+<hr>
 <p><code>Graphics</code>フォルダに<code>Mesh</code>フォルダを追加し、<code>Mesh.h</code>と<code>Mesh.cpp</code>を追加</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">dev-dx12-202308（プロジェクト名）
 </span></span><span class="line"><span class="cl">└─ Source
@@ -357,9 +379,9 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Mesh</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="n">GraphicsDevice</span><span class="o">*</span> <span class="n">pGraphicsDevice</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="n">m_pDevice</span> <span class="o">=</span> <span class="n">pGraphicsDevice</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="n">m_vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="o">-</span><span class="mf">1.0f</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0f</span> <span class="p">};</span>
-</span></span><span class="line"><span class="cl">	<span class="n">m_vertices</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>  <span class="mf">1.0f</span><span class="p">,</span>  <span class="mf">1.0f</span> <span class="p">};</span>
-</span></span><span class="line"><span class="cl">	<span class="n">m_vertices</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>  <span class="mf">0.0f</span><span class="p">,</span>  <span class="mf">1.0f</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="o">-</span><span class="mf">0.75f</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.75f</span><span class="p">,</span> <span class="mf">0.0f</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_vertices</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>   <span class="mf">0.0f</span><span class="p">,</span>  <span class="mf">0.75f</span><span class="p">,</span> <span class="mf">0.0f</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_vertices</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>  <span class="mf">0.75f</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.75f</span><span class="p">,</span> <span class="mf">0.0f</span> <span class="p">};</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">	<span class="n">D3D12_HEAP_PROPERTIES</span> <span class="n">heapProp</span> <span class="o">=</span> <span class="p">{};</span>
 </span></span><span class="line"><span class="cl">	<span class="n">heapProp</span><span class="p">.</span><span class="n">Type</span> <span class="o">=</span> <span class="n">D3D12_HEAP_TYPE_UPLOAD</span><span class="p">;</span>
@@ -424,7 +446,827 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;../Graphics/GraphicsDevice.h&#34;</span><span class="cp">
 </span></span></span><span class="line"><span class="cl"><span class="cp"></span>
 </span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;../Graphics/Mesh/Mesh.h&#34;</span><span class="cp">
-</span></span></span></code></pre></div>
+</span></span></span></code></pre></div><h3 id="シェーダー">シェーダー</h3>
+<hr>
+<p>プロジェクト直下に<code>Asset</code>&gt;<code>Shader</code>フォルダを追加し、<code>SimpleShader_VS.hlsl</code>と<code>SimpleShader_PS.hlsl</code>を追加</p>
+<p><code>Graphics</code>フォルダに<code>Shader</code>フォルダを追加し、<code>Shader.h</code>と<code>Shader.cpp</code>を追加</p>
+<p><code>Shader</code>フォルダに<code>RootSignature</code>フォルダを追加し、<code>RootSignature.h</code>と<code>RootSignature.cpp</code>を追加</p>
+<p><code>Shader</code>フォルダに<code>Pipeline</code>フォルダを追加し、<code>Pipeline.h</code>と<code>Pipeline.cpp</code>を追加</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">dev-dx12-202308（プロジェクト名）
+</span></span><span class="line"><span class="cl">├─ Asset
+</span></span><span class="line"><span class="cl">│  └─ Shader
+</span></span><span class="line"><span class="cl">│     ├─ SimpleShader_VS.hlsl
+</span></span><span class="line"><span class="cl">│     └─ SimpleShader_PS.hlsl
+</span></span><span class="line"><span class="cl">└─ Source
+</span></span><span class="line"><span class="cl">   ├─ Application
+</span></span><span class="line"><span class="cl">   │  ├─ Application.h
+</span></span><span class="line"><span class="cl">   │  └─ Application.cpp
+</span></span><span class="line"><span class="cl">   ├─ Graphics
+</span></span><span class="line"><span class="cl">   │  ├─ Mesh
+</span></span><span class="line"><span class="cl">   │  │  ├─ Mesh.h
+</span></span><span class="line"><span class="cl">   │  │  └─ Mesh.cpp
+</span></span><span class="line"><span class="cl">   │  ├─ Shader
+</span></span><span class="line"><span class="cl">   │  │  ├─ RootSignature
+</span></span><span class="line"><span class="cl">   │  │  │  ├─ RootSignature.h
+</span></span><span class="line"><span class="cl">   │  │  │  └─ RootSignature.cpp
+</span></span><span class="line"><span class="cl">   │  │  ├─ Pipeline
+</span></span><span class="line"><span class="cl">   │  │  │  ├─ Pipeline.h
+</span></span><span class="line"><span class="cl">   │  │  │  └─ Pipeline.cpp
+</span></span><span class="line"><span class="cl">   │  │  ├─ Shader.h
+</span></span><span class="line"><span class="cl">   │  │  └─ Shader.cpp
+</span></span><span class="line"><span class="cl">   │  ├─ GraphicsDevice.h
+</span></span><span class="line"><span class="cl">   │  └─ GraphicsDevice.cpp
+</span></span><span class="line"><span class="cl">   ├─ System
+</span></span><span class="line"><span class="cl">   │  ├─ Utility
+</span></span><span class="line"><span class="cl">   │  │  ├─ Utility.h
+</span></span><span class="line"><span class="cl">   │  │  └─ Utility.cpp
+</span></span><span class="line"><span class="cl">   │  ├─ Window
+</span></span><span class="line"><span class="cl">   │  │  ├─ Window.h
+</span></span><span class="line"><span class="cl">   │  │  └─ Window.cpp
+</span></span><span class="line"><span class="cl">   │  └─ System.h
+</span></span><span class="line"><span class="cl">   ├─ stdafx.h
+</span></span><span class="line"><span class="cl">   └─ stdafx.cpp
+</span></span></code></pre></div><h4 id="simpleshader_vshlsl頂点シェーダー">SimpleShader_VS.hlsl（頂点シェーダー）</h4>
+<p>基本的に座標変換の処理が記述され、頂点数分だけ実行される（ここでの処理は、入力として与えられた位置情報をそのまま返す）</p>
+<p>x,y,z,wの4つの成分の浮動小数点数が返されるエントリーポイント関数<code>main()</code></p>
+<p><code>:POSITION</code>セマンティクスは、この引数が<strong>頂点の位置情報</strong>を持っていることを示す</p>
+<p><code>:SV_POSITION</code>セマンティクスは、関数の戻り値が<strong>シェーダーの出力位置</strong>を示していることを示す</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// SimpleShader_VS.hlsl
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">float4</span> <span class="nf">main</span><span class="p">(</span> <span class="n">float4</span> <span class="nl">pos</span> <span class="p">:</span> <span class="n">POSITION</span> <span class="p">)</span> <span class="o">:</span> <span class="n">SV_POSITION</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">pos</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="simpleshader_pshlslピクセルシェーダー">SimpleShader_PS.hlsl（ピクセルシェーダー）</h4>
+<p>基本的にライティングの処理が記述され、画面のピクセル分だけ実行される（ここでの処理は、すべてのピクセルを白色で塗りつぶす）</p>
+<p><code>:SV_TARGET</code>セマンティクスは、関数の戻り値が<strong>レンダーターゲット（通常は画面やテクスチャ）に書き込まれる色情報</strong>を示していることを示す</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// SimpleShader_PS.hlsl
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">float4</span> <span class="nf">main</span><span class="p">(</span><span class="n">float4</span> <span class="nl">pos</span> <span class="p">:</span> <span class="n">SV_POSITION</span><span class="p">)</span> <span class="o">:</span> <span class="n">SV_TARGET</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">float4</span><span class="p">(</span><span class="mf">1.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="rootsignatureh">RootSignature.h</h4>
+<h5 id="rangetype列挙型クラス">RangeType列挙型クラス</h5>
+<p>レンジタイプリストを表す
+<br><strong>CBV（定数バッファ）</strong>：マトリックス、ベクトル、スカラー値など
+<br><strong>SRV（シェーダーリソース）</strong>：テクスチャやバッファなどの読み取り専用のデータをシェーダーに供給するためのリソースで、テクスチャをピクセルシェーダーに渡してサンプリングする場合はそのテクスチャのSRVが必要になる
+<br><strong>URV（非順序つきアクセスリソース）</strong>：シェーダーから読み書きが可能なリソースで、コンピュートシェーダーでのデータの並列処理やレンダリングの高度な技術（イメージベースの照明など）において使われる</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// RootSignature.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">enum</span> <span class="k">class</span> <span class="nc">RangeType</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">CBV</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">SRV</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">UAV</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h5 id="textureaddressmode列挙型クラス">TextureAddressMode列挙型クラス</h5>
+<p>アドレスモードを表す
+<br><strong>Wrap</strong>：テクスチャ座標がテクスチャの境界を超えると、座標はテクスチャのサイズに対してモジュロ演算を行い、テクスチャの反対側から再び開始する
+<br><strong>Clamp</strong>：テクスチャ座標がテクスチャの境界を超えると、座標はテクスチャの境界にクランプ（制限）される</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// RootSignature.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">enum</span> <span class="k">class</span> <span class="nc">TextureAddressMode</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Wrap</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Clamp</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h5 id="d3d12filter列挙型クラス">D3D12Filter列挙型クラス</h5>
+<p>テクスチャサンプリング時のフィルタリング方法を指定するための列挙型
+<br><strong>Point</strong>：サンプリング時に最も近いテクスチャのテクセル（テクスチャのピクセル）の値をそのまま使用する
+<br><strong>Linear</strong>：サンプリング時に近隣のテクセルの値を線形的に補間して使用する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// RootSignature.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">enum</span> <span class="k">class</span> <span class="nc">D3D12Filter</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Point</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Linear</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h5 id="rootsignatureクラス">RootSignatureクラス</h5>
+<p>ルートシグネチャの作成を行う関数<code>Create()</code>を宣言
+<br>▶ 第一引数はグラフィクスデバイスのポインタを指定する
+<br>▶ 第二引数はレンジタイプリストを指定する</p>
+<p><code>ID3D12RootSignature</code>は、リソースとシェーダーを対応つけるインタフェース（グラフィックスパイプラインにバインドされるリソースを定義するインタフェース）
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12rootsignature">詳細</a></p>
+<p>ルートシグネチャの取得を行う関数<code>GetRootSignature()</code>を定義</p>
+<p>レンジの作成を行う関数<code>CreateRange()</code>を宣言
+<br>▶ 第一引数はレンジのポインタを指定する（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_descriptor_range">構造体の詳細</a>）
+<br>▶ 第二引数はレンジタイプを指定する
+<br>▶ 第三引数は登録数</p>
+<p>サンプラーの作成を行う関数<code>CreateStaticSampler()</code>を宣言
+<br>▶ 第一引数はサンプラーデスクのポインタを指定する（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_static_sampler_desc">構造体の詳細</a>）
+<br>▶ 第二引数はアドレスモードを指定する
+<br>▶ 第三引数はフィルターを指定する
+<br>▶ 第四引数は使用サンプラー数</p>
+<p><code>ID3DBlob</code>は、任意の長さのデータを返すために使用されるインタフェース</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// RootSignature.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">RootSignature</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">void</span> <span class="n">Create</span><span class="p">(</span><span class="n">GraphicsDevice</span><span class="o">*</span> <span class="n">pGraphicsDevice</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">RangeType</span><span class="o">&gt;&amp;</span> <span class="n">rangeTypes</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">ID3D12RootSignature</span><span class="o">*</span> <span class="nf">GetRootSignature</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_pRootSignature</span><span class="p">.</span><span class="n">Get</span><span class="p">();</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">void</span> <span class="n">CreateRange</span><span class="p">(</span><span class="n">D3D12_DESCRIPTOR_RANGE</span><span class="o">&amp;</span> <span class="n">pRange</span><span class="p">,</span> <span class="n">RangeType</span> <span class="n">type</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="kt">void</span> <span class="nf">CreateStaticSampler</span><span class="p">(</span><span class="n">D3D12_STATIC_SAMPLER_DESC</span><span class="o">&amp;</span> <span class="n">samplerDesc</span><span class="p">,</span> <span class="n">TextureAddressMode</span> <span class="n">mode</span><span class="p">,</span> <span class="n">D3D12Filter</span> <span class="n">filter</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">GraphicsDevice</span><span class="o">*</span> <span class="n">m_pDevice</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">ID3DBlob</span><span class="o">&gt;</span> <span class="n">m_pRootBlob</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">ID3D12RootSignature</span><span class="o">&gt;</span> <span class="n">m_pRootSignature</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h4 id="rootsignaturecpp">RootSignature.cpp</h4>
+<h5 id="rootsignaturecreate関数">RootSignature::Create()関数</h5>
+<p><code>D3D12_ROOT_SIGNATURE_DESC</code>はルートシグネチャのディスクリプタを定義するための構造体
+<br>▶ <code>rootSignatureDesc.pStaticSamplers</code>は静的サンプラーについて説明する構造体へのポインタ（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_static_sampler_desc">構造体の詳細</a>）
+<br>▶ <code>rootSignatureDesc.NumStaticSamplers</code>は静的サンプラーの数を指定する
+<br>▶ <code>rootSignatureDesc.Flags</code>はレイアウトのオプションを指定する（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_root_signature_flags">列挙の詳細</a>）
+<br>▶ <code>rootSignatureDesc.pParameters</code>はスロットを説明する構造体を指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_root_parameter">構造体の詳細</a>）
+<br>▶ <code>rootSignatureDesc.NumParameters</code>はスロットの数を指定する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_root_signature_desc">詳細</a></p>
+<p><code>D3D12_ROOT_PARAMETER</code>はルートシグネチャディスクリプタのスロットについて説明する構造体
+<br>▶ <code>rootParams.ParameterType</code>はスロットの種類を指定する（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_root_parameter_type">列挙の詳細</a>）
+<br>▶ <code>rootParams.DescriptorTable.pDescriptorRanges</code>はディスクリプタレンジを指定する（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_descriptor_range">構造体の詳細</a>）
+<br>▶ <code>rootParams.DescriptorTable.NumDescriptorRanges</code>はテーブルレイアウト内のディスクリプタレンジの数
+<br>▶ <code>rootParams.ShaderVisibility</code>はスロットの内容にアクセスできるシェーダーを指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_shader_visibility">列挙の詳細</a>）
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_root_parameter">詳細</a></p>
+<p><code>D3D12_DESCRIPTOR_RANGE</code>はディスクリプタレンジについて説明する構造体
+<br>▶ <code>pRange.NumDescriptors</code>はレンジ内のディスクリプタの数を指定
+<br>▶ <code>pRange.RangeType</code>はディスクリプタレンジの種類を指定する（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_descriptor_range_type">列挙の詳細</a>）
+<br>▶ <code>pRange.BaseShaderRegister</code>はレンジ内のベースシェーダーレジスタを指定
+<br>▶ <code>pRange.OffsetInDescriptorsFromTableStart</code>はこのパラメータースロットのルート引数値として設定されたディスクリプタテーブルの先頭からのディスクリプタのオフセットを指定
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_descriptor_range">詳細</a></p>
+<p><code>CreateRange()</code>関数を実行</p>
+<p><code>D3D12_STATIC_SAMPLER_DESC</code>は静的サンプラーについて説明する構造体
+<br>▶ <code>pSamplerDesc.AddressU</code>は0~1の範囲外のuテクスチャ座標を解決するために使用するモードを指定する（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_texture_address_mode">列挙の詳細</a>）
+<br>▶ <code>pSamplerDesc.AddressV</code>は0~1の範囲外のvテクスチャ座標を解決するために使用するモードを指定する
+<br>▶ <code>pSamplerDesc.AddressW</code>は0~1の範囲外のwテクスチャ座標を解決するために使用するモードを指定する
+<br>▶ <code>pSamplerDesc.BorderColor</code>はAddressU、AddressV、またはAddressWに<code>D3D12_TEXTURE_ADDRESS_MODE_BORDER</code>が指定されている場合に使用する罫線の色（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_static_border_color">列挙の詳細</a>）
+<br>▶ <code>pSamplerDesc.Filter</code>はテクスチャをサンプリングするとき使用するフィルターオプションを指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_filter">列挙の詳細</a>）
+<br>▶ <code>pSamplerDesc.MaxLOD</code>はアクセスをクランプするミップマップ範囲の上端
+<br>▶ <code>pSamplerDesc.MinLOD</code>はアクセスをクランプするミップマップ範囲の下端
+<br>▶ <code>pSamplerDesc.ComparisonFunc</code>はサンプリングされたデータを既存のサンプリング データと比較する関数を指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_comparison_func">列挙の詳細</a>）
+<br>▶ <code>pSamplerDesc.ShaderVisibility</code>はパイプラインシェーダー<code>D3D12_SHADER_VISIBILITY</code>の1つのメンバー) に対するサンプラーの可視性を指定
+<br>▶ <code>pSamplerDesc.MaxAnisotropy</code>は<code>D3D12_FILTER_ANISOTROPIC</code>または<code>D3D12_FILTER_COMPARISON_ANISOTROPIC</code>がフィルターとして指定されている場合に使用されるクランプ値を指定（有効な値は1~16）
+<br>▶ <code>pSamplerDesc.ShaderRegister</code>はShaderRegister(型がSRV)は2に対応し、RegisterSpaceは3に対応する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_static_sampler_desc">詳細</a></p>
+<p><code>CreateStaticSampler()</code>関数を実行</p>
+<p><code>D3D12SerializeRootSignature()</code>関数は<code>ID3D12Device::CreateRootSignature</code>に渡すことができるルートシグネチャディスクリプタをシリアル化する
+<br>▶ 第一引数はルートシグネチャのレイアウトについて説明する構造体へのポインタ（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_root_signature_desc">構造体の詳細</a>）
+<br>▶ 第二引数はルートシグネチャのレイアウトのバージョンを指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d_root_signature_version">列挙の詳細</a>）
+<br>▶ 第三引数はシリアル化されたルートシグネチャディスクリプタへのアクセスに使用できる<code>ID3DBlob</code>インターフェイスへのポインタを受け取るメモリブロックへのポインタ
+<br>▶ 第四引数はシリアライザーのエラーメッセージへのアクセスに使用できる<code>ID3DBlob</code>インターフェイスへのポインタを受け取るメモリブロックへのポインタ（エラーがない場合はNULL）
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-d3d12serializerootsignature">詳細</a></p>
+<p><code>m_pDevice-&gt;GetDevice()-&gt;CreateRootSignature()</code>関数は
+<br>▶ 第一引数は単一GPU操作の場合は0に設定し、複数のGPUノードがある場合はルートシグネチャディスクリプタを適用するノード(デバイスの物理アダプター)を識別するビットを設定
+<br>▶ 第二引数はシリアル化されたシグネチャディスクリプタのソースデータへのポインタ
+<br>▶ 第三引数は第二引数が指すメモリブロックのサイズ
+<br>▶ 第四引数はルートシグネチャディスクリプタインターフェイスのGUID
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12device-createrootsignature">詳細</a></p>
+<p><code>m_pRootBlob-&gt;GetBufferPointer()</code>関数はデータへのポインタを取得する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3dcommon/nf-d3dcommon-id3d10blob-getbufferpointer">詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// RootSignature.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">RootSignature</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="n">GraphicsDevice</span><span class="o">*</span> <span class="n">pGraphicsDevice</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">RangeType</span><span class="o">&gt;&amp;</span> <span class="n">rangeTypes</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pDevice</span> <span class="o">=</span> <span class="n">pGraphicsDevice</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_ROOT_SIGNATURE_DESC</span> <span class="n">rootSignatureDesc</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">rangeCount</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">rangeTypes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">D3D12_ROOT_PARAMETER</span><span class="o">&gt;</span> <span class="n">rootParams</span><span class="p">(</span><span class="n">rangeCount</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">D3D12_DESCRIPTOR_RANGE</span><span class="o">&gt;</span> <span class="n">ranges</span><span class="p">(</span><span class="n">rangeCount</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">samplerCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">rangeTypes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">rangeTypes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">RangeType</span><span class="o">::</span><span class="n">SRV</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="o">++</span><span class="n">samplerCount</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">samplerCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">bool</span> <span class="n">bSampler</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">cbvCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">uavCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">rangeCount</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">switch</span> <span class="p">(</span><span class="n">rangeTypes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="n">RangeType</span><span class="o">::</span><span class="nl">CBV</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">CreateRange</span><span class="p">(</span><span class="n">ranges</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">RangeType</span><span class="o">::</span><span class="n">CBV</span><span class="p">,</span> <span class="n">cbvCount</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="n">rootParams</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">ParameterType</span> <span class="o">=</span> <span class="n">D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">rootParams</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">DescriptorTable</span><span class="p">.</span><span class="n">pDescriptorRanges</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ranges</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">			<span class="n">rootParams</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">DescriptorTable</span><span class="p">.</span><span class="n">NumDescriptorRanges</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">rootParams</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">ShaderVisibility</span> <span class="o">=</span> <span class="n">D3D12_SHADER_VISIBILITY_ALL</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">++</span><span class="n">cbvCount</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="n">RangeType</span><span class="o">::</span><span class="nl">SRV</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">CreateRange</span><span class="p">(</span><span class="n">ranges</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">RangeType</span><span class="o">::</span><span class="n">SRV</span><span class="p">,</span> <span class="n">samplerCount</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="n">rootParams</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">ParameterType</span> <span class="o">=</span> <span class="n">D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">rootParams</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">DescriptorTable</span><span class="p">.</span><span class="n">pDescriptorRanges</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ranges</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">			<span class="n">rootParams</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">DescriptorTable</span><span class="p">.</span><span class="n">NumDescriptorRanges</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">rootParams</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">ShaderVisibility</span> <span class="o">=</span> <span class="n">D3D12_SHADER_VISIBILITY_ALL</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">++</span><span class="n">samplerCount</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">bSampler</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="n">RangeType</span><span class="o">::</span><span class="nl">UAV</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">CreateRange</span><span class="p">(</span><span class="n">ranges</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">RangeType</span><span class="o">::</span><span class="n">UAV</span><span class="p">,</span> <span class="n">uavCount</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="n">rootParams</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">ParameterType</span> <span class="o">=</span> <span class="n">D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">rootParams</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">DescriptorTable</span><span class="p">.</span><span class="n">pDescriptorRanges</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ranges</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">			<span class="n">rootParams</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">DescriptorTable</span><span class="p">.</span><span class="n">NumDescriptorRanges</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">rootParams</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">ShaderVisibility</span> <span class="o">=</span> <span class="n">D3D12_SHADER_VISIBILITY_ALL</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">++</span><span class="n">uavCount</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">default</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">D3D12_STATIC_SAMPLER_DESC</span><span class="p">,</span> <span class="mi">4</span><span class="o">&gt;</span> <span class="n">pStaticSamplerDescs</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">bSampler</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">CreateStaticSampler</span><span class="p">(</span><span class="n">pStaticSamplerDescs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">TextureAddressMode</span><span class="o">::</span><span class="n">Wrap</span><span class="p">,</span> <span class="n">D3D12Filter</span><span class="o">::</span><span class="n">Point</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">CreateStaticSampler</span><span class="p">(</span><span class="n">pStaticSamplerDescs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">TextureAddressMode</span><span class="o">::</span><span class="n">Clamp</span><span class="p">,</span> <span class="n">D3D12Filter</span><span class="o">::</span><span class="n">Point</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">CreateStaticSampler</span><span class="p">(</span><span class="n">pStaticSamplerDescs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">TextureAddressMode</span><span class="o">::</span><span class="n">Wrap</span><span class="p">,</span> <span class="n">D3D12Filter</span><span class="o">::</span><span class="n">Linear</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">CreateStaticSampler</span><span class="p">(</span><span class="n">pStaticSamplerDescs</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">TextureAddressMode</span><span class="o">::</span><span class="n">Clamp</span><span class="p">,</span> <span class="n">D3D12Filter</span><span class="o">::</span><span class="n">Linear</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">rootSignatureDesc</span><span class="p">.</span><span class="n">pStaticSamplers</span> <span class="o">=</span> <span class="n">bSampler</span> <span class="o">?</span> <span class="n">pStaticSamplerDescs</span><span class="p">.</span><span class="n">data</span><span class="p">()</span> <span class="o">:</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">rootSignatureDesc</span><span class="p">.</span><span class="n">NumStaticSamplers</span> <span class="o">=</span> <span class="n">bSampler</span> <span class="o">?</span> <span class="mi">4</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">rootSignatureDesc</span><span class="p">.</span><span class="n">Flags</span> <span class="o">=</span> <span class="n">D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">rootSignatureDesc</span><span class="p">.</span><span class="n">pParameters</span> <span class="o">=</span> <span class="n">rootParams</span><span class="p">.</span><span class="n">data</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">rootSignatureDesc</span><span class="p">.</span><span class="n">NumParameters</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">rangeTypes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">ID3DBlob</span><span class="o">*</span> <span class="n">pErrorBlob</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">auto</span> <span class="n">hr</span> <span class="o">=</span> <span class="n">D3D12SerializeRootSignature</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rootSignatureDesc</span><span class="p">,</span> <span class="n">D3D_ROOT_SIGNATURE_VERSION_1_0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m_pRootBlob</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pErrorBlob</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">FAILED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;ルートシグネチャ初期化失敗&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">hr</span> <span class="o">=</span> <span class="n">m_pDevice</span><span class="o">-&gt;</span><span class="n">GetDevice</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">CreateRootSignature</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">m_pRootBlob</span><span class="o">-&gt;</span><span class="n">GetBufferPointer</span><span class="p">(),</span> <span class="n">m_pRootBlob</span><span class="o">-&gt;</span><span class="n">GetBufferSize</span><span class="p">(),</span> <span class="n">IID_PPV_ARGS</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_pRootSignature</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">FAILED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;ルートシグネチャ作成失敗&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="rootsignaturecreaterange関数">RootSignature::CreateRange()関数</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// RootSignature.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">RootSignature</span><span class="o">::</span><span class="n">CreateRange</span><span class="p">(</span><span class="n">D3D12_DESCRIPTOR_RANGE</span><span class="o">&amp;</span> <span class="n">pRange</span><span class="p">,</span> <span class="n">RangeType</span> <span class="n">type</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">switch</span> <span class="p">(</span><span class="n">type</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="n">RangeType</span><span class="o">::</span><span class="nl">CBV</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pRange</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pRange</span><span class="p">.</span><span class="n">NumDescriptors</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pRange</span><span class="p">.</span><span class="n">RangeType</span> <span class="o">=</span> <span class="n">D3D12_DESCRIPTOR_RANGE_TYPE_CBV</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pRange</span><span class="p">.</span><span class="n">BaseShaderRegister</span> <span class="o">=</span> <span class="n">count</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pRange</span><span class="p">.</span><span class="n">OffsetInDescriptorsFromTableStart</span> <span class="o">=</span> <span class="n">D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="n">RangeType</span><span class="o">::</span><span class="nl">SRV</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pRange</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pRange</span><span class="p">.</span><span class="n">NumDescriptors</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pRange</span><span class="p">.</span><span class="n">RangeType</span> <span class="o">=</span> <span class="n">D3D12_DESCRIPTOR_RANGE_TYPE_SRV</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pRange</span><span class="p">.</span><span class="n">BaseShaderRegister</span> <span class="o">=</span> <span class="n">count</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pRange</span><span class="p">.</span><span class="n">OffsetInDescriptorsFromTableStart</span> <span class="o">=</span> <span class="n">D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="n">RangeType</span><span class="o">::</span><span class="nl">UAV</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pRange</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pRange</span><span class="p">.</span><span class="n">NumDescriptors</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pRange</span><span class="p">.</span><span class="n">RangeType</span> <span class="o">=</span> <span class="n">D3D12_DESCRIPTOR_RANGE_TYPE_UAV</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pRange</span><span class="p">.</span><span class="n">BaseShaderRegister</span> <span class="o">=</span> <span class="n">count</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pRange</span><span class="p">.</span><span class="n">OffsetInDescriptorsFromTableStart</span> <span class="o">=</span> <span class="n">D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">default</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">		<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="rootsignaturecreatestaticsampler関数">RootSignature::CreateStaticSampler()関数</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// RootSignature.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">RootSignature</span><span class="o">::</span><span class="n">CreateStaticSampler</span><span class="p">(</span><span class="n">D3D12_STATIC_SAMPLER_DESC</span><span class="o">&amp;</span> <span class="n">pSamplerDesc</span><span class="p">,</span> <span class="n">TextureAddressMode</span> <span class="n">mode</span><span class="p">,</span> <span class="n">D3D12Filter</span> <span class="n">filter</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_TEXTURE_ADDRESS_MODE</span> <span class="n">addressMode</span> <span class="o">=</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">TextureAddressMode</span><span class="o">::</span><span class="n">Wrap</span> <span class="o">?</span> <span class="nl">D3D12_TEXTURE_ADDRESS_MODE_WRAP</span> <span class="p">:</span> <span class="n">D3D12_TEXTURE_ADDRESS_MODE_CLAMP</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_FILTER</span> <span class="n">samplingFilter</span> <span class="o">=</span> <span class="n">filter</span> <span class="o">==</span> <span class="n">D3D12Filter</span><span class="o">::</span><span class="n">Point</span> <span class="o">?</span> <span class="nl">D3D12_FILTER_MIN_MAG_MIP_POINT</span> <span class="p">:</span> <span class="n">D3D12_FILTER_MIN_MAG_MIP_LINEAR</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">pSamplerDesc</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">pSamplerDesc</span><span class="p">.</span><span class="n">AddressU</span> <span class="o">=</span> <span class="n">addressMode</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">pSamplerDesc</span><span class="p">.</span><span class="n">AddressV</span> <span class="o">=</span> <span class="n">addressMode</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">pSamplerDesc</span><span class="p">.</span><span class="n">AddressW</span> <span class="o">=</span> <span class="n">addressMode</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">pSamplerDesc</span><span class="p">.</span><span class="n">BorderColor</span> <span class="o">=</span> <span class="n">D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">pSamplerDesc</span><span class="p">.</span><span class="n">Filter</span> <span class="o">=</span> <span class="n">samplingFilter</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">pSamplerDesc</span><span class="p">.</span><span class="n">MaxLOD</span> <span class="o">=</span> <span class="n">D3D12_FLOAT32_MAX</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">pSamplerDesc</span><span class="p">.</span><span class="n">MinLOD</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">pSamplerDesc</span><span class="p">.</span><span class="n">ComparisonFunc</span> <span class="o">=</span> <span class="n">D3D12_COMPARISON_FUNC_NEVER</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">pSamplerDesc</span><span class="p">.</span><span class="n">ShaderVisibility</span> <span class="o">=</span> <span class="n">D3D12_SHADER_VISIBILITY_ALL</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">pSamplerDesc</span><span class="p">.</span><span class="n">MaxAnisotropy</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">pSamplerDesc</span><span class="p">.</span><span class="n">ShaderRegister</span> <span class="o">=</span> <span class="n">count</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="pipelineh">Pipeline.h</h4>
+<h5 id="cullmode列挙型クラス">CullMode列挙型クラス</h5>
+<p>特定の方向に向いている三角形が描画されないように指定する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_cull_mode">D3D12_CULL_MODE列挙の詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Pipeline.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">enum</span> <span class="k">class</span> <span class="nc">CullMode</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">None</span> <span class="o">=</span> <span class="n">D3D12_CULL_MODE_NONE</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Front</span> <span class="o">=</span> <span class="n">D3D12_CULL_MODE_FRONT</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Back</span> <span class="o">=</span> <span class="n">D3D12_CULL_MODE_BACK</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h5 id="blendmode列挙型クラス">BlendMode列挙型クラス</h5>
+<p>ピクセルの色をどのように合成するかを指定する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Pipeline.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">enum</span> <span class="k">class</span> <span class="nc">BlendMode</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Add</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Alpha</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h5 id="inputlayout列挙型クラス">InputLayout列挙型クラス</h5>
+<p>頂点データのセマンティクスを示す</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Pipeline.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">enum</span> <span class="k">class</span> <span class="nc">InputLayout</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">POSITION</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">TEXCOORD</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">NORMAL</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">TANGENT</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">COLOR</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">SKININDEX</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">SKINWEIGHT</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h5 id="primitivetopologytype列挙型クラス">PrimitiveTopologyType列挙型クラス</h5>
+<p>パイプラインがジオメトリまたはハル シェーダー入力プリミティブを解釈する方法を指定する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_primitive_topology_type">D3D12_PRIMITIVE_TOPOLOGY_TYPE列挙の詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Pipeline.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">enum</span> <span class="k">class</span> <span class="nc">PrimitiveTopologyType</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Undefined</span> <span class="o">=</span> <span class="n">D3D12_PRIMITIVE_TOPOLOGY_TYPE_UNDEFINED</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Point</span> <span class="o">=</span> <span class="n">D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Line</span> <span class="o">=</span> <span class="n">D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Triangle</span> <span class="o">=</span> <span class="n">D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Patch</span> <span class="o">=</span> <span class="n">D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h5 id="rootsignatureクラス-1">RootSignatureクラス</h5>
+<h5 id="pipelineクラス">Pipelineクラス</h5>
+<p><code>SetRenderSettings()</code>関数を宣言</p>
+<p><code>Create()</code>関数を宣言</p>
+<p><code>ID3D12PipelineState</code>は</p>
+<p><code>GetPipeline()</code>関数を定義</p>
+<p><code>PrimitiveTopologyType</code>は</p>
+<p><code>GetTopologyType()</code>関数を定義</p>
+<p><code>SetInputLayout()</code>関数を宣言</p>
+<p><code>SetBlendMode()</code>関数を宣言</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// RootSignature.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Pipeline</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">void</span> <span class="n">SetRenderSettings</span><span class="p">(</span><span class="n">GraphicsDevice</span><span class="o">*</span> <span class="n">pGraphicsDevice</span><span class="p">,</span> <span class="n">RootSignature</span><span class="o">*</span> <span class="n">pRootSignature</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">InputLayout</span><span class="o">&gt;&amp;</span> <span class="n">inputLayouts</span><span class="p">,</span> <span class="n">CullMode</span> <span class="n">cullMode</span><span class="p">,</span> <span class="n">BlendMode</span> <span class="n">blendMode</span><span class="p">,</span> <span class="n">PrimitiveTopologyType</span> <span class="n">topologyType</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="kt">void</span> <span class="nf">Create</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ID3DBlob</span><span class="o">*&gt;</span> <span class="n">pBlobs</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DXGI_FORMAT</span><span class="o">&gt;</span> <span class="n">formats</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">isDepth</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">isDepthMask</span><span class="p">,</span> <span class="kt">int</span> <span class="n">rtvCount</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">isWireFrame</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">ID3D12PipelineState</span><span class="o">*</span> <span class="nf">GetPipeline</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_pPipelineState</span><span class="p">.</span><span class="n">Get</span><span class="p">();</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">PrimitiveTopologyType</span> <span class="nf">GetTopologyType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_topologyType</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">void</span> <span class="n">SetInputLayout</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="o">&gt;&amp;</span> <span class="n">inputElements</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">InputLayout</span><span class="o">&gt;&amp;</span> <span class="n">inputLayouts</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="kt">void</span> <span class="nf">SetBlendMode</span><span class="p">(</span><span class="n">D3D12_RENDER_TARGET_BLEND_DESC</span><span class="o">&amp;</span> <span class="n">blendDesc</span><span class="p">,</span> <span class="n">BlendMode</span> <span class="n">blendMode</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">GraphicsDevice</span><span class="o">*</span> <span class="n">m_pDevice</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">RootSignature</span><span class="o">*</span> <span class="n">m_pRootSignature</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">InputLayout</span><span class="o">&gt;</span>	<span class="n">m_inputLayouts</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">CullMode</span>					<span class="n">m_cullMode</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">BlendMode</span>					<span class="n">m_blendMode</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">PrimitiveTopologyType</span>		<span class="n">m_topologyType</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">ID3D12PipelineState</span><span class="o">&gt;</span> <span class="n">m_pPipelineState</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h4 id="pipelinecpp">Pipeline.cpp</h4>
+<h5 id="pipelinesetrendersettings関数">Pipeline::SetRenderSettings()関数</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Pipeline.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Pipeline</span><span class="o">::</span><span class="n">SetRenderSettings</span><span class="p">(</span><span class="n">GraphicsDevice</span><span class="o">*</span> <span class="n">pGraphicsDevice</span><span class="p">,</span> <span class="n">RootSignature</span><span class="o">*</span> <span class="n">pRootSignature</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">InputLayout</span><span class="o">&gt;&amp;</span> <span class="n">inputLayouts</span><span class="p">,</span> <span class="n">CullMode</span> <span class="n">cullMode</span><span class="p">,</span> <span class="n">BlendMode</span> <span class="n">blendMode</span><span class="p">,</span> <span class="n">PrimitiveTopologyType</span> <span class="n">topologyType</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pDevice</span> <span class="o">=</span> <span class="n">pGraphicsDevice</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pRootSignature</span> <span class="o">=</span> <span class="n">pRootSignature</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_inputLayouts</span> <span class="o">=</span> <span class="n">inputLayouts</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_cullMode</span> <span class="o">=</span> <span class="n">cullMode</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_blendMode</span> <span class="o">=</span> <span class="n">blendMode</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_topologyType</span> <span class="o">=</span> <span class="n">topologyType</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="pipelinecreate関数">Pipeline::Create()関数</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Pipeline.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Pipeline</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ID3DBlob</span><span class="o">*&gt;</span> <span class="n">pBlobs</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DXGI_FORMAT</span><span class="o">&gt;</span> <span class="n">formats</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bDepth</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bDepthMask</span><span class="p">,</span> <span class="kt">int</span> <span class="n">rtvCount</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bWireFrame</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="o">&gt;</span> <span class="n">inputLayouts</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">SetInputLayout</span><span class="p">(</span><span class="n">inputLayouts</span><span class="p">,</span> <span class="n">m_inputLayouts</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_GRAPHICS_PIPELINE_STATE_DESC</span> <span class="n">graphicsPipelineState</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">VS</span><span class="p">.</span><span class="n">pShaderBytecode</span> <span class="o">=</span> <span class="n">pBlobs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetBufferPointer</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">VS</span><span class="p">.</span><span class="n">BytecodeLength</span> <span class="o">=</span> <span class="n">pBlobs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetBufferSize</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">pBlobs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">HS</span><span class="p">.</span><span class="n">pShaderBytecode</span> <span class="o">=</span> <span class="n">pBlobs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetBufferPointer</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">HS</span><span class="p">.</span><span class="n">BytecodeLength</span> <span class="o">=</span> <span class="n">pBlobs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetBufferSize</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">pBlobs</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">DS</span><span class="p">.</span><span class="n">pShaderBytecode</span> <span class="o">=</span> <span class="n">pBlobs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetBufferPointer</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">DS</span><span class="p">.</span><span class="n">BytecodeLength</span> <span class="o">=</span> <span class="n">pBlobs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetBufferSize</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">pBlobs</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">GS</span><span class="p">.</span><span class="n">pShaderBytecode</span> <span class="o">=</span> <span class="n">pBlobs</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetBufferPointer</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">GS</span><span class="p">.</span><span class="n">BytecodeLength</span> <span class="o">=</span> <span class="n">pBlobs</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetBufferSize</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">PS</span><span class="p">.</span><span class="n">pShaderBytecode</span> <span class="o">=</span> <span class="n">pBlobs</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetBufferPointer</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">PS</span><span class="p">.</span><span class="n">BytecodeLength</span> <span class="o">=</span> <span class="n">pBlobs</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">GetBufferSize</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">SampleMask</span> <span class="o">=</span> <span class="n">D3D12_DEFAULT_SAMPLE_MASK</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">RasterizerState</span><span class="p">.</span><span class="n">CullMode</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">D3D12_CULL_MODE</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_cullMode</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">bWireFrame</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">RasterizerState</span><span class="p">.</span><span class="n">FillMode</span> <span class="o">=</span> <span class="n">D3D12_FILL_MODE_WIREFRAME</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">RasterizerState</span><span class="p">.</span><span class="n">FillMode</span> <span class="o">=</span> <span class="n">D3D12_FILL_MODE_SOLID</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">bDepth</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">RasterizerState</span><span class="p">.</span><span class="n">DepthClipEnable</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">DepthStencilState</span><span class="p">.</span><span class="n">DepthEnable</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">bDepthMask</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">DepthStencilState</span><span class="p">.</span><span class="n">DepthWriteMask</span> <span class="o">=</span> <span class="n">D3D12_DEPTH_WRITE_MASK_ALL</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">DepthStencilState</span><span class="p">.</span><span class="n">DepthWriteMask</span> <span class="o">=</span> <span class="n">D3D12_DEPTH_WRITE_MASK_ZERO</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">DepthStencilState</span><span class="p">.</span><span class="n">DepthFunc</span> <span class="o">=</span> <span class="n">D3D12_COMPARISON_FUNC_LESS</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">DSVFormat</span> <span class="o">=</span> <span class="n">DXGI_FORMAT_D32_FLOAT</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">RasterizerState</span><span class="p">.</span><span class="n">DepthClipEnable</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">DepthStencilState</span><span class="p">.</span><span class="n">DepthEnable</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">BlendState</span><span class="p">.</span><span class="n">AlphaToCoverageEnable</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">BlendState</span><span class="p">.</span><span class="n">IndependentBlendEnable</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_RENDER_TARGET_BLEND_DESC</span> <span class="n">blendDesc</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">SetBlendMode</span><span class="p">(</span><span class="n">blendDesc</span><span class="p">,</span> <span class="n">m_blendMode</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">BlendState</span><span class="p">.</span><span class="n">RenderTarget</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">blendDesc</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">InputLayout</span><span class="p">.</span><span class="n">pInputElementDescs</span> <span class="o">=</span> <span class="n">inputLayouts</span><span class="p">.</span><span class="n">data</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">InputLayout</span><span class="p">.</span><span class="n">NumElements</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">m_inputLayouts</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">PrimitiveTopologyType</span> <span class="o">=</span> <span class="p">(</span><span class="n">pBlobs</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">pBlobs</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span> <span class="o">?</span> <span class="nl">D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH</span> <span class="p">:</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">D3D12_PRIMITIVE_TOPOLOGY_TYPE</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_topologyType</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">NumRenderTargets</span> <span class="o">=</span> <span class="n">rtvCount</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">rtvCount</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">RTVFormats</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">formats</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">SampleDesc</span><span class="p">.</span><span class="n">Count</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">graphicsPipelineState</span><span class="p">.</span><span class="n">pRootSignature</span> <span class="o">=</span> <span class="n">m_pRootSignature</span><span class="o">-&gt;</span><span class="n">GetRootSignature</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">auto</span> <span class="n">hr</span> <span class="o">=</span> <span class="n">m_pDevice</span><span class="o">-&gt;</span><span class="n">GetDevice</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">CreateGraphicsPipelineState</span><span class="p">(</span><span class="o">&amp;</span><span class="n">graphicsPipelineState</span><span class="p">,</span> <span class="n">IID_PPV_ARGS</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_pPipelineState</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">FAILED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;パイプラインステートの作成に失敗しました&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="pipelinesetinputlayout関数">Pipeline::SetInputLayout()関数</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Pipeline.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Pipeline</span><span class="o">::</span><span class="n">SetInputLayout</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="o">&gt;&amp;</span> <span class="n">inputElements</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">InputLayout</span><span class="o">&gt;&amp;</span> <span class="n">inputLayouts</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">inputLayouts</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">inputLayouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">InputLayout</span><span class="o">::</span><span class="n">POSITION</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;POSITION&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R32G32B32_FLOAT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">inputLayouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">InputLayout</span><span class="o">::</span><span class="n">TEXCOORD</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;TEXCOORD&#34;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">DXGI_FORMAT_R32G32_FLOAT</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span><span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span> <span class="p">,</span><span class="mi">0</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">inputLayouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">InputLayout</span><span class="o">::</span><span class="n">NORMAL</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;NORMAL&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R32G32B32_FLOAT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">inputLayouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">InputLayout</span><span class="o">::</span><span class="n">COLOR</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;COLOR&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R8G8B8A8_UNORM</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">inputLayouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">InputLayout</span><span class="o">::</span><span class="n">TANGENT</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;TANGENT&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R32G32B32_FLOAT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">inputLayouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">InputLayout</span><span class="o">::</span><span class="n">SKININDEX</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;SKININDEX&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R16G16B16A16_UINT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">inputLayouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">InputLayout</span><span class="o">::</span><span class="n">SKINWEIGHT</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;SKINWEIGHT&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R32G32B32A32_FLOAT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="pipelinesetblendmode関数">Pipeline::SetBlendMode()関数</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Pipeline.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Pipeline</span><span class="o">::</span><span class="n">SetBlendMode</span><span class="p">(</span><span class="n">D3D12_RENDER_TARGET_BLEND_DESC</span><span class="o">&amp;</span> <span class="n">blendDesc</span><span class="p">,</span> <span class="n">BlendMode</span> <span class="n">blendMode</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">blendDesc</span><span class="p">.</span><span class="n">RenderTargetWriteMask</span> <span class="o">=</span> <span class="n">D3D12_COLOR_WRITE_ENABLE_ALL</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">blendDesc</span><span class="p">.</span><span class="n">BlendEnable</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">switch</span> <span class="p">(</span><span class="n">blendMode</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="n">BlendMode</span><span class="o">::</span><span class="nl">Add</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">blendDesc</span><span class="p">.</span><span class="n">BlendOp</span> <span class="o">=</span> <span class="n">D3D12_BLEND_OP_ADD</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">blendDesc</span><span class="p">.</span><span class="n">SrcBlend</span> <span class="o">=</span> <span class="n">D3D12_BLEND_SRC_ALPHA</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">blendDesc</span><span class="p">.</span><span class="n">DestBlend</span> <span class="o">=</span> <span class="n">D3D12_BLEND_ONE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">blendDesc</span><span class="p">.</span><span class="n">BlendOpAlpha</span> <span class="o">=</span> <span class="n">D3D12_BLEND_OP_ADD</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">blendDesc</span><span class="p">.</span><span class="n">SrcBlendAlpha</span> <span class="o">=</span> <span class="n">D3D12_BLEND_ONE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">blendDesc</span><span class="p">.</span><span class="n">DestBlendAlpha</span> <span class="o">=</span> <span class="n">D3D12_BLEND_INV_SRC_ALPHA</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">blendDesc</span><span class="p">.</span><span class="n">LogicOp</span> <span class="o">=</span> <span class="n">D3D12_LOGIC_OP_NOOP</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="n">BlendMode</span><span class="o">::</span><span class="nl">Alpha</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">blendDesc</span><span class="p">.</span><span class="n">BlendOp</span> <span class="o">=</span> <span class="n">D3D12_BLEND_OP_ADD</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">blendDesc</span><span class="p">.</span><span class="n">SrcBlend</span> <span class="o">=</span> <span class="n">D3D12_BLEND_SRC_ALPHA</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">blendDesc</span><span class="p">.</span><span class="n">DestBlend</span> <span class="o">=</span> <span class="n">D3D12_BLEND_INV_SRC_ALPHA</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">blendDesc</span><span class="p">.</span><span class="n">BlendOpAlpha</span> <span class="o">=</span> <span class="n">D3D12_BLEND_OP_ADD</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">blendDesc</span><span class="p">.</span><span class="n">SrcBlendAlpha</span> <span class="o">=</span> <span class="n">D3D12_BLEND_ONE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">blendDesc</span><span class="p">.</span><span class="n">DestBlendAlpha</span> <span class="o">=</span> <span class="n">D3D12_BLEND_INV_SRC_ALPHA</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">blendDesc</span><span class="p">.</span><span class="n">LogicOp</span> <span class="o">=</span> <span class="n">D3D12_LOGIC_OP_NOOP</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">default</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">		<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="shaderh">Shader.h</h4>
+<h5 id="renderingsetting構造体">RenderingSetting構造体</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Shader.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">RenderingSetting</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">InputLayout</span><span class="o">&gt;</span> <span class="n">InputLayouts</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DXGI_FORMAT</span><span class="o">&gt;</span> <span class="n">Formats</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">CullMode</span> <span class="n">CullMode</span> <span class="o">=</span> <span class="n">CullMode</span><span class="o">::</span><span class="n">Back</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">BlendMode</span> <span class="n">BlendMode</span> <span class="o">=</span> <span class="n">BlendMode</span><span class="o">::</span><span class="n">Alpha</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">PrimitiveTopologyType</span> <span class="n">PrimitiveTopologyType</span> <span class="o">=</span> <span class="n">PrimitiveTopologyType</span><span class="o">::</span><span class="n">Triangle</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">bool</span> <span class="n">IsDepth</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">bool</span> <span class="n">IsDepthMask</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">RTVCount</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">bool</span> <span class="n">IsWireFrame</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h5 id="shaderクラス">Shaderクラス</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Shader.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Shader</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">void</span> <span class="n">Create</span><span class="p">(</span><span class="n">GraphicsDevice</span><span class="o">*</span> <span class="n">pGraphicsDevice</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">wstring</span><span class="o">&amp;</span> <span class="n">filePath</span><span class="p">,</span> <span class="k">const</span> <span class="n">RenderingSetting</span><span class="o">&amp;</span> <span class="n">renderingSetting</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">RangeType</span><span class="o">&gt;&amp;</span> <span class="n">rangeTypes</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="kt">void</span> <span class="nf">Begin</span><span class="p">(</span><span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="kt">int</span> <span class="n">h</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="kt">void</span> <span class="nf">DrawMesh</span><span class="p">(</span><span class="k">const</span> <span class="n">Mesh</span><span class="o">&amp;</span> <span class="n">mesh</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">void</span> <span class="n">LoadShaderFile</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">wstring</span><span class="o">&amp;</span> <span class="n">filePath</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">GraphicsDevice</span><span class="o">*</span> <span class="n">m_pDevice</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Pipeline</span><span class="o">&gt;</span>		<span class="n">m_upPipeline</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">RootSignature</span><span class="o">&gt;</span>	<span class="n">m_upRootSignature</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">ID3DBlob</span><span class="o">*</span> <span class="n">m_pVSBlob</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>		<span class="c1">// 頂点シェーダー
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">ID3DBlob</span><span class="o">*</span> <span class="n">m_pHSBlob</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>		<span class="c1">// ハルシェーダー
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">ID3DBlob</span><span class="o">*</span> <span class="n">m_pDSBlob</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>		<span class="c1">// ドメインシェーダー
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">ID3DBlob</span><span class="o">*</span> <span class="n">m_pGSBlob</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>		<span class="c1">// ジオメトリシェーダー
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">ID3DBlob</span><span class="o">*</span> <span class="n">m_pPSBlob</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>		<span class="c1">// ピクセルシェーダー
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></code></pre></div><h4 id="shadercpp">Shader.cpp</h4>
+<h5 id="shadercreate関数">Shader::Create()関数</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Shader.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Shader</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="n">GraphicsDevice</span><span class="o">*</span> <span class="n">pGraphicsDevice</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">wstring</span><span class="o">&amp;</span> <span class="n">filePath</span><span class="p">,</span> <span class="k">const</span> <span class="n">RenderingSetting</span><span class="o">&amp;</span> <span class="n">renderingSetting</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">RangeType</span><span class="o">&gt;&amp;</span> <span class="n">rangeTypes</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pDevice</span> <span class="o">=</span> <span class="n">pGraphicsDevice</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">LoadShaderFile</span><span class="p">(</span><span class="n">filePath</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">m_upRootSignature</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">RootSignature</span><span class="o">&gt;</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_upRootSignature</span><span class="o">-&gt;</span><span class="n">Create</span><span class="p">(</span><span class="n">pGraphicsDevice</span><span class="p">,</span> <span class="n">rangeTypes</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">m_upPipeline</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">Pipeline</span><span class="o">&gt;</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_upPipeline</span><span class="o">-&gt;</span><span class="n">SetRenderSettings</span><span class="p">(</span><span class="n">pGraphicsDevice</span><span class="p">,</span> <span class="n">m_upRootSignature</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">renderingSetting</span><span class="p">.</span><span class="n">InputLayouts</span><span class="p">,</span> <span class="n">renderingSetting</span><span class="p">.</span><span class="n">CullMode</span><span class="p">,</span> <span class="n">renderingSetting</span><span class="p">.</span><span class="n">BlendMode</span><span class="p">,</span> <span class="n">renderingSetting</span><span class="p">.</span><span class="n">PrimitiveTopologyType</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_upPipeline</span><span class="o">-&gt;</span><span class="n">Create</span><span class="p">({</span> <span class="n">m_pVSBlob</span> <span class="p">,</span><span class="n">m_pHSBlob</span> <span class="p">,</span><span class="n">m_pDSBlob</span> <span class="p">,</span><span class="n">m_pGSBlob</span> <span class="p">,</span><span class="n">m_pPSBlob</span> <span class="p">},</span> <span class="n">renderingSetting</span><span class="p">.</span><span class="n">Formats</span><span class="p">,</span> <span class="n">renderingSetting</span><span class="p">.</span><span class="n">IsDepth</span><span class="p">,</span> <span class="n">renderingSetting</span><span class="p">.</span><span class="n">IsDepthMask</span><span class="p">,</span> <span class="n">renderingSetting</span><span class="p">.</span><span class="n">RTVCount</span><span class="p">,</span> <span class="n">renderingSetting</span><span class="p">.</span><span class="n">IsWireFrame</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="shaderbegin関数">Shader::Begin()関数</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Shader.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Shader</span><span class="o">::</span><span class="n">Begin</span><span class="p">(</span><span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="kt">int</span> <span class="n">h</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pDevice</span><span class="o">-&gt;</span><span class="n">GetCmdList</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetPipelineState</span><span class="p">(</span><span class="n">m_upPipeline</span><span class="o">-&gt;</span><span class="n">GetPipeline</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">m_pDevice</span><span class="o">-&gt;</span><span class="n">GetCmdList</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetGraphicsRootSignature</span><span class="p">(</span><span class="n">m_upRootSignature</span><span class="o">-&gt;</span><span class="n">GetRootSignature</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_PRIMITIVE_TOPOLOGY_TYPE</span> <span class="n">topologyType</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">D3D12_PRIMITIVE_TOPOLOGY_TYPE</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_upPipeline</span><span class="o">-&gt;</span><span class="n">GetTopologyType</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">switch</span> <span class="p">(</span><span class="n">topologyType</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="nl">D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">m_pDevice</span><span class="o">-&gt;</span><span class="n">GetCmdList</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">IASetPrimitiveTopology</span><span class="p">(</span><span class="n">D3D_PRIMITIVE_TOPOLOGY_POINTLIST</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="nl">D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">m_pDevice</span><span class="o">-&gt;</span><span class="n">GetCmdList</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">IASetPrimitiveTopology</span><span class="p">(</span><span class="n">D3D_PRIMITIVE_TOPOLOGY_LINELIST</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="nl">D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">m_pDevice</span><span class="o">-&gt;</span><span class="n">GetCmdList</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">IASetPrimitiveTopology</span><span class="p">(</span><span class="n">D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="nl">D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">m_pDevice</span><span class="o">-&gt;</span><span class="n">GetCmdList</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">IASetPrimitiveTopology</span><span class="p">(</span><span class="n">D3D_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_VIEWPORT</span> <span class="n">viewport</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">D3D12_RECT</span> <span class="n">rect</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">viewport</span><span class="p">.</span><span class="n">Width</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">w</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">viewport</span><span class="p">.</span><span class="n">Height</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">h</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">viewport</span><span class="p">.</span><span class="n">MinDepth</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">viewport</span><span class="p">.</span><span class="n">MaxDepth</span> <span class="o">=</span> <span class="mf">1.0f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">rect</span><span class="p">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">w</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">rect</span><span class="p">.</span><span class="n">bottom</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Instance</span><span class="p">().</span><span class="n">GetCmdList</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">RSSetViewports</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">viewport</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Instance</span><span class="p">().</span><span class="n">GetCmdList</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">RSSetScissorRects</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rect</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="shaderdrawmesh関数">Shader::DrawMesh()関数</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Shader.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Shader</span><span class="o">::</span><span class="n">DrawMesh</span><span class="p">(</span><span class="k">const</span> <span class="n">Mesh</span><span class="o">&amp;</span> <span class="n">mesh</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">mesh</span><span class="p">.</span><span class="n">DrawInstanced</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="shaderloadshaderfile関数">Shader::LoadShaderFile()関数</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Shader.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Shader</span><span class="o">::</span><span class="n">LoadShaderFile</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">wstring</span><span class="o">&amp;</span> <span class="n">filePath</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ID3DInclude</span><span class="o">*</span> <span class="n">include</span> <span class="o">=</span> <span class="n">D3D_COMPILE_STANDARD_FILE_INCLUDE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">UINT</span> <span class="n">flag</span> <span class="o">=</span> <span class="n">D3DCOMPILE_DEBUG</span> <span class="o">|</span> <span class="n">D3DCOMPILE_SKIP_OPTIMIZATION</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ID3DBlob</span><span class="o">*</span> <span class="n">pErrorBlob</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">wstring</span> <span class="n">format</span> <span class="o">=</span> <span class="sa">L</span><span class="s">&#34;.hlsl&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">wstring</span> <span class="n">currentPath</span> <span class="o">=</span> <span class="sa">L</span><span class="s">&#34;Asset/Shader/&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">std</span><span class="o">::</span><span class="n">wstring</span> <span class="n">fullFilepath</span> <span class="o">=</span> <span class="n">currentPath</span> <span class="o">+</span> <span class="n">filePath</span> <span class="o">+</span> <span class="sa">L</span><span class="s">&#34;_VS&#34;</span> <span class="o">+</span> <span class="n">format</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">auto</span> <span class="n">hr</span> <span class="o">=</span> <span class="n">D3DCompileFromFile</span><span class="p">(</span><span class="n">fullFilepath</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="s">&#34;main&#34;</span><span class="p">,</span> <span class="s">&#34;vs_5_0&#34;</span><span class="p">,</span> <span class="n">flag</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m_pVSBlob</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pErrorBlob</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">FAILED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;頂点シェーダーのコンパイルに失敗しました&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">std</span><span class="o">::</span><span class="n">wstring</span> <span class="n">fullFilepath</span> <span class="o">=</span> <span class="n">currentPath</span> <span class="o">+</span> <span class="n">filePath</span> <span class="o">+</span> <span class="sa">L</span><span class="s">&#34;_HS&#34;</span> <span class="o">+</span> <span class="n">format</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">auto</span> <span class="n">hr</span> <span class="o">=</span> <span class="n">D3DCompileFromFile</span><span class="p">(</span><span class="n">fullFilepath</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="s">&#34;main&#34;</span><span class="p">,</span> <span class="s">&#34;hs_5_0&#34;</span><span class="p">,</span> <span class="n">flag</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m_pHSBlob</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pErrorBlob</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1">// ハルシェーダーはなくてもいい
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">std</span><span class="o">::</span><span class="n">wstring</span> <span class="n">fullFilepath</span> <span class="o">=</span> <span class="n">currentPath</span> <span class="o">+</span> <span class="n">filePath</span> <span class="o">+</span> <span class="sa">L</span><span class="s">&#34;_DS&#34;</span> <span class="o">+</span> <span class="n">format</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">auto</span> <span class="n">hr</span> <span class="o">=</span> <span class="n">D3DCompileFromFile</span><span class="p">(</span><span class="n">fullFilepath</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="s">&#34;main&#34;</span><span class="p">,</span> <span class="s">&#34;ds_5_0&#34;</span><span class="p">,</span> <span class="n">flag</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m_pDSBlob</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pErrorBlob</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1">// ドメインシェーダーはなくてもいい
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// ジオメトリシェーダーのコンパイル
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">std</span><span class="o">::</span><span class="n">wstring</span> <span class="n">fullFilepath</span> <span class="o">=</span> <span class="n">currentPath</span> <span class="o">+</span> <span class="n">filePath</span> <span class="o">+</span> <span class="sa">L</span><span class="s">&#34;_GS&#34;</span> <span class="o">+</span> <span class="n">format</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">auto</span> <span class="n">hr</span> <span class="o">=</span> <span class="n">D3DCompileFromFile</span><span class="p">(</span><span class="n">fullFilepath</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="s">&#34;main&#34;</span><span class="p">,</span> <span class="s">&#34;gs_5_0&#34;</span><span class="p">,</span> <span class="n">flag</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m_pGSBlob</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pErrorBlob</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1">// ジオメトリシェーダーはなくてもいい
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// ピクセルシェーダーのコンパイル
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">std</span><span class="o">::</span><span class="n">wstring</span> <span class="n">fullFilepath</span> <span class="o">=</span> <span class="n">currentPath</span> <span class="o">+</span> <span class="n">filePath</span> <span class="o">+</span> <span class="sa">L</span><span class="s">&#34;_PS&#34;</span> <span class="o">+</span> <span class="n">format</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">auto</span> <span class="n">hr</span> <span class="o">=</span> <span class="n">D3DCompileFromFile</span><span class="p">(</span><span class="n">fullFilepath</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="s">&#34;main&#34;</span><span class="p">,</span> <span class="s">&#34;ps_5_0&#34;</span><span class="p">,</span> <span class="n">flag</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m_pPSBlob</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pErrorBlob</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">FAILED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;ピクセルシェーダーのコンパイルに失敗しました&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="systemh-1">System.h</h4>
+<p>System.hにShader.hをインクルード</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// System.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;Utility/Utility.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;../Graphics/RTVHeap/RTVHeap.h&#34;	// GraphicsDevice.hよりも先にインクルード</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;../Graphics/GraphicsDevice.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;../Graphics/Mesh/Mesh.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;../Graphics/Shader/Shader.h&#34;</span><span class="cp">
+</span></span></span></code></pre></div><h3 id="ポリゴンの描画-1">ポリゴンの描画</h3>
+<h4 id="graphicsdeviceh-1">GraphicsDevice.h</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GraphicsDevice</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="kt">void</span> <span class="n">Prepare</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span></code></pre></div><h4 id="graphicsdevicecpp">GraphicsDevice.cpp</h4>
+<h5 id="graphicsdeviceprepare関数">GraphicsDevice::Prepare()関数</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Prepare</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">auto</span> <span class="n">bbIdx</span> <span class="o">=</span> <span class="n">m_pSwapChain</span><span class="o">-&gt;</span><span class="n">GetCurrentBackBufferIndex</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">SetResourceBarrier</span><span class="p">(</span><span class="n">m_pSwapchainBuffers</span><span class="p">[</span><span class="n">bbIdx</span><span class="p">].</span><span class="n">Get</span><span class="p">(),</span> <span class="n">D3D12_RESOURCE_STATE_PRESENT</span><span class="p">,</span> <span class="n">D3D12_RESOURCE_STATE_RENDER_TARGET</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">auto</span> <span class="n">rtvH</span> <span class="o">=</span> <span class="n">m_pRTVHeap</span><span class="o">-&gt;</span><span class="n">GetRTVCPUHandle</span><span class="p">(</span><span class="n">bbIdx</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pCmdList</span><span class="o">-&gt;</span><span class="n">OMSetRenderTargets</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rtvH</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">clearColor</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mf">1.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">,</span><span class="mf">1.0f</span><span class="p">,</span><span class="mf">1.0f</span> <span class="p">};</span> <span class="c1">// 紫色
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">m_pCmdList</span><span class="o">-&gt;</span><span class="n">ClearRenderTargetView</span><span class="p">(</span><span class="n">rtvH</span><span class="p">,</span> <span class="n">clearColor</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="graphicsdevicescreenflip関数">GraphicsDevice::ScreenFlip()関数</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">ScreenFlip</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">	auto bbIdx = m_pSwapChain-&gt;GetCurrentBackBufferIndex();
+</span></span></span><span class="line"><span class="cl"><span class="cm">	SetResourceBarrier(m_pSwapchainBuffers[bbIdx].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">	auto rtvH = m_pRTVHeap-&gt;GetRTVCPUHandle(bbIdx);
+</span></span></span><span class="line"><span class="cl"><span class="cm">	m_pCmdList-&gt;OMSetRenderTargets(1, &amp;rtvH, false, nullptr);
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">	float clearColor[] = { 1.0f, 0.0f, 1.0f, 1.0f };
+</span></span></span><span class="line"><span class="cl"><span class="cm">	m_pCmdList-&gt;ClearRenderTargetView(rtvH, clearColor, 0, nullptr);
+</span></span></span><span class="line"><span class="cl"><span class="cm">	*/</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">auto</span> <span class="n">bbIdx</span> <span class="o">=</span> <span class="n">m_pSwapChain</span><span class="o">-&gt;</span><span class="n">GetCurrentBackBufferIndex</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">SetResourceBarrier</span><span class="p">(</span><span class="n">m_pSwapchainBuffers</span><span class="p">[</span><span class="n">bbIdx</span><span class="p">].</span><span class="n">Get</span><span class="p">(),</span> <span class="n">D3D12_RESOURCE_STATE_RENDER_TARGET</span><span class="p">,</span> <span class="n">D3D12_RESOURCE_STATE_PRESENT</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">m_pCmdList</span><span class="o">-&gt;</span><span class="n">Close</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ID3D12CommandList</span><span class="o">*</span> <span class="n">cmdlists</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="n">m_pCmdList</span><span class="p">.</span><span class="n">Get</span><span class="p">()</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pCmdQueue</span><span class="o">-&gt;</span><span class="n">ExecuteCommandLists</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmdlists</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">WaitForCommandQueue</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">m_pCmdAllocator</span><span class="o">-&gt;</span><span class="n">Reset</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">m_pCmdList</span><span class="o">-&gt;</span><span class="n">Reset</span><span class="p">(</span><span class="n">m_pCmdAllocator</span><span class="p">.</span><span class="n">Get</span><span class="p">(),</span> <span class="k">nullptr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">m_pSwapChain</span><span class="o">-&gt;</span><span class="n">Present</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="applicationcpp">Application.cpp</h4>
+<h5 id="applicationexecute関数">Application::Execute()関数</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Application.cpp
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GraphicsDevice</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Application</span><span class="o">::</span><span class="n">Execute</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">Mesh</span> <span class="n">mesh</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">mesh</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Instance</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">RenderingSetting</span> <span class="n">renderingSetting</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">renderingSetting</span><span class="p">.</span><span class="n">InputLayouts</span> <span class="o">=</span> <span class="p">{</span> <span class="n">InputLayout</span><span class="o">::</span><span class="n">POSITION</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">renderingSetting</span><span class="p">.</span><span class="n">Formats</span> <span class="o">=</span> <span class="p">{</span> <span class="n">DXGI_FORMAT_R8G8B8A8_UNORM</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">renderingSetting</span><span class="p">.</span><span class="n">IsDepth</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">renderingSetting</span><span class="p">.</span><span class="n">IsDepthMask</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">Shader</span> <span class="n">shader</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">shader</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Instance</span><span class="p">(),</span> <span class="sa">L</span><span class="s">&#34;SimpleShader&#34;</span><span class="p">,</span> <span class="n">renderingSetting</span><span class="p">,</span> <span class="p">{});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">m_window</span><span class="p">.</span><span class="n">ProcessMessage</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Instance</span><span class="p">().</span><span class="n">Prepare</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">shader</span><span class="p">.</span><span class="n">Begin</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">shader</span><span class="p">.</span><span class="n">DrawMesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Instance</span><span class="p">().</span><span class="n">ScreenFlip</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
             </div>
         </article></main>
 </div>
