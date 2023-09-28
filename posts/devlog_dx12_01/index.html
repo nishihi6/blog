@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-08-23",
         "description": "",
-        "wordCount":  370 ,
+        "wordCount":  384 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-08-23",
         "image": {
@@ -268,7 +268,8 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">   └─ Graphics
 </span></span></code></pre></div><h4 id="applicationh">Application.h</h4>
 <h5 id="applicationクラス">Applicationクラス</h5>
-<p>実行を行う<code>Execute()</code>関数を宣言し、Applicationクラスオブジェクトを生成する<code>Instance()</code>関数を定義する（シングルトン）</p>
+<p>ウィンドウ作成の実行を行う<code>Execute()</code>関数を宣言</p>
+<p>Applicationクラスオブジェクトを生成する<code>Instance()</code>関数を定義する（シングルトン：クラスのインスタンスが１つしか存在しないことを保証する）</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Application.h
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="c1">// Applicationクラス
@@ -335,7 +336,12 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">         └─ Window.cpp
 </span></span></code></pre></div><h4 id="windowh">Window.h</h4>
 <h5 id="windowクラス">Windowクラス</h5>
-<p>ウィンドウの作成をする<code>Create()</code>関数の第一引数は横幅の長さ、第二引数は縦幅の長さ、第三引数はタイトル名、第四引数はクラス名として宣言し、ウィンドウメッセージの処理をする<code>ProcessMessage()</code>関数を宣言する</p>
+<p>ウィンドウの作成をする<code>Create()</code>関数を宣言
+<br>▶ 第一引数は横幅の長さ
+<br>▶ 第二引数は縦幅の長さ
+<br>▶ 第三引数はタイトル名
+<br>▶ 第四引数はクラス名</p>
+<p>ウィンドウメッセージの処理をする<code>ProcessMessage()</code>関数を宣言する</p>
 <p><code>m_hWnd</code>変数はウィンドウハンドル型のデータ型であるHWND型で宣言する</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Window.h
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
@@ -374,7 +380,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h5 id="windowcreate関数">Window::Create()関数</h5>
 <p>ウィンドウの作成を行う</p>
-<p><code>HINSTANCE</code>型は、アプリケーション自体を表すインスタンスハンドル型のデータ型であり、<code>hInst</code>はその変数</p>
+<p><code>HINSTANCE</code>型は、アプリケーション自体を表すインスタンスハンドル型のデータ型</p>
 <p><code>GetModuleHandle(NULL)</code>関数によりインスタンスハンドルを取得する</p>
 <p><code>WNDCLASSEX</code>構造体を用いてウィンドウクラスの定義を行う
 <br>構造体のサイズ：<code>wc.cbSize</code>
@@ -383,7 +389,9 @@ stroke-linejoin="round" class="feather feather-home">
 <br>インスタンスハンドル：<code>wc.hInstance</code></p>
 <p>ここで初期化した変数を<code>RegisterClassEx()</code>関数に渡すことで、ウィンドウクラスは登録され、成功すると登録されたクラスを一意的に識別する<code>ATOM</code>型で返す（失敗すると0が返却される）</p>
 <p>ウィンドウの作成には<code>HWND</code>型を戻り値とする<code>CreateWindow()</code>関数を使用する。</p>
-<p><code>ShowWindow()</code>関数は指定されたウィンドウの表示状態を設定し、第一引数で表示状態を変更するウィンドウのハンドルを指定し、第二引数でウィンドウの表示状態を指定する
+<p><code>ShowWindow()</code>関数は指定されたウィンドウの表示状態を設定する
+<br>▶ 第一引数では表示状態を変更するウィンドウのハンドルを指定する
+<br>▶ 第二引数ではウィンドウの表示状態を指定する
 <br>指定する値と意味はこちらを参照：<a href="http://chokuto.ifdef.jp/urawaza/api/ShowWindow.html">http://chokuto.ifdef.jp/urawaza/api/ShowWindow.html</a></p>
 <p><code>UpdateWindow()</code>関数は<code>WM_PAINT</code>メッセージがウィンドウプロシージャに直接送られ、ウィンドウのクライアントエリアを再描画させる</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Window.cpp
@@ -451,6 +459,8 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h3 id="結果">結果</h3>
+<img src="../img/devlog_dx12_01_002.png" width="100%">
+<p><a href=""></a></p>
 <img src="../img/devlog_dx12_01_001.png" width="100%">
 <p><a href="https://github.com/nishihi6/DX12FrameworkBasics">GitHubリポジトリ</a></p>
 

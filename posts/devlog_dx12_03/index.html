@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-08-27",
         "description": "",
-        "wordCount":  1632 ,
+        "wordCount":  1635 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-08-27",
         "image": {
@@ -272,7 +272,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>初期化を行う<code>Init()</code>関数を宣言し、GraphicsDeviceクラスオブジェクトを生成する<code>Instance()</code>関数を定義する（シングルトン）</p>
 <p>ファクトリー関数<code>CreateFactory()</code>を宣言（DXGIFactoryの機能）</p>
 <p>デバイス関数<code>CreateDevice()</code>を宣言（D3D12Deviceの機能）</p>
-<p><code>ID3D12Device8</code>は仮想アタプターを表し、コマンド アロケーター、コマンド リスト、コマンド キュー、フェンス、リソース、パイプライン状態オブジェクト、ヒープ、ルート署名、サンプラー、および多くのリソース ビューを作成するために使用される
+<p><code>ID3D12Device8</code>はコマンド アロケーター、コマンド リスト、コマンド キュー、フェンス、リソース、パイプライン状態オブジェクト、ヒープ、ルート署名、サンプラー、および多くのリソース ビューを作成するために使用される
 <br>DirectX12のアプリケーションでのグラフィックスと計算タスクの中心的なインターフェース
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12device8">詳細</a></p>
 <p><code>IDXGIFactory6</code>は全画面表示の遷移を処理するDXGIオブジェクトを生成するためのメソッドを実装するなど、グラフィックリソースの管理や設定を行うためのインターフェース
@@ -332,7 +332,8 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h5 id="graphicsdevicecreatefactory関数">GraphicsDevice::CreateFactory()関数</h5>
 <p><code>CreateDXGIFactory2()</code>関数は、モニターやグラボのスペックを取得するなど、DirectXアプリケーションでのグラフィックスリソースの管理や操作を行うためのDXGIファクトリインスタンス（<code>IDXGIFactory2</code>）を作成する
-<br>第一引数はDXGIのデバッグレイヤーを有効にするためのフラグ、第二引数と第三引数はインターフェースへのポインタ（<code>IID_PPV_ARGS</code>マクロを使ってうまくやってる）</p>
+<br>▶ 第一引数はDXGIのデバッグレイヤーを有効にするためのフラグ
+<br>▶ 第二引数と第三引数はインターフェースへのポインタ（<code>IID_PPV_ARGS</code>マクロを使ってうまくやってる）</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//GraphicsDevice.cpp
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">CreateFactory</span><span class="p">()</span> <span class="p">{</span>
