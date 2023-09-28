@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-09-20",
         "description": "",
-        "wordCount":  2316 ,
+        "wordCount":  2504 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-09-20",
         "image": {
@@ -229,6 +229,7 @@ stroke-linejoin="round" class="feather feather-home">
             <li><a href="#applicationcpp">Application.cpp</a></li>
           </ul>
         </li>
+        <li><a href="#結果">結果</a></li>
       </ul>
     </li>
   </ul>
@@ -314,9 +315,12 @@ stroke-linejoin="round" class="feather feather-home">
 <h5 id="meshクラス">Meshクラス</h5>
 <p>メッシュの作成を行う関数<code>Create()</code>を宣言（グラフィクスデバイスのポインタを渡す）</p>
 <p>インスタンス描画を行う<code>DrawInstanced()</code>を宣言</p>
-<p><code>D3D12_VERTEX_BUFFER_VIEW</code>構造体は頂点バッファービューについて説明する
+<p><code>D3D12_VERTEX_BUFFER_VIEW</code>構造体は頂点バッファーについて説明するビュー
+<br>▶ <code>m_vbView.BufferLocation</code>はバッファーのアドレスを識別する<code>D3D12_GPU_VIRTUAL_ADDRESS</code>を指定する
+<br>▶ <code>m_vbView.SizeInBytes</code>はバッファーのサイズをバイト単位で指定する
+<br>▶ <code>m_vbView.StrideInBytes</code>は各頂点エントリのサイズをバイト単位で指定する
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_vertex_buffer_view">詳細</a></p>
-<p><code>D3D12_INDEX_BUFFER_VIEW</code>構造体は表示するインデックスバッファーについて説明する
+<p><code>D3D12_INDEX_BUFFER_VIEW</code>構造体は表示するインデックスバッファーについて説明するビュー
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_index_buffer_view">詳細</a></p>
 <p><code>SimpleMath::Vector3</code>の<a href="https://github.com/Microsoft/DirectXTK/wiki/SimpleMath">詳細</a></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//Mesh.h
@@ -344,7 +348,7 @@ stroke-linejoin="round" class="feather feather-home">
 <br>▶ <code>heapProp.MemoryPoolPreference</code>はヒープのメモリプールを指定する値（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_memory_pool">列挙の詳細</a>）
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_heap_properties">詳細</a></p>
 <p><code>D3D12_RESOURCE_DESC</code>構造体はテクスチャなどのリソースについて説明する
-<br>▶ <code>resDesc.Dimension</code>はリソースのディメンションかバッファーかを指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_resource_dimension">列挙の詳細</a>）
+<br>▶ <code>resDesc.Dimension</code>はリソースの種類を指定（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_resource_dimension">列挙の詳細</a>）
 <br>▶ <code>resDesc.Width</code>はリソースの幅を指定する
 <br>▶ <code>resDesc.Height</code>はリソースの高さを指定する
 <br>▶ <code>resDesc.DepthOrArraySize</code>は3Dの場合はリソースの深さを指定し、1Dまたは2Dリソースの配列の場合は配列サイズを指定する
@@ -410,7 +414,8 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="n">m_vbView</span><span class="p">.</span><span class="n">SizeInBytes</span> <span class="o">=</span> <span class="p">(</span><span class="n">UINT</span><span class="p">)</span><span class="n">resDesc</span><span class="p">.</span><span class="n">Width</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	<span class="n">m_vbView</span><span class="p">.</span><span class="n">StrideInBytes</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Math</span><span class="o">::</span><span class="n">Vector3</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="n">Math</span><span class="o">::</span><span class="n">Vector3</span> <span class="o">*</span> <span class="n">vbMap</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Math</span><span class="o">::</span><span class="n">Vector3</span><span class="o">*</span> <span class="n">vbMap</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">{</span>
 </span></span><span class="line"><span class="cl">		<span class="n">m_pVBuffer</span><span class="o">-&gt;</span><span class="n">Map</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">vbMap</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">		<span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">begin</span><span class="p">(</span><span class="n">m_vertices</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">end</span><span class="p">(</span><span class="n">m_vertices</span><span class="p">),</span> <span class="n">vbMap</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">		<span class="n">m_pVBuffer</span><span class="o">-&gt;</span><span class="n">Unmap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
@@ -613,7 +618,7 @@ stroke-linejoin="round" class="feather feather-home">
 <br>▶ 第三引数はシリアル化されたルートシグネチャディスクリプタへのアクセスに使用できる<code>ID3DBlob</code>インターフェイスへのポインタを受け取るメモリブロックへのポインタ
 <br>▶ 第四引数はシリアライザーのエラーメッセージへのアクセスに使用できる<code>ID3DBlob</code>インターフェイスへのポインタを受け取るメモリブロックへのポインタ（エラーがない場合はNULL）
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-d3d12serializerootsignature">詳細</a></p>
-<p><code>m_pDevice-&gt;GetDevice()-&gt;CreateRootSignature()</code>関数は
+<p><code>m_pDevice-&gt;GetDevice()-&gt;CreateRootSignature()</code>関数はルートシグネチャレイアウトを作成する
 <br>▶ 第一引数は単一GPU操作の場合は0に設定し、複数のGPUノードがある場合はルートシグネチャディスクリプタを適用するノード(デバイスの物理アダプター)を識別するビットを設定
 <br>▶ 第二引数はシリアル化されたシグネチャディスクリプタのソースデータへのポインタ
 <br>▶ 第三引数は第二引数が指すメモリブロックのサイズ
@@ -621,6 +626,8 @@ stroke-linejoin="round" class="feather feather-home">
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12device-createrootsignature">詳細</a></p>
 <p><code>m_pRootBlob-&gt;GetBufferPointer()</code>関数はデータへのポインタを取得する
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3dcommon/nf-d3dcommon-id3d10blob-getbufferpointer">詳細</a></p>
+<p><code>m_pRootBlob-&gt;GetBufferSize()</code>関数はサイズを取得する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3dcommon/nf-d3dcommon-id3d10blob-getbuffersize">詳細</a></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// RootSignature.cpp
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">RootSignature</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="n">GraphicsDevice</span><span class="o">*</span> <span class="n">pGraphicsDevice</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">RangeType</span><span class="o">&gt;&amp;</span> <span class="n">rangeTypes</span><span class="p">)</span> <span class="p">{</span>
@@ -736,6 +743,8 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h5 id="rootsignaturecreatestaticsampler関数">RootSignature::CreateStaticSampler()関数</h5>
+<p><code>D3D12_FILTER</code>列挙はテクスチャサンプリング中のフィルターオプションを指定する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_filter">詳細</a></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// RootSignature.cpp
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">RootSignature</span><span class="o">::</span><span class="n">CreateStaticSampler</span><span class="p">(</span><span class="n">D3D12_STATIC_SAMPLER_DESC</span><span class="o">&amp;</span> <span class="n">pSamplerDesc</span><span class="p">,</span> <span class="n">TextureAddressMode</span> <span class="n">mode</span><span class="p">,</span> <span class="n">D3D12Filter</span> <span class="n">filter</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">)</span> <span class="p">{</span>
@@ -789,7 +798,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="n">SKINWEIGHT</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></div><h5 id="primitivetopologytype列挙型クラス">PrimitiveTopologyType列挙型クラス</h5>
-<p>パイプラインがジオメトリまたはハル シェーダー入力プリミティブを解釈する方法を指定する
+<p>パイプラインがジオメトリまたはハルシェーダー入力プリミティブを解釈する方法を指定する
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_primitive_topology_type">D3D12_PRIMITIVE_TOPOLOGY_TYPE列挙の詳細</a></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Pipeline.h
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
@@ -801,16 +810,21 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="n">Patch</span> <span class="o">=</span> <span class="n">D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></div><h5 id="rootsignatureクラス-1">RootSignatureクラス</h5>
-<h5 id="pipelineクラス">Pipelineクラス</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Pipeline.h
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">RootSignature</span><span class="p">;</span>
+</span></span></code></pre></div><h5 id="pipelineクラス">Pipelineクラス</h5>
 <p><code>SetRenderSettings()</code>関数を宣言</p>
 <p><code>Create()</code>関数を宣言</p>
-<p><code>ID3D12PipelineState</code>は</p>
+<p><code>ID3D12PipelineState</code>は設定されているすべてのシェーダーの状態と、特定の固定関数状態オブジェクトを表すインタフェース
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nn-d3d12-id3d12pipelinestate">詳細</a></p>
 <p><code>GetPipeline()</code>関数を定義</p>
-<p><code>PrimitiveTopologyType</code>は</p>
+<p><code>PrimitiveTopologyType</code>はプリミティブの型とプリミティブデータの順序の<code>D3D12_PRIMITIVE_TOPOLOGY_TYPE</code>型指定された値
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_graphics_pipeline_state_desc">詳細</a></p>
 <p><code>GetTopologyType()</code>関数を定義</p>
 <p><code>SetInputLayout()</code>関数を宣言</p>
 <p><code>SetBlendMode()</code>関数を宣言</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// RootSignature.h
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Pipeline.h
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Pipeline</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
@@ -839,6 +853,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></div><h4 id="pipelinecpp">Pipeline.cpp</h4>
 <h5 id="pipelinesetrendersettings関数">Pipeline::SetRenderSettings()関数</h5>
+<p>描画の設定を行う</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Pipeline.cpp
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Pipeline</span><span class="o">::</span><span class="n">SetRenderSettings</span><span class="p">(</span><span class="n">GraphicsDevice</span><span class="o">*</span> <span class="n">pGraphicsDevice</span><span class="p">,</span> <span class="n">RootSignature</span><span class="o">*</span> <span class="n">pRootSignature</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">InputLayout</span><span class="o">&gt;&amp;</span> <span class="n">inputLayouts</span><span class="p">,</span> <span class="n">CullMode</span> <span class="n">cullMode</span><span class="p">,</span> <span class="n">BlendMode</span> <span class="n">blendMode</span><span class="p">,</span> <span class="n">PrimitiveTopologyType</span> <span class="n">topologyType</span><span class="p">)</span> <span class="p">{</span>
@@ -850,6 +865,49 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="n">m_topologyType</span> <span class="o">=</span> <span class="n">topologyType</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h5 id="pipelinecreate関数">Pipeline::Create()関数</h5>
+<p>作成を行う</p>
+<p><code>D3D12_INPUT_ELEMENT_DESC</code>はグラフィックスパイプラインの<code>input-assembler</code>ステージの1つの要素について説明する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_input_element_desc">詳細</a></p>
+<p><code>SetInputLayout()</code>を実行</p>
+<p><code>D3D12_GRAPHICS_PIPELINE_STATE_DESC</code>構造体はグラフィックスパイプラインの状態オブジェクトについて説明する
+<br>▶ <code>.VS.pShaderBytecode</code>は<strong>頂点シェーダー</strong>のメモリブロックへのポインタ
+<br>▶ <code>.VS.BytecodeLength</code>は<strong>頂点シェーダー</strong>のシェーダーデータのサイズ
+<br>▶ <code>.HS.pShaderBytecode</code>は<strong>ハルシェーダー</strong>のメモリブロックへのポインタ
+<br>▶ <code>.HS.BytecodeLength</code>は<strong>ハルシェーダー</strong>のシェーダーデータのサイズ
+<br>▶ <code>.DS.pShaderBytecode</code>は<strong>ドメインシェーダー</strong>のメモリブロックへのポインタ
+<br>▶ <code>.DS.BytecodeLength</code>は<strong>ドメインシェーダー</strong>のシェーダーデータのサイズ
+<br>▶ <code>.GS.pShaderBytecode</code>は<strong>ジオメトリシェーダー</strong>のメモリブロックへのポインタ
+<br>▶ <code>.GS.BytecodeLength</code>は<strong>ジオメトリシェーダー</strong>のシェーダーデータのサイズ
+<br>▶ <code>.PS.pShaderBytecode</code>は<strong>ピクセルシェーダー</strong>のメモリブロックへのポインタ
+<br>▶ <code>.PS.BytecodeLength</code>は<strong>ピクセルシェーダー</strong>のシェーダーデータのサイズ
+<br>▶ <code>.SampleMask</code>はブレンド状態のサンプルマスク
+<br>▶ <code>.RasterizerState.CullMode</code>は指定した方向に向いている三角形が描画されないことを指定する
+<br>▶ <code>.RasterizerState.FillMode</code>はレンダリング時に使用する塗りつぶしモードを指定する
+<br>▶ <code>.RasterizerState.DepthClipEnable</code>は距離に基づいてクリッピングを有効にするかどうかを指定する
+<br>▶ <code>.BlendState.AlphaToCoverageEnable</code>はピクセルをレンダーターゲットに設定するときに、マルチサンプリング手法としてアルファからカバレッジを使用するかどうかを指定する
+<br>▶ <code>.BlendState.IndependentBlendEnable</code>は同時レンダー ターゲットで独立したブレンドを有効にするかどうかを指定する
+<br>▶ <code>.BlendState.RenderTarget[0]</code>はレンダーターゲットのブレンド状態を記述する<code>D3D12_RENDER_TARGET_BLEND_DESC</code>構造体の配列
+<br>▶ <code>.InputLayout.pInputElementDescs</code>は入力アセンブラーステージのデータ型を記述する
+<br>▶ <code>.InputLayout.NumElements</code>は入力要素の配列内の入力データ型の数
+<br>▶ <code>.PrimitiveTopologyType</code>はプリミティブの型とプリミティブ データの順序を指定する
+<br>▶ <code>.NumRenderTargets</code>は<code>RTVFormats</code>メンバー内のレンダー ターゲット形式の数
+<br>▶ <code>.RTVFormats[i]</code>はレンダーターゲット形式の<code>DXGI_FORMAT</code>型指定された値の配列
+<br>▶ <code>.SampleDesc.Count</code>はピクセルあたりのマルチサンプルの数
+<br>▶ <code>.pRootSignature</code>は<code>ID3D12RootSignature</code>オブジェクトへのポインタ
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_graphics_pipeline_state_desc">詳細</a></p>
+<p><code>D3D12_RENDER_TARGET_BLEND_DESC</code>はレンダーターゲットのブレンド状態について説明する構造体
+<br>▶ <code>blendDesc.RenderTargetWriteMask</code>は書き込みマスクを指定する
+<br>▶ <code>blendDesc.BlendOp</code>はSrcBlend操作とDestBlend操作を組み合わせる方法を定義する
+<br>▶ <code>blendDesc.SrcBlend</code>はピクセルシェーダーが出力するRGB値に対して実行する操作を指定する
+<br>▶ <code>blendDesc.DestBlend</code>はレンダーターゲットの現在のRGB値に対して実行する操作を指定する
+<br>▶ <code>blendDesc.BlendOpAlpha</code>はSrcBlendAlpha操作とDestBlendAlpha操作を組み合わせる方法を定義する
+<br>▶ <code>blendDesc.SrcBlendAlpha</code>はピクセルシェーダーが出力するアルファ値に対して実行する操作を指定する
+<br>▶ <code>blendDesc.DestBlendAlpha</code>はレンダーターゲットの現在のアルファ値に対して実行する操作を指定する
+<br>▶ <code>blendDesc.LogicOp</code>はレンダーターゲットに対して構成する論理操作を指定する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_render_target_blend_desc">詳細</a></p>
+<p><code>SetBlendMode()</code>を実行</p>
+<p><code>m_pDevice-&gt;GetDevice()-&gt;CreateGraphicsPipelineState()</code>はグラフィックスパイプラインの状態オブジェクトを作成する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12device-creategraphicspipelinestate">詳細</a></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Pipeline.cpp
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Pipeline</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ID3DBlob</span><span class="o">*&gt;</span> <span class="n">pBlobs</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">DXGI_FORMAT</span><span class="o">&gt;</span> <span class="n">formats</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bDepth</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bDepthMask</span><span class="p">,</span> <span class="kt">int</span> <span class="n">rtvCount</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bWireFrame</span><span class="p">)</span> <span class="p">{</span>
@@ -944,32 +1002,25 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Pipeline</span><span class="o">::</span><span class="n">SetInputLayout</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="o">&gt;&amp;</span> <span class="n">inputElements</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">InputLayout</span><span class="o">&gt;&amp;</span> <span class="n">inputLayouts</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">inputLayouts</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">inputLayouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">InputLayout</span><span class="o">::</span><span class="n">POSITION</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;POSITION&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R32G32B32_FLOAT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">				<span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;POSITION&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R32G32B32_FLOAT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
 </span></span><span class="line"><span class="cl">		<span class="p">}</span>
 </span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">inputLayouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">InputLayout</span><span class="o">::</span><span class="n">TEXCOORD</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;TEXCOORD&#34;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">DXGI_FORMAT_R32G32_FLOAT</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">				<span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span><span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span> <span class="p">,</span><span class="mi">0</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;TEXCOORD&#34;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">DXGI_FORMAT_R32G32_FLOAT</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span><span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span> <span class="p">,</span><span class="mi">0</span> <span class="p">});</span>
 </span></span><span class="line"><span class="cl">		<span class="p">}</span>
 </span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">inputLayouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">InputLayout</span><span class="o">::</span><span class="n">NORMAL</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;NORMAL&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R32G32B32_FLOAT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">				<span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;NORMAL&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R32G32B32_FLOAT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
 </span></span><span class="line"><span class="cl">		<span class="p">}</span>
 </span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">inputLayouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">InputLayout</span><span class="o">::</span><span class="n">COLOR</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;COLOR&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R8G8B8A8_UNORM</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">				<span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;COLOR&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R8G8B8A8_UNORM</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
 </span></span><span class="line"><span class="cl">		<span class="p">}</span>
 </span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">inputLayouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">InputLayout</span><span class="o">::</span><span class="n">TANGENT</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;TANGENT&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R32G32B32_FLOAT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">				<span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;TANGENT&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R32G32B32_FLOAT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
 </span></span><span class="line"><span class="cl">		<span class="p">}</span>
 </span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">inputLayouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">InputLayout</span><span class="o">::</span><span class="n">SKININDEX</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;SKININDEX&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R16G16B16A16_UINT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">				<span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;SKININDEX&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R16G16B16A16_UINT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
 </span></span><span class="line"><span class="cl">		<span class="p">}</span>
 </span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">inputLayouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">InputLayout</span><span class="o">::</span><span class="n">SKINWEIGHT</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;SKINWEIGHT&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R32G32B32A32_FLOAT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">				<span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">			<span class="n">inputElements</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">D3D12_INPUT_ELEMENT_DESC</span><span class="p">{</span> <span class="s">&#34;SKINWEIGHT&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DXGI_FORMAT_R32G32B32A32_FLOAT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">D3D12_APPEND_ALIGNED_ELEMENT</span><span class="p">,</span> <span class="n">D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
 </span></span><span class="line"><span class="cl">		<span class="p">}</span>
 </span></span><span class="line"><span class="cl">	<span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
@@ -1021,6 +1072,10 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="kt">bool</span> <span class="n">IsWireFrame</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></div><h5 id="shaderクラス">Shaderクラス</h5>
+<p>作成を行う<code>Create()</code>関数を宣言</p>
+<p>描画を開始する<code>Begin()</code>関数を宣言</p>
+<p>メッシュの描画を行う<code>DrawMesh()</code>関数を宣言</p>
+<p>シェーダーファイルのロードを行う<code>LoadShaderFile()</code>関数を宣言</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Shader.h
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Shader</span> <span class="p">{</span>
@@ -1047,6 +1102,10 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
 </span></span></code></pre></div><h4 id="shadercpp">Shader.cpp</h4>
 <h5 id="shadercreate関数">Shader::Create()関数</h5>
+<p><code>LoadShaderFile()</code>を実行</p>
+<p>ルートシグネチャを作成するため、<code>m_upRootSignature-&gt;Create()</code>を実行</p>
+<p>パイプラインの描画の設定を行うため、<code>m_upPipeline-&gt;SetRenderSettings()</code>を実行</p>
+<p>パイプラインの作成を行うため、<code>m_upPipeline-&gt;Create()</code>を実行</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Shader.cpp
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Shader</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="n">GraphicsDevice</span><span class="o">*</span> <span class="n">pGraphicsDevice</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">wstring</span><span class="o">&amp;</span> <span class="n">filePath</span><span class="p">,</span> <span class="k">const</span> <span class="n">RenderingSetting</span><span class="o">&amp;</span> <span class="n">renderingSetting</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">RangeType</span><span class="o">&gt;&amp;</span> <span class="n">rangeTypes</span><span class="p">)</span> <span class="p">{</span>
@@ -1062,6 +1121,27 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="n">m_upPipeline</span><span class="o">-&gt;</span><span class="n">Create</span><span class="p">({</span> <span class="n">m_pVSBlob</span> <span class="p">,</span><span class="n">m_pHSBlob</span> <span class="p">,</span><span class="n">m_pDSBlob</span> <span class="p">,</span><span class="n">m_pGSBlob</span> <span class="p">,</span><span class="n">m_pPSBlob</span> <span class="p">},</span> <span class="n">renderingSetting</span><span class="p">.</span><span class="n">Formats</span><span class="p">,</span> <span class="n">renderingSetting</span><span class="p">.</span><span class="n">IsDepth</span><span class="p">,</span> <span class="n">renderingSetting</span><span class="p">.</span><span class="n">IsDepthMask</span><span class="p">,</span> <span class="n">renderingSetting</span><span class="p">.</span><span class="n">RTVCount</span><span class="p">,</span> <span class="n">renderingSetting</span><span class="p">.</span><span class="n">IsWireFrame</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h5 id="shaderbegin関数">Shader::Begin()関数</h5>
+<p><code>m_pDevice-&gt;GetCmdList()-&gt;SetPipelineState()</code>を実行してパイプライン状態をコマンドリストに割り当てる
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-setpipelinestate">詳細</a></p>
+<p><code>m_pDevice-&gt;GetCmdList()-&gt;SetGraphicsRootSignature()</code>を実行してグラフィックス ルートシグネチャのレイアウトを設定する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-setgraphicsrootsignature">詳細</a></p>
+<p><code>D3D12_PRIMITIVE_TOPOLOGY_TYPE</code>列挙はパイプラインがジオメトリまたはハルシェーダー入力プリミティブを解釈する方法を指定する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ne-d3d12-d3d12_primitive_topology_type">詳細</a></p>
+<p><code>D3D12_VIEWPORT</code>はビューポートの寸法を指定する
+<br>▶ <code>viewport.Width</code>はビューポートの幅
+<br>▶ <code>viewport.Height</code>はビューポートの高さ
+<br>▶ <code>viewport.MinDepth</code>はビューポートの最小深度
+<br>▶ <code>viewport.MaxDepth</code>はビューポートの最大深度
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_viewport">詳細</a></p>
+<p><code>D3D12_RECT</code>はRECT構造体は、左上隅と右下隅の座標によって四角形を定義する
+<br>▶ <code>rect.right</code>は四角形の右下隅のx座標を指定する
+<br>▶ <code>rect.bottom</code>は四角形の右下隅のy座標を指定する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/direct3d12/d3d12-rect">詳細1</a>
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/windef/ns-windef-rect">詳細2</a></p>
+<p><code>GraphicsDevice::Instance().GetCmdList()-&gt;RSSetViewports()</code>を実行してビューポートの配列をパイプラインのラスタライザーステージにバインドする
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-rssetviewports">詳細</a></p>
+<p><code>GraphicsDevice::Instance().GetCmdList()-&gt;RSSetScissorRects()</code>を実行してシザー矩形の配列をラスタライザーステージにバインドする
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-rssetscissorrects">詳細</a></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Shader.cpp
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Shader</span><span class="o">::</span><span class="n">Begin</span><span class="p">(</span><span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="kt">int</span> <span class="n">h</span><span class="p">)</span> <span class="p">{</span>
@@ -1101,12 +1181,27 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Instance</span><span class="p">().</span><span class="n">GetCmdList</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">RSSetScissorRects</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rect</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h5 id="shaderdrawmesh関数">Shader::DrawMesh()関数</h5>
+<p><code>mesh.DrawInstanced()</code>を実行してインスタンス描画を行う</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Shader.cpp
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Shader</span><span class="o">::</span><span class="n">DrawMesh</span><span class="p">(</span><span class="k">const</span> <span class="n">Mesh</span><span class="o">&amp;</span> <span class="n">mesh</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="n">mesh</span><span class="p">.</span><span class="n">DrawInstanced</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h5 id="shaderloadshaderfile関数">Shader::LoadShaderFile()関数</h5>
+<p><code>ID3DInclude</code>はシェーダーの内容を開いて読み取るためのインターフェース（DirectXのシェーダーコンパイラがシェーダーコード内で#includeディレクティブを処理するためのメカニズムを提供する）
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3dcommon/nn-d3dcommon-id3dinclude">詳細</a></p>
+<p><code>D3D_COMPILE_STANDARD_FILE_INCLUDE</code>はシェーダーコンパイラに標準的なファイルベースのインクルードメカニズムを提供し、シェーダーコンパイラはファイルシステム上で直接インクルードファイルを探す</p>
+<p><code>D3DCompileFromFile()</code>は特定のターゲットのバイトコードにHLSLコードをコンパイルする
+<br>▶第一引数はシェーダーコードを含むファイルの名前を含む、nullで終わる定数文字列へのポインタ
+<br>▶第二引数はシェーダーマクロを定義する<code>D3D_SHADER_MACRO</code>構造体の省略可能な配列
+<br>▶第三引数はコンパイラがインクルードファイルの処理に使用する<code>ID3DInclude</code>インターフェイスへの省略可能なポインタ
+<br>▶第四引数はシェーダーの実行が開始されるシェーダーエントリポイント関数の名前を含む、null で終わる定数文字列へのポインタ
+<br>▶第五引数はコンパイル対象のシェーダーターゲットまたはシェーダー機能のセットを指定する、null で終わる定数文字列へのポインタ
+<br>▶第六引数はコンパイラがHLSLコードをコンパイルする方法を指定する
+<br>▶第七引数はコンパイラが効果をコンパイルする方法を指定する
+<br>▶第八引数はコンパイル済みコードへのアクセスに使用できる<code>ID3DBlob</code>インターフェイスへのポインターを受け取る変数へのポインタ
+<br>▶第九引数はコンパイラエラーメッセージへのアクセスに使用できる<code>ID3DBlob</code>インターフェイスへのポインターを受け取る変数への省略可能なポインタ
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3dcompiler/nf-d3dcompiler-d3dcompilefromfile">詳細</a></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Shader.cpp
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Shader</span><span class="o">::</span><span class="n">LoadShaderFile</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">wstring</span><span class="o">&amp;</span> <span class="n">filePath</span><span class="p">)</span> <span class="p">{</span>
@@ -1175,6 +1270,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;../Graphics/Shader/Shader.h&#34;</span><span class="cp">
 </span></span></span></code></pre></div><h3 id="ポリゴンの描画-1">ポリゴンの描画</h3>
 <h4 id="graphicsdeviceh-1">GraphicsDevice.h</h4>
+<p>描画準備を行う<code>Prepare()</code>関数を宣言</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.h
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GraphicsDevice</span> <span class="p">{</span>
@@ -1186,6 +1282,22 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">	<span class="c1">// ~ //
 </span></span></span></code></pre></div><h4 id="graphicsdevicecpp">GraphicsDevice.cpp</h4>
 <h5 id="graphicsdeviceprepare関数">GraphicsDevice::Prepare()関数</h5>
+<p><code>m_pSwapChain-&gt;GetCurrentBackBufferIndex()</code>を実行して、スワップチェーンの現在のバック バッファーのインデックスを取得する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi1_4/nf-dxgi1_4-idxgiswapchain3-getcurrentbackbufferindex">詳細</a></p>
+<p>リソースとして引数に渡したバッファの扱いを変更する関数<code>SetResourceBarrier()</code>を実行</p>
+<p>レンダーターゲットビューのCPU側アドレスを返す関数<code>m_pRTVHeap-&gt;GetRTVCPUHandle()</code>を実行</p>
+<p><code>m_pCmdList-&gt;OMSetRenderTargets()</code>はレンダーターゲットと深度ステンシルのCPUディスクリプタハンドルを設定する
+<br>▶ 第一引数は<code>rtvH</code>配列内のエントリの数
+<br>▶ 第二引数はレンダーターゲットディスクリプタのヒープの開始を表すCPUディスクリプタハンドルを記述する<code>D3D12_CPU_DESCRIPTOR_HANDLE</code>構造体の配列を指定
+<br>▶ 第三引数について、<code>False</code>はハンドルが第一引数のハンドルの配列の最初であることを意味する
+<br>▶ 第四引数は深度ステンシルディスクリプタを保持するヒープの開始を表すCPUディスクリプタハンドル
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-omsetrendertargets">詳細</a></p>
+<p><code>m_pCmdList-&gt;ClearRenderTargetView()</code>はレンダーターゲット内のすべての要素を1つの値に設定する
+<br>▶ 第一引数はレンダーターゲットがクリアされるヒープの開始を表すCPUディスクリプタハンドルを記述
+<br>▶ 第二引数は塗りつぶす色を表す4成分配列
+<br>▶ 第三引数は第四引数のパラメーターが指定する配列内の四角形の数を指定
+<br>▶ 第四引数はリソースビューでクリアする四角形の<code>D3D12_RECT</code>構造体の配列を指定し、NULLの場合はリソースビュー全体をクリアする
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-clearrendertargetview">詳細</a></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.cpp
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Prepare</span><span class="p">()</span> <span class="p">{</span>
@@ -1199,6 +1311,20 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">m_pCmdList</span><span class="o">-&gt;</span><span class="n">ClearRenderTargetView</span><span class="p">(</span><span class="n">rtvH</span><span class="p">,</span> <span class="n">clearColor</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h5 id="graphicsdevicescreenflip関数">GraphicsDevice::ScreenFlip()関数</h5>
+<p><code>m_pSwapChain-&gt;GetCurrentBackBufferIndex()</code>はスワップチェーンの現在のバックバッファーのインデックスを取得する
+<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi1_4/nf-dxgi1_4-idxgiswapchain3-getcurrentbackbufferindex">詳細</a></p>
+<p>リソースとして引数に渡したバッファの扱いを変更する関数<code>SetResourceBarrier()</code>を実行</p>
+<p><code>m_pCmdList-&gt;Close()</code>はコマンドリストへの記録が完了したことを示す
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-close">詳細</a></p>
+<p><code>m_pCmdQueue-&gt;ExecuteCommandLists()</code>は実行するコマンドリストの配列を送信する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12commandqueue-executecommandlists">詳細</a></p>
+<p>コマンドキューの同期待ちを行う関数<code>WaitForCommandQueue()</code>を実行</p>
+<p><code>m_pCmdAllocator-&gt;Reset()</code>はコマンドアロケーターに関連付けられているメモリを再利用することを示す
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12commandallocator-reset">詳細</a></p>
+<p><code>m_pCmdList-&gt;Reset()</code>は新しいコマンドリストが作成されたかのように、コマンドリストを初期状態に戻す
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-reset">詳細</a></p>
+<p><code>m_pSwapChain-&gt;Present()</code>はレンダリングされたイメージをユーザーに表示する
+<br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-present">詳細</a></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// GraphicsDevice.cpp
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">ScreenFlip</span><span class="p">()</span> <span class="p">{</span>
@@ -1266,7 +1392,9 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl">		<span class="n">GraphicsDevice</span><span class="o">::</span><span class="n">Instance</span><span class="p">().</span><span class="n">ScreenFlip</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">	<span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div>
+</span></span></code></pre></div><h3 id="結果">結果</h3>
+<p><a href="https://github.com/nishihi6/DX12FrameworkBasics/wiki/Class-Diagram/">クラス図</a></p>
+
             </div>
         </article></main>
 </div>
