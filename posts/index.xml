@@ -6,7 +6,17 @@
     <description>Recent content in Posts on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Wed, 20 Sep 2023 22:48:58 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 29 Sep 2023 23:41:38 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CG理論 #3 変換 [Devlog #008]</title>
+      <link>https://nishihi6.github.io/blog/posts/devlog_cg_03/</link>
+      <pubDate>Fri, 29 Sep 2023 23:41:38 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/devlog_cg_03/</guid>
+      <description>CG屋さんのバイブル：Real Time Rendering Fourth Edition を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します）
+変換 変換（transform） 基本的な変換 平行移動 回転 拡大縮小（スケール） せん断 変換の連結 剛体変換 法線の変換 逆行列の計算 特殊な行列変換と操作 オイラー変換 オイラー変換からのパラメータ抽出 行列の分解 任意の軸の周りの回転 クォータニオン クォータニオン クォータニオン変換 行列への変換 球面線形補間 頂点ブレンド モーフィング ジオメトリーキャッシュの再生 投影 正投影 透視投影 </description>
+    </item>
+    
     <item>
       <title>DirectX12の描画処理 #4 [Devlog #007]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_dx12_04/</link>

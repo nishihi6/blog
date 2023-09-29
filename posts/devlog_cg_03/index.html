@@ -3,11 +3,11 @@
 <meta http-equiv="content-type" content="text/html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title itemprop="name">Posts | nishihi6</title>
-<meta property="og:title" content="Posts | nishihi6" />
-<meta name="twitter:title" content="Posts | nishihi6" />
-<meta itemprop="name" content="Posts | nishihi6" />
-<meta name="application-name" content="Posts | nishihi6" />
+<title itemprop="name">CG理論 #3 変換 [Devlog #008] | nishihi6</title>
+<meta property="og:title" content="CG理論 #3 変換 [Devlog #008] | nishihi6" />
+<meta name="twitter:title" content="CG理論 #3 変換 [Devlog #008] | nishihi6" />
+<meta itemprop="name" content="CG理論 #3 変換 [Devlog #008] | nishihi6" />
+<meta name="application-name" content="CG理論 #3 変換 [Devlog #008] | nishihi6" />
 <meta property="og:site_name" content="nishihi6" />
 
 <meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
@@ -32,11 +32,6 @@
     
     
     
-    <link rel="first" href="/blog/posts/" />
-    <link rel="last" href="/blog/posts/" />
-    
-    
-    
 
     <meta property="og:type" content="article" />
     <meta property="og:article:published_time" content=2023-09-29T23:41:38&#43;0900 />
@@ -50,14 +45,14 @@
     {
         "@context": "http://schema.org",
         "@type": "Article",
-        "headline": "Posts",
+        "headline": "CG理論 #3 変換 [Devlog #008]",
         "author": {
         "@type": "Person",
         "name": ""
         },
         "datePublished": "2023-09-29",
         "description": "",
-        "wordCount":  0 ,
+        "wordCount":  33 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-09-29",
         "image": {
@@ -76,9 +71,7 @@
 
     
 
-    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/">
-    <link href="/blog/posts/index.xml" rel="alternate" type="application/rss+xml" title="nishihi6">
-    <link href="/blog/posts/index.xml" rel="feed" type="application/rss+xml" title="nishihi6">
+    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/devlog_cg_03/">
     <link href="/blog/style.min.840eada6dfddec7b8ccfcf867f039bf80b1f16a265ec6e01dc553a3dddc9d509.css" rel="stylesheet">
     <link href="/blog/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
 
@@ -179,177 +172,100 @@ stroke-linejoin="round" class="feather feather-home">
         </div>
     </nav>
 </div>
-<div class="wrapper list-page">
-    <header class="header">
-        <h1 class="header-title center">Posts</h1>
-    </header>
+
+<div class="wrapper post">
     <main class="page-content" aria-label="Content">
-        
-        
-        <h2 class="post-year">2023</h2>
+        <article>
+            <header class="header">
+                <h1 class="header-title">CG理論 #3 変換 [Devlog #008]</h1>
+                
+                
+                <div class="post-meta">
+                    <time datetime="2023-09-29T23:41:38&#43;09:00" itemprop="datePublished"> 29 Sep 2023 </time>
+                </div>
+                
+            </header>
+            <details class="toc">
+                <summary><b>Table of Contents</b></summary>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#基本的な変換">基本的な変換</a>
+      <ul>
+        <li><a href="#平行移動">平行移動</a></li>
+        <li><a href="#回転">回転</a></li>
+        <li><a href="#拡大縮小スケール">拡大縮小（スケール）</a></li>
+        <li><a href="#せん断">せん断</a></li>
+        <li><a href="#変換の連結">変換の連結</a></li>
+        <li><a href="#剛体変換">剛体変換</a></li>
+        <li><a href="#法線の変換">法線の変換</a></li>
+        <li><a href="#逆行列の計算">逆行列の計算</a></li>
+      </ul>
+    </li>
+    <li><a href="#特殊な行列変換と操作">特殊な行列変換と操作</a>
+      <ul>
+        <li><a href="#オイラー変換">オイラー変換</a></li>
+        <li><a href="#オイラー変換からのパラメータ抽出">オイラー変換からのパラメータ抽出</a></li>
+        <li><a href="#行列の分解">行列の分解</a></li>
+        <li><a href="#任意の軸の周りの回転">任意の軸の周りの回転</a></li>
+      </ul>
+    </li>
+    <li><a href="#クォータニオン">クォータニオン</a>
+      <ul>
+        <li><a href="#クォータニオン-1">クォータニオン</a></li>
+        <li><a href="#クォータニオン変換">クォータニオン変換</a>
+          <ul>
+            <li><a href="#行列への変換">行列への変換</a></li>
+            <li><a href="#球面線形補間">球面線形補間</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#頂点ブレンド">頂点ブレンド</a></li>
+    <li><a href="#モーフィング">モーフィング</a></li>
+    <li><a href="#ジオメトリーキャッシュの再生">ジオメトリーキャッシュの再生</a></li>
+    <li><a href="#投影">投影</a>
+      <ul>
+        <li><a href="#正投影">正投影</a></li>
+        <li><a href="#透視投影">透視投影</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+            </details><div class="page-content">
+                <p>CG屋さんのバイブル：<a href="https://www.borndigital.co.jp/book/15291.html">Real Time Rendering Fourth Edition</a> を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します）</p>
+<h1 id="変換">変換</h1>
+<h1 id="変換transform">変換（transform）</h1>
+<hr>
+<h2 id="基本的な変換">基本的な変換</h2>
+<h3 id="平行移動">平行移動</h3>
+<h3 id="回転">回転</h3>
+<h3 id="拡大縮小スケール">拡大縮小（スケール）</h3>
+<h3 id="せん断">せん断</h3>
+<h3 id="変換の連結">変換の連結</h3>
+<h3 id="剛体変換">剛体変換</h3>
+<h3 id="法線の変換">法線の変換</h3>
+<h3 id="逆行列の計算">逆行列の計算</h3>
+<h2 id="特殊な行列変換と操作">特殊な行列変換と操作</h2>
+<h3 id="オイラー変換">オイラー変換</h3>
+<h3 id="オイラー変換からのパラメータ抽出">オイラー変換からのパラメータ抽出</h3>
+<h3 id="行列の分解">行列の分解</h3>
+<h3 id="任意の軸の周りの回転">任意の軸の周りの回転</h3>
+<h2 id="クォータニオン">クォータニオン</h2>
+<h3 id="クォータニオン-1">クォータニオン</h3>
+<h3 id="クォータニオン変換">クォータニオン変換</h3>
+<h4 id="行列への変換">行列への変換</h4>
+<h4 id="球面線形補間">球面線形補間</h4>
+<h2 id="頂点ブレンド">頂点ブレンド</h2>
+<h2 id="モーフィング">モーフィング</h2>
+<h2 id="ジオメトリーキャッシュの再生">ジオメトリーキャッシュの再生</h2>
+<h2 id="投影">投影</h2>
+<h3 id="正投影">正投影</h3>
+<h3 id="透視投影">透視投影</h3>
 
-        
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_cg_03/">CG理論 #3 変換 [Devlog #008]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-09-29T23:41:38&#43;0900">
-        29 Sep 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_04/">DirectX12の描画処理 #4 [Devlog #007]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-09-20T22:48:58&#43;0900">
-        20 Sep 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_unity-vr_01/">Unity-VR 備忘録 #1 [Devlog #006]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-09-06T17:42:09&#43;0900">
-        6 Sep 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_cg_02/">CG理論 #2 グラフィクス処理 [Devlog #005]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-30T03:46:40&#43;0900">
-        30 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/memo_cmake_01/">CMakeについてのメモ [Memo #002]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-29T15:43:33&#43;0900">
-        29 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/memo_links_01/">メモリンク集 [Memo #001]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-28T21:43:10&#43;0900">
-        28 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_03/">DirectX12の描画処理 #3 [Devlog #004]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-27T21:44:55&#43;0900">
-        27 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_02/">DirectX12の描画処理 #2 [Devlog #003]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-26T18:46:37&#43;0900">
-        26 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_cg_01/">CG理論 #1 レンダリングパイプライン [Devlog #002]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-24T15:22:11&#43;0900">
-        24 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_01/">DirectX12の描画処理 #1 [Devlog #001]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-23T01:19:34&#43;0900">
-        23 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/my-first-post/">My First Post（記事作成に関する備忘録）</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-22T06:05:10&#43;0900">
-        22 Aug 2023
-    </time>
-</article>
-
-
-         
-
-         
-
-    </main>
-</div><footer class="footer">
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
     <span class="footer_item"> </span>
     &nbsp;
 
