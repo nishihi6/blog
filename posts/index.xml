@@ -6,7 +6,17 @@
     <description>Recent content in Posts on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Fri, 29 Sep 2023 23:41:38 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 30 Sep 2023 22:43:30 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CG理論 #4 シェーディング [Devlog #009]</title>
+      <link>https://nishihi6.github.io/blog/posts/devlog_cg_04/</link>
+      <pubDate>Sat, 30 Sep 2023 22:43:30 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/devlog_cg_04/</guid>
+      <description>CG屋さんのバイブル：Real Time Rendering Fourth Edition を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します）
+シェーディング シェーディングの基礎 シェーディングモデル 光源 平行光源 点光源 ポイント/オムニライト スポットライト その他の点光源 その他のライト シェーディングモデルの実装 評価の頻度 実装例 マテリアルシステム エイリアシングとアンチエイリアシング サンプリングとフィルタリングの理論 再構成 リサンプリング スクリーンベースのアンチエイリアシング サンプリングパターン 形態学的手法 透明度、アルファと合成 ブレンドの順番 順番に依存しない透明度 乗算済みアルファと合成 ディスプレイエンコーディング </description>
+    </item>
+    
     <item>
       <title>CG理論 #3 変換 [Devlog #008]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_cg_03/</link>

@@ -1,12 +1,13 @@
-<!DOCTYPE html><html lang="ja-jp" class="dark"><head><meta charset="utf-8">
+<!DOCTYPE html>
+<html lang="ja-jp"><head><meta charset="utf-8">
 <meta http-equiv="content-type" content="text/html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title itemprop="name">Home | nishihi6</title>
-<meta property="og:title" content="Home | nishihi6" />
-<meta name="twitter:title" content="Home | nishihi6" />
-<meta itemprop="name" content="Home | nishihi6" />
-<meta name="application-name" content="Home | nishihi6" />
+<title itemprop="name">CG理論 #4 シェーディング [Devlog #009] | nishihi6</title>
+<meta property="og:title" content="CG理論 #4 シェーディング [Devlog #009] | nishihi6" />
+<meta name="twitter:title" content="CG理論 #4 シェーディング [Devlog #009] | nishihi6" />
+<meta itemprop="name" content="CG理論 #4 シェーディング [Devlog #009] | nishihi6" />
+<meta name="application-name" content="CG理論 #4 シェーディング [Devlog #009] | nishihi6" />
 <meta property="og:site_name" content="nishihi6" />
 
 <meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
@@ -27,14 +28,50 @@
 
 
 
+    
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2023-09-30T22:43:30&#43;0900 />
+    <meta property="article:published_time" content=2023-09-30T22:43:30&#43;0900 />
+
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "CG理論 #4 シェーディング [Devlog #009]",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2023-09-30",
+        "description": "",
+        "wordCount":  32 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2023-09-30",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "nishihi6"
+        }
+    }
+    </script>
+
 
 <meta name="generator" content="Hugo 0.117.0">
 
     
 
-    <link rel="canonical" href="https://nishihi6.github.io/blog/">
-    <link href="/blog/index.xml" rel="alternate" type="application/rss+xml" title="nishihi6">
-    <link href="/blog/index.xml" rel="feed" type="application/rss+xml" title="nishihi6">
+    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/devlog_cg_04/">
     <link href="/blog/style.min.840eada6dfddec7b8ccfcf867f039bf80b1f16a265ec6e01dc553a3dddc9d509.css" rel="stylesheet">
     <link href="/blog/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
 
@@ -75,7 +112,7 @@
     });"></script>
 
     </head>
-<body data-theme="dark" class="notransition">
+<body data-theme = "dark" class="notransition">
 
 <script src="/blog/js/theme.min.8961c317c5b88b953fe27525839672c9343f1058ab044696ca225656c8ba2ab0.js" integrity="sha256-iWHDF8W4i5U/4nUlg5ZyyTQ/EFirBEaWyiJWVsi6KrA="></script>
 
@@ -102,14 +139,14 @@ stroke-linejoin="round" class="feather feather-home">
                 
                 
                 <li>
-                    <a class="menu-link active" href="/blog/">
+                    <a class="menu-link " href="/blog/">
                         Home
                     </a>
                     
                 </li>
                 
                 <li>
-                    <a class="menu-link " href="/blog/posts/">
+                    <a class="menu-link active" href="/blog/posts/">
                         Posts
                     </a>
                     
@@ -135,95 +172,104 @@ stroke-linejoin="round" class="feather feather-home">
         </div>
     </nav>
 </div>
-<div class="wrapper">
-        
 
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">CG理論 #4 シェーディング [Devlog #009]</h1>
+                
+                
+                <div class="post-meta">
+                    <time datetime="2023-09-30T22:43:30&#43;09:00" itemprop="datePublished"> 30 Sep 2023 </time>
+                </div>
+                
+            </header>
+            <details class="toc">
+                <summary><b>Table of Contents</b></summary>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#シェーディングモデル">シェーディングモデル</a></li>
+    <li><a href="#光源">光源</a>
+      <ul>
+        <li><a href="#平行光源">平行光源</a></li>
+        <li><a href="#点光源">点光源</a>
+          <ul>
+            <li><a href="#ポイントオムニライト">ポイント/オムニライト</a></li>
+            <li><a href="#スポットライト">スポットライト</a></li>
+            <li><a href="#その他の点光源">その他の点光源</a></li>
+          </ul>
+        </li>
+        <li><a href="#その他のライト">その他のライト</a></li>
+      </ul>
+    </li>
+    <li><a href="#シェーディングモデルの実装">シェーディングモデルの実装</a>
+      <ul>
+        <li><a href="#評価の頻度">評価の頻度</a></li>
+        <li><a href="#実装例">実装例</a></li>
+        <li><a href="#マテリアルシステム">マテリアルシステム</a></li>
+      </ul>
+    </li>
+    <li><a href="#エイリアシングとアンチエイリアシング">エイリアシングとアンチエイリアシング</a>
+      <ul>
+        <li><a href="#サンプリングとフィルタリングの理論">サンプリングとフィルタリングの理論</a>
+          <ul>
+            <li><a href="#再構成">再構成</a></li>
+            <li><a href="#リサンプリング">リサンプリング</a></li>
+          </ul>
+        </li>
+        <li><a href="#スクリーンベースのアンチエイリアシング">スクリーンベースのアンチエイリアシング</a>
+          <ul>
+            <li><a href="#サンプリングパターン">サンプリングパターン</a></li>
+            <li><a href="#形態学的手法">形態学的手法</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#透明度アルファと合成">透明度、アルファと合成</a>
+      <ul>
+        <li><a href="#ブレンドの順番">ブレンドの順番</a></li>
+        <li><a href="#順番に依存しない透明度">順番に依存しない透明度</a></li>
+        <li><a href="#乗算済みアルファと合成">乗算済みアルファと合成</a></li>
+      </ul>
+    </li>
+    <li><a href="#ディスプレイエンコーディング">ディスプレイエンコーディング</a></li>
+  </ul>
+</nav>
+            </details><div class="page-content">
+                <p>CG屋さんのバイブル：<a href="https://www.borndigital.co.jp/book/15291.html">Real Time Rendering Fourth Edition</a> を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します）</p>
+<h1 id="シェーディング">シェーディング</h1>
+<h1 id="シェーディングの基礎">シェーディングの基礎</h1>
+<hr>
+<h2 id="シェーディングモデル">シェーディングモデル</h2>
+<h2 id="光源">光源</h2>
+<h3 id="平行光源">平行光源</h3>
+<h3 id="点光源">点光源</h3>
+<h4 id="ポイントオムニライト">ポイント/オムニライト</h4>
+<h4 id="スポットライト">スポットライト</h4>
+<h4 id="その他の点光源">その他の点光源</h4>
+<h3 id="その他のライト">その他のライト</h3>
+<h2 id="シェーディングモデルの実装">シェーディングモデルの実装</h2>
+<h3 id="評価の頻度">評価の頻度</h3>
+<h3 id="実装例">実装例</h3>
+<h3 id="マテリアルシステム">マテリアルシステム</h3>
+<h2 id="エイリアシングとアンチエイリアシング">エイリアシングとアンチエイリアシング</h2>
+<h3 id="サンプリングとフィルタリングの理論">サンプリングとフィルタリングの理論</h3>
+<h4 id="再構成">再構成</h4>
+<h4 id="リサンプリング">リサンプリング</h4>
+<h3 id="スクリーンベースのアンチエイリアシング">スクリーンベースのアンチエイリアシング</h3>
+<h4 id="サンプリングパターン">サンプリングパターン</h4>
+<h4 id="形態学的手法">形態学的手法</h4>
+<h2 id="透明度アルファと合成">透明度、アルファと合成</h2>
+<h3 id="ブレンドの順番">ブレンドの順番</h3>
+<h3 id="順番に依存しない透明度">順番に依存しない透明度</h3>
+<h3 id="乗算済みアルファと合成">乗算済みアルファと合成</h3>
+<h2 id="ディスプレイエンコーディング">ディスプレイエンコーディング</h2>
 
-<div class="author">
-    
-    
-    <img class="author-avatar" src="/blog/avatar_hua482c13146070e7c1a389f9b830d9831_60230_100x100_fill_q75_h2_box_smart1.webp" alt="nishihi6" width="956"
-        height="956" />
-    
-    <h2 class="author-name">nishihi6</h2>
-    <p class="author-bio">Computer Vision and Graphics</p>
+            </div>
+        </article></main>
 </div>
-
-        <main aria-label="Content">
-            <h3 class="posts-item-note" aria-label="Recent Posts">Recent Posts</h3>
-            
-            
-            
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_cg_04/">CG理論 #4 シェーディング [Devlog #009]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-09-30T22:43:30&#43;0900">
-        30 Sep 2023
-    </time>
-</article>
-
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_cg_03/">CG理論 #3 変換 [Devlog #008]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-09-29T23:41:38&#43;0900">
-        29 Sep 2023
-    </time>
-</article>
-
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_04/">DirectX12の描画処理 #4 [Devlog #007]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-09-20T22:48:58&#43;0900">
-        20 Sep 2023
-    </time>
-</article>
-
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_unity-vr_01/">Unity-VR 備忘録 #1 [Devlog #006]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-09-06T17:42:09&#43;0900">
-        6 Sep 2023
-    </time>
-</article>
-
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_cg_02/">CG理論 #2 グラフィクス処理 [Devlog #005]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-30T03:46:40&#43;0900">
-        30 Aug 2023
-    </time>
-</article>
-
-            
-            
-            <p>
-                
-                <a href="https://nishihi6.github.io/blog/posts/">See all posts</a>
-                
-            </p>
-            
-        </main>
-    </div><footer class="footer">
+<footer class="footer">
     <span class="footer_item"> </span>
     &nbsp;
 
@@ -312,5 +358,4 @@ stroke-linejoin="round" class="feather feather-home">
     
 
 </body>
-
 </html>
