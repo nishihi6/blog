@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-08-24",
         "description": "",
-        "wordCount":  208 ,
+        "wordCount":  245 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-08-24",
         "image": {
@@ -255,6 +255,10 @@ stroke-linejoin="round" class="feather feather-home">
 <p>アプリケーションの作業は基本的にCPU上で実行するが、コンピュートシェーダーを使ってGPU上で実行することもある</p>
 <p><strong>レンダーすべきジオメトリ（点、直線、三角形）</strong>をジオメトリ処理ステージに渡すのが主なタスク</p>
 <p>ユーザからの入力情報を扱ったり、描画する必要がないポリゴンを求めるカリングアルゴリズムを実行したりと様々な処理を行う</p>
+<details><summary><mark>[DX12] Input-Assembler（頂点情報やインデックス情報の入力）</mark></summary>
+<p>Input-Assembler（入力アセンブラー）は頂点情報だけではなく、&ldquo;どの3頂点を組み合わせて三角形を作るのか&quot;という情報などが入力されるステージ</p>
+<p>ポリゴンの表示のためには、数値（バイトの塊）を解釈するための<strong>頂点レイアウト</strong>と<strong>インデックス情報</strong>、そしてもちろん<strong>頂点情報（バイトの塊）</strong>が入力情報として必要になる</p>
+</details>
 <h2 id="ジオメトリ処理">ジオメトリ処理</h2>
 <p>ジオメトリ処理ステージでは、幾何学形状（ジオメトリ）を三角形単位と頂点単位で操作する</p>
 <p><strong>ジオメトリ処理ステージのサブステージ（機能ステージ）</strong></p>
@@ -297,6 +301,15 @@ stroke-linejoin="round" class="feather feather-home">
 </ul>
 <p>変換はいずれも4×4行列として実装できる</p>
 <p>変換により、モデルの<strong>クリップ座標</strong>が決まり、Z軸座標の情報はZバッファーに格納されることで３次元から２次元に投影される</p>
+<details><summary><mark>[DX12] Vertex Shader（頂点シェーダー：頂点座標変換）</mark></summary>
+<p><strong>頂点シェーダー</strong>は、以下の役割を担う</p>
+<ul>
+<li>平行移動や回転の変換</li>
+<li>カメラ用の変換</li>
+<li>スクリーンへ投影する変換</li>
+</ul>
+<p>また、ボーンによる頂点変換も頂点シェーダーの役割である</p>
+</details>
 <h3 id="頂点処理の追加オプション">頂点処理の追加オプション</h3>
 <ul>
 <li>テッセレーション</li>
@@ -304,7 +317,9 @@ stroke-linejoin="round" class="feather feather-home">
 <li>ストリーム出力</li>
 </ul>
 <p><strong>テッセレーション</strong></p>
-<p>テッセレーションは、<strong>頂点のセットで作られる<a href="https://www.asahi-net.or.jp/~qb3k-kwsk/3dcg/know/model/model03.html">パッチ</a></strong>のセットで表現される曲面サーフェイスから三角形のセットに変換する一連のステージで構成される</p>
+<p>テッセレーションとは、三角形や四角形（線分を含む）をより細かい三角形に分割することで、実行時により精密な表現を可能にする処理である</p>
+<p>またテッセレーションは、<strong>頂点のセットで作られる<a href="https://www.asahi-net.or.jp/~qb3k-kwsk/3dcg/know/model/model03.html">パッチ</a></strong>のセットで表現される曲面サーフェイスから三角形のセットに変換することもする</p>
+<p>サブディビジョンサーフェスやハイトマップといった、実際に細かく頂点を調整する緻密な表現などにも応用される</p>
 <ul>
 <li>ハルシェーダー</li>
 <li>テッセレーター</li>
@@ -312,11 +327,29 @@ stroke-linejoin="round" class="feather feather-home">
 </ul>
 <p>シーン上でのカメラからの距離に応じて、適切な数の三角形を生成することで、処理時間とメモリの無駄を省く</p>
 <p>テッセレーションについての参考ページ：<a href="https://docs.microsoft.com/ja-jp/previous-versions/direct-x/ee417841(v=vs.85)?redirectedfrom=MSDN">テッセレーションの概要</a></p>
+<details><summary><mark>[DX12] Hull Shader（ハルシェーダー：パッチをどう分割するか設定）</mark></summary>
+<p>頂点シェーダーからくる入力パッチ情報から、出力パッチ情報とパッチ定数を生成する</p>
+<p><strong>ハルシェーダー</strong>には、実際にテッセレーターに分割するための<strong>設定</strong>（分割数や分割の仕方）を記述する</p>
+<p>頂点シェーダーからくる頂点データをパッチ（3つ一組 or 4つ一組）として扱い、分割の目安になる座標データ<strong>入力コントロールポイント</strong>として扱う</p>
+<p><strong>パッチごとに実行される関数</strong>と<strong>パッチ内のコントロールポイントごとに実行される関数</strong>が必要になる</p>
+</details>
+<details><summary><mark>[DX12] Tesselator（テッセレータ：パッチを分割）</mark></summary>
+<p>ハルシェーダーで設定されたパッチデータをもとに、テッセレーターが実際に分割を行う</p>
+<p>基本的にプログラマが行えることはない</p>
+</details>
+<details><summary><mark>[DX12] Domain Shader（ドメインシェーダー：生成頂点を設定）</mark></summary>
+<p>テッセレーションにより分割された結果、最終的にできた頂点を扱う</p>
+<p><strong>ドメインシェーダー</strong>は、出力された<strong>パッチ定数</strong>と<strong>コントロールポイント</strong>、<strong>ドメインロケーション（分割後の頂点座標を決めるためのパラメータ）</strong>を受け取る</p>
+</details>
 <p><strong>ジオメトリシェーディング</strong></p>
 <p>ジオメトリシェーダーは、様々な種類の<strong>プリミティブ</strong>から新たな頂点を生成する</p>
 <p>最もよく使われるのがパーティクルの生成で、花火の爆発を例とすると、それぞれの火球を１つの頂点で表し、視点を向いて何ピクセルかに広がる正方形に変えるといった処理ができる</p>
+<details><summary><mark>[DX12] Geometry Shader（ジオメトリシェーダー：頂点を増やしたりする）</mark></summary>
+<p>プリミティブ単位で（三角面なら頂点3つを一組にして）加工処理が行われる</p>
+<p>座標の移動だけでなく、面数を増やすことも可能で、壁などに影を投影するための&quot;シャドウボリューム&quot;や&quot;フィン法ファー表現&quot;などに活用される</p>
+</details>
 <p><strong>ストリーム出力</strong></p>
-<p>処理した頂点をパイプラインの下流に送る代わりに配列に出力し、頂点データの処理を行うことができる</p>
+<p>処理した頂点をパイプラインの下流に送る代わりに配列に出力し（GPU上のメモリに書き込む）、頂点データの処理を行うことができる</p>
 <p>花火を例としたパーティクルシミュレーション等で使われる</p>
 <h3 id="クリッピング">クリッピング</h3>
 <p>続くステージにはビューボリューム内にあるプリミティブだけを渡すため、部分的にビューボリューム内にあるプリミティブに対してクリッピングを行う必要がある</p>
