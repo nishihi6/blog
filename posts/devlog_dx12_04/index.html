@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-09-20",
         "description": "",
-        "wordCount":  2504 ,
+        "wordCount":  2514 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-09-20",
         "image": {
@@ -367,6 +367,10 @@ stroke-linejoin="round" class="feather feather-home">
 <br>▶ 第五引数はクリアカラーの既定値を記述する<code>D3D12_CLEAR_VALUE</code>構造体を指定する（<a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_clear_value">構造体の詳細</a>）
 <br>▶ 第六引数はリソースインターフェイスのGUID
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12device-createcommittedresource">詳細</a></p>
+<details><summary><mark>ID3D12Device::CreateCommittedResource()</mark></summary>
+<p>データの塊をGPU上に作成して、CPU側からそのバッファにデータをコピーして頂点情報をGPUから見えるようにする</p>
+</details>
+<br>
 <p><code>m_pVBuffer-&gt;GetGPUVirtualAddress()</code>は、バッファーリソースのGPU仮想アドレスを返す
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/nf-d3d12-id3d12resource-getgpuvirtualaddress">詳細</a></p>
 <p><code>m_pVBuffer-&gt;Map()</code>は、リソース内の指定されたサブリソースへのCPUポインタを取得する（ポインタ値をアプリケーションに公開することはできない）
@@ -496,20 +500,24 @@ stroke-linejoin="round" class="feather feather-home">
 <p>x,y,z,wの4つの成分の浮動小数点数が返されるエントリーポイント関数<code>main()</code></p>
 <p><code>:POSITION</code>セマンティクスは、この引数が<strong>頂点の位置情報</strong>を持っていることを示す</p>
 <p><code>:SV_POSITION</code>セマンティクスは、関数の戻り値が<strong>シェーダーの出力位置</strong>を示していることを示す</p>
+<p><code>SV_</code>は&quot;頂点シェーダーからラスタライザーへ&quot;のようにプログラマブルなステージから非プログラマブルなステージに情報を投げる場合に付加される接頭辞（System Value：システムバリュー）</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// SimpleShader_VS.hlsl
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="n">float4</span> <span class="nf">main</span><span class="p">(</span> <span class="n">float4</span> <span class="nl">pos</span> <span class="p">:</span> <span class="n">POSITION</span> <span class="p">)</span> <span class="o">:</span> <span class="n">SV_POSITION</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">pos</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h4 id="simpleshader_pshlslピクセルシェーダー">SimpleShader_PS.hlsl（ピクセルシェーダー）</h4>
+<p>ここでは引数に座標情報のみが入ってきている</p>
 <p>基本的にライティングの処理が記述され、画面のピクセル分だけ実行される（ここでの処理は、すべてのピクセルを白色で塗りつぶす）</p>
+<p>ピクセルシェーダーは色を決定するだけで、塗りつぶすかどうかはラスタライザーが決定する</p>
 <p><code>:SV_TARGET</code>セマンティクスは、関数の戻り値が<strong>レンダーターゲット（通常は画面やテクスチャ）に書き込まれる色情報</strong>を示していることを示す</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// SimpleShader_PS.hlsl
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="n">float4</span> <span class="nf">main</span><span class="p">(</span><span class="n">float4</span> <span class="nl">pos</span> <span class="p">:</span> <span class="n">SV_POSITION</span><span class="p">)</span> <span class="o">:</span> <span class="n">SV_TARGET</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">float4</span><span class="p">(</span><span class="mf">1.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><h4 id="rootsignatureh">RootSignature.h</h4>
+</span></span></code></pre></div><p>シェーダーはC言語と同様に<strong>エントリポイント（C言語でいうところのmain()関数）</strong>が必要になり、<strong>パイプラインステート</strong>というオブジェクトによりエントリポイントの指定が行われる</p>
+<h4 id="rootsignatureh">RootSignature.h</h4>
 <h5 id="rangetype列挙型クラス">RangeType列挙型クラス</h5>
 <p>レンジタイプリストを表す
 <br><strong>CBV（定数バッファ）</strong>：マトリックス、ベクトル、スカラー値など
@@ -868,6 +876,11 @@ stroke-linejoin="round" class="feather feather-home">
 <p>作成を行う</p>
 <p><code>D3D12_INPUT_ELEMENT_DESC</code>はグラフィックスパイプラインの<code>input-assembler</code>ステージの1つの要素について説明する
 <br><a href="https://learn.microsoft.com/ja-jp/windows/win32/api/d3d12/ns-d3d12-d3d12_input_element_desc">詳細</a></p>
+<details><summary><mark>D3D12_INPUT_ELEMENT_DESC（頂点レイアウト）</mark></summary>
+<p>&ldquo;何バイト目から何バイト目までが何か&quot;という情報を<strong>頂点レイアウト</strong>といい、このデータを用いてGPUに座標や法線などの&quot;意味&quot;を教える</p>
+<p>頂点データには頂点レイアウトが必須である</p>
+</details>
+<br>
 <p><code>SetInputLayout()</code>を実行</p>
 <p><code>D3D12_GRAPHICS_PIPELINE_STATE_DESC</code>構造体はグラフィックスパイプラインの状態オブジェクトについて説明する
 <br>▶ <code>.VS.pShaderBytecode</code>は<strong>頂点シェーダー</strong>のメモリブロックへのポインタ
