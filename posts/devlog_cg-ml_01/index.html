@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ja-jp"><head><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">CG×ML #1 微分可能レンダリング [Devlog #010] | nishihi6</title>
+<meta property="og:title" content="CG×ML #1 微分可能レンダリング [Devlog #010] | nishihi6" />
+<meta name="twitter:title" content="CG×ML #1 微分可能レンダリング [Devlog #010] | nishihi6" />
+<meta itemprop="name" content="CG×ML #1 微分可能レンダリング [Devlog #010] | nishihi6" />
+<meta name="application-name" content="CG×ML #1 微分可能レンダリング [Devlog #010] | nishihi6" />
+<meta property="og:site_name" content="nishihi6" />
+
+<meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
+<meta itemprop="description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta property="og:description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta name="twitter:description" content="Minimal Hugo blog theme with light and dark mode support" />
+
+<meta property="og:locale" content="ja-jp" />
+<meta name="language" content="ja-jp" />
+
+
+
+  <meta itemprop="image" content="https://nishihi6.github.io/blog/" />
+  <meta property="og:image" content="https://nishihi6.github.io/blog/" />
+  <meta name="twitter:image" content="https://nishihi6.github.io/blog/" />
+  <meta name="twitter:image:src" content="https://nishihi6.github.io/blog/" />
+
+
+
+
+    
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2023-10-04T16:03:45&#43;0900 />
+    <meta property="article:published_time" content=2023-10-04T16:03:45&#43;0900 />
+
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "CG×ML #1 微分可能レンダリング [Devlog #010]",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2023-10-04",
+        "description": "",
+        "wordCount":  135 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2023-10-04",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "nishihi6"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.117.0">
+
+    
+
+    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/devlog_cg-ml_01/">
+    <link href="/blog/style.min.840eada6dfddec7b8ccfcf867f039bf80b1f16a265ec6e01dc553a3dddc9d509.css" rel="stylesheet">
+    <link href="/blog/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/blog/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/blog/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/blog/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/blog/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/blog/favicon.ico">
+
+
+
+
+<link rel="manifest" href="https://nishihi6.github.io/blog/site.webmanifest">
+
+<meta name="msapplication-config" content="/blog/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/blog/icons/favicon.svg">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"
+    integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous" />
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"
+    integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4"
+    crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"
+    integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false}
+      ]
+    });"></script>
+
+    </head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/blog/js/theme.min.8961c317c5b88b953fe27525839672c9343f1058ab044696ca225656c8ba2ab0.js" integrity="sha256-iWHDF8W4i5U/4nUlg5ZyyTQ/EFirBEaWyiJWVsi6KrA="></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="https://nishihi6.github.io/blog/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/blog/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/blog/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/blog/pages/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">CG×ML #1 微分可能レンダリング [Devlog #010]</h1>
+                
+                
+                <div class="post-meta">
+                    <time datetime="2023-10-04T16:03:45&#43;09:00" itemprop="datePublished"> 4 Oct 2023 </time>
+                </div>
+                
+            </header>
+            <details class="toc">
+                <summary><b>Table of Contents</b></summary>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#微分可能レンダリングとは">微分可能レンダリングとは</a>
+      <ul>
+        <li><a href="#微分可能レンダラとは">微分可能レンダラとは</a>
+          <ul>
+            <li><a href="#3次元構造の表現方法研究発展中">3次元構造の表現方法（研究発展中）</a></li>
+            <li><a href="#レンダリング方式研究発展中">レンダリング方式（研究発展中）</a></li>
+            <li><a href="#微分可能レンダラの例ライブラリ">微分可能レンダラの例（ライブラリ）</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+            </details><div class="page-content">
+                <h1 id="微分可能レンダリングdifferential-rendering">微分可能レンダリング（differential rendering）</h1>
+<hr>
+<h2 id="微分可能レンダリングとは">微分可能レンダリングとは</h2>
+<p>微分可能レンダリングは、<strong>コンピュータグラフィックスと機械学習</strong>を組み合わせた技術であり、2D画像から3D空間のパラメータを推定することを目的としている</p>
+<p>通常のレンダリングでは、3Dモデル、カメラ位置、ライティング条件などのパラメータを利用して2D画像を生成するが、<strong>微分可能レンダリングはこのレンダリングのプロセスを逆に行う</strong></p>
+<p>2D画像から3D情報への変換の精度を向上させるために、レンダリング画像と入力画像（教師データ）との差分を計算し、ネットワーク全体を学習する手法として使用される
+<br>この場合、教師画像データはカメラパラメータ（撮影された位置と方向）がわかっているものとし、レンダリングの際にはそのパラメータと同じような仮想カメラを設定してレンダリング画像を生成することになる</p>
+<p>特に3次元形状の教師データが手に入らない場合に効果的で、さまざまな物体カテゴリにも適応可能である</p>
+<p>一方で、3Dデータ（3次元形状やポーズなど）を機械学習タスクの教師データとして用いる学習は&quot;3D supervision&quot;と呼ばれる
+<br>こちらは3D教師データを大量に用意しなければならないという点であまり現実的な選択肢ではない</p>
+<h3 id="微分可能レンダラとは">微分可能レンダラとは</h3>
+<p>レンダリング画像における入力画像（教師データ）との差分を<strong>誤差逆伝播させてニューラルネットを学習させる</strong>には、レンダリング箇所が微分可能である必要がある</p>
+<p>つまり、レンダリング画像と入力画像（教師データ）との<strong>差分からパラメータの更新ができる（ロスからBackwardできる）レンダラ</strong>を微分可能レンダラという</p>
+<p>勾配ベースの最適化アルゴリズム（SGD、Adam等）で3Dシーンを最適化できるレンダラ</p>
+<dl>
+  <dt>最適化する3Dシーンの例</dt>
+  <dd>頂点位置</dd>
+  <dd>カメラポーズ（姿勢）</dd>
+  <dd>テクスチャ</dd>
+  <dd>ライト</dd>
+  <dd>その他、レンダリングに重畳する概念ほぼ全て</dd>
+</dl>
+<p><a href="https://speakerdeck.com/hsato/wei-fen-ke-neng-rendaranotukurikata-li-lun-karavulkanshi-zhuang-made?slide=10">参考：微分可能レンダラのつくりかた</a>
+<br><a href="https://tech.preferred.jp/ja/blog/differentiable_ray_sampling/">参考：ニューラルネット3D表現に対する微分可能レンダラー</a>
+<br><a href="https://speakerdeck.com/hkato/wei-fen-ke-neng-rendaringu-cvimyan-jiu-hui-tiyutoriaru">参考：微分可能レンダリング</a></p>
+<h4 id="3次元構造の表現方法研究発展中">3次元構造の表現方法（研究発展中）</h4>
+<ul>
+<li>ボクセル（Voxel）</li>
+<li>点群（Point）</li>
+<li>メッシュ（Mesh）</li>
+<li>+α ニューラルネットワーク表現（ニューラル場）</li>
+<li>+α 点群-&gt;ガウス</li>
+</ul>
+<h5 id="メッシュmesh">メッシュ（Mesh）</h5>
+<p>メッシュ表現を用いる場合は、何らかの初期形状を仮定して、それを変形させることで3次元構造の再構成を行う手法が主流である</p>
+<h4 id="レンダリング方式研究発展中">レンダリング方式（研究発展中）</h4>
+<ul>
+<li>ラスタライズ</li>
+<li>レイトレーシング</li>
+<li>+α Radiance Field</li>
+<li>+α 微分可能ガウスラスタライズ</li>
+</ul>
+<p>ラスタライズは視界の範囲だけ、レイトレーシングは視界範囲外の考慮してレンダリングする</p>
+<p><a href="https://blogs.nvidia.co.jp/2018/03/26/whats-difference-between-ray-tracing-rasterization/">参考：レイトレーシングとラスタライズの違い - NVIDIA</a></p>
+<h5 id="ラスタライズのアプローチ">ラスタライズのアプローチ</h5>
+<p>メッシュの微分可能ラスタライズには2つのアプローチがある</p>
+<ul>
+<li>レンダリング画像を変えずに擬似的な勾配を計算（逆伝搬を工夫）</li>
+<li>レンダリング画像をぼやかすことで最適化に有用な勾配を得る（順伝搬を工夫）</li>
+</ul>
+<h5 id="レイトレーシングのアプローチ">レイトレーシングのアプローチ</h5>
+<p>物理ベース微分可能レンダリング</p>
+<p>計算速度が遅く、深層学習（機械学習）と組み合わせるのは難しいのが現状</p>
+<h5 id="neural-radiance-fieldnerfのアプローチ">Neural Radiance Field（NeRF）のアプローチ</h5>
+<p>レンダリング方程式（<a href="https://en.wikipedia.org/wiki/Rendering_equation">詳細</a>）を逆問題として解くが、ピクセルの色の決定にボリュームレンダリングを用いる</p>
+<p>NeRF（neural radiance field）のボリュームレンダリングは微分可能（特に工夫は必要ない（自動微分でオーケー））</p>
+<p>レンダリング方程式を放射輸送方程式に戻し、ニューラルネットワークで表される3Dシーン（ベクトル場）と微分可能なボリュームレンダリング関数で解く</p>
+<p>ニューラル場（Neural Fields）の研究はNeRFの登場以前からも行われており、NeRFはDeepSDFのテクニックを継承している</p>
+<details><summary>陰関数とCGの関係</summary>
+<p>従来のCGは<strong>離散的な頂点定義</strong>によって成り立っているのに対して、陰関数（Implicit Function）によるCGは<strong>連続的な数学定義</strong>によって成り立っている</p>
+<p>陰関数で0の値をとるサーフェスを定義し、距離場（SDF、TSDF、DeepSDF）はそのサーフェスからの距離を定義する</p>
+<p>関数でCGが表現できる！（密に点群を用意せずとも関数でCGが表現できる点で最近注目されている）</p>
+<p><a href="https://www.slideshare.net/cvpaperchallenge/neural-fields">参考：【メタサーベイ】Neural Fields</a></p>
+</details>
+<p>NeRFには<strong>面</strong>がなく、透明体を通る光の重ね合わせによって表現している（陰関数は<strong>面=0</strong>と定義している点で異なる）</p>
+<p>つまり、NeRFは放射輝度場（Radiance Field）を復元する手法</p>
+<p><a href="https://www.slideshare.net/DeepLearningJP2016/dlneural-radiance-field-nerf">参考：[DL輪読会]Neural Radiance Field (NeRF) の派生研究まとめ</a></p>
+<h5 id="signed-distance-fieldsdfのアプローチ">Signed Distance Field（SDF）のアプローチ</h5>
+<details><summary>Signed Distance Field（SDF）とは</summary>
+<p>日本語に訳すと&quot;符号付き距離場&quot;であり、場にある物体との距離を表す</p>
+<p>SDFはレイトレーシング手法の1つであるレイマーチで使われる</p>
+<p><a href="https://sites.google.com/site/monshonosuana/directx%E3%81%AE%E8%A9%B1/directx%E3%81%AE%E8%A9%B1-%E7%AC%AC167%E5%9B%9E#h.r08hoeupsmq">参考：Signed Distance Fieldとは？</a>
+<br><a href="https://qiita.com/edo_m18/items/034665d42c562da88cb6">参考：[GLSL] レイマーチング入門 vol.1</a>
+<br><a href="https://twitter.com/gam0022/status/1569137098900525056">参考：レイマーチングのすすめ</a>
+<br><a href="https://www.slideshare.net/shohosoda9/threejs-58238484">参考：シェーダだけで世界を創る！three.jsによるレイマーチング</a></p>
+</details>
+<h5 id="微分可能ガウスラスタライズのアプローチgaussian-splatting">微分可能ガウスラスタライズのアプローチ（Gaussian Splatting）</h5>
+<p>手順</p>
+<ul>
+<li>3次元点群の推定</li>
+<li>点群からガウスへの変換（ラスター化された単一のガウス分布への変換）</li>
+<li>SGDによる学習
+<ul>
+<li>微分可能ガウスラスタライズを使用してラスタライズ</li>
+<li>ラスタライズ画像とGrandTruth画像の差分からロスを計算</li>
+<li>ロスに応じてガウスパラメータを更新</li>
+<li>高密度化とプルーニング
+<ul>
+<li>特定のガウスに対して勾配が大きい場合
+<ul>
+<li>ガウスが小さい場合はクローンを作成</li>
+<li>ガウスが大きい場合は分割</li>
+</ul>
+</li>
+<li>ガウスのアルファが低すぎる場合は削除</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>ラスタライズ
+<ul>
+<li>カメラ視点から各ガウスを投影</li>
+<li>ガウス分布を深さ順に並び替え</li>
+<li>ピクセルごとに各ガウスを前から後ろに繰り返しそれらをブレンド</li>
+</ul>
+</li>
+</ul>
+<p>現状、既存のレンダリングパイプラインと互換性がない</p>
+<p><a href="https://note.com/npaka/n/ncd4b84c1e2eb">参考：3D Gaussian Splatting の概要</a></p>
+<details><summary>ガウス分布とは</summary>
+<p>正規分布（ガウス分布）は&quot;normal distribution&quot;からもわかるように、&ldquo;ありふれた&quot;確率分布である（自然界や人間の行動、性質など様々な現象に対してよく当てはまる）</p>
+<p><a href="https://ai-trend.jp/basic-study/normal-distribution/normal-distribution/">参考：正規分布の分かりやすいまとめ</a>
+<br><a href="https://ai-trend.jp/basic-study/normal-distribution/density-function-derivation/">参考：正規分布の密度関数を意味的に理解する</a>
+<br><a href="https://ai-trend.jp/basic-study/basic/central-limit-theorem/">参考：中心極限定理</a></p>
+</details>
+<h4 id="微分可能レンダラの例ライブラリ">微分可能レンダラの例（ライブラリ）</h4>
+<h5 id="mitsuba">Mitsuba</h5>
+<p>表現方法：メッシュ
+<br>レンダリング：レイトレーシング</p>
+<h5 id="nvdiffrast">nvdiffrast</h5>
+<p>表現方法：メッシュ
+<br>レンダリング：ラスタライズ</p>
+<h5 id="pytorch3d">PyTorch3D</h5>
+<p>表現方法：メッシュ
+<br>レンダリング：ラスタライズ</p>
+<p><a href="https://pt.slideshare.net/SSII_Slides/ssii2020ss">参考：微分可能レンダリングの最新動向 〜「見比べる」ことによる３次元理解〜</a></p>
+
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/nishihi6" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="https://www.facebook.com/profile.php?id=100034856812491" target="_blank" rel="noopener noreferrer me"
+    title="Facebook">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg>
+</a>
+<a href="https://twitter.com" target="_blank" rel="noopener noreferrer me"
+    title="X">
+    <svg viewBox="0 0 1200 1227" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"/>
+</svg>
+</a>
+<a href="https://connpass.com/user/nishihi6/" target="_blank" rel="noopener noreferrer me"
+    title="Connpass">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg>
+</a>
+<a href="http://www.igl.ise.shibaura-it.ac.jp/" target="_blank" rel="noopener noreferrer me"
+    title="Lab">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg>
+</a>
+<a href="index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2023 nishihi6.
+    </small>
+    
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+    
+    
+        
+    
+
+    
+    
+        
+    
+
+
+
+    
+    <script src="https://nishihi6.github.io/blog/js/main.min.35f435a5d8eac613c52daa28d8af544a4512337d3e95236e4a4978417b8dcb2f.js" integrity="sha256-NfQ1pdjqxhPFLaoo2K9USkUSM30&#43;lSNuSkl4QXuNyy8="></script>
+
+    
+
+</body>
+</html>
