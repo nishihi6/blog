@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ja-jp"><head><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">CG×ML #2 勾配ベースの最適化（Mitsuba3） [Devlog #011] | nishihi6</title>
+<meta property="og:title" content="CG×ML #2 勾配ベースの最適化（Mitsuba3） [Devlog #011] | nishihi6" />
+<meta name="twitter:title" content="CG×ML #2 勾配ベースの最適化（Mitsuba3） [Devlog #011] | nishihi6" />
+<meta itemprop="name" content="CG×ML #2 勾配ベースの最適化（Mitsuba3） [Devlog #011] | nishihi6" />
+<meta name="application-name" content="CG×ML #2 勾配ベースの最適化（Mitsuba3） [Devlog #011] | nishihi6" />
+<meta property="og:site_name" content="nishihi6" />
+
+<meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
+<meta itemprop="description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta property="og:description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta name="twitter:description" content="Minimal Hugo blog theme with light and dark mode support" />
+
+<meta property="og:locale" content="ja-jp" />
+<meta name="language" content="ja-jp" />
+
+
+
+  <meta itemprop="image" content="https://nishihi6.github.io/blog/" />
+  <meta property="og:image" content="https://nishihi6.github.io/blog/" />
+  <meta name="twitter:image" content="https://nishihi6.github.io/blog/" />
+  <meta name="twitter:image:src" content="https://nishihi6.github.io/blog/" />
+
+
+
+
+    
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2023-10-07T15:36:49&#43;0900 />
+    <meta property="article:published_time" content=2023-10-07T15:36:49&#43;0900 />
+
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "CG×ML #2 勾配ベースの最適化（Mitsuba3） [Devlog #011]",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2023-10-07",
+        "description": "",
+        "wordCount":  253 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2023-10-07",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "nishihi6"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.117.0">
+
+    
+
+    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/devlog_cg-ml_02/">
+    <link href="/blog/style.min.840eada6dfddec7b8ccfcf867f039bf80b1f16a265ec6e01dc553a3dddc9d509.css" rel="stylesheet">
+    <link href="/blog/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/blog/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/blog/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/blog/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/blog/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/blog/favicon.ico">
+
+
+
+
+<link rel="manifest" href="https://nishihi6.github.io/blog/site.webmanifest">
+
+<meta name="msapplication-config" content="/blog/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/blog/icons/favicon.svg">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"
+    integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous" />
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"
+    integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4"
+    crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"
+    integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false}
+      ]
+    });"></script>
+
+    </head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/blog/js/theme.min.8961c317c5b88b953fe27525839672c9343f1058ab044696ca225656c8ba2ab0.js" integrity="sha256-iWHDF8W4i5U/4nUlg5ZyyTQ/EFirBEaWyiJWVsi6KrA="></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="https://nishihi6.github.io/blog/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/blog/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/blog/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/blog/pages/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">CG×ML #2 勾配ベースの最適化（Mitsuba3） [Devlog #011]</h1>
+                
+                
+                <div class="post-meta">
+                    <time datetime="2023-10-07T15:36:49&#43;09:00" itemprop="datePublished"> 7 Oct 2023 </time>
+                </div>
+                
+            </header>
+            <details class="toc">
+                <summary><b>Table of Contents</b></summary>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#mitsuba3の動作確認">Mitsuba3の動作確認</a>
+      <ul>
+        <li><a href="#mitsuba3の使い方python">Mitsuba3の使い方（Python）</a>
+          <ul>
+            <li><a href="#インポート">インポート</a></li>
+            <li><a href="#バリアントの選択">バリアントの選択</a></li>
+            <li><a href="#シーンのロード">シーンのロード</a></li>
+            <li><a href="#シーンのレンダリング">シーンのレンダリング</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#勾配ベースの最適化gradient-based-optimization">勾配ベースの最適化（Gradient-based optimization）</a>
+      <ul>
+        <li><a href="#勾配ベースの最適化とは">勾配ベースの最適化とは</a></li>
+        <li><a href="#mitsuba3での実装">Mitsuba3での実装</a>
+          <ul>
+            <li><a href="#セットアップ">セットアップ</a></li>
+            <li><a href="#シーンのロード-1">シーンのロード</a></li>
+            <li><a href="#リファレンス画像">リファレンス画像</a></li>
+            <li><a href="#最適化するための設定">最適化するための設定</a></li>
+            <li><a href="#最適化">最適化</a></li>
+            <li><a href="#結果">結果</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+            </details><div class="page-content">
+                <h1 id="勾配ベースの最適化mitsuba3">勾配ベースの最適化（Mitsuba3）</h1>
+<h2 id="mitsuba3の動作確認">Mitsuba3の動作確認</h2>
+<hr>
+<p>Mitsuba3はPyPIからpip経由でインストールすることが推奨されている
+<br>公式ドキュメントは<a href="https://mitsuba.readthedocs.io/en/stable/index.html">こちら</a></p>
+<h3 id="mitsuba3の使い方python">Mitsuba3の使い方（Python）</h3>
+<h4 id="インポート">インポート</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">mitsuba</span> <span class="k">as</span> <span class="nn">mi</span>
+</span></span></code></pre></div><h4 id="バリアントの選択">バリアントの選択</h4>
+<p>バリアントについての<a href="https://mitsuba.readthedocs.io/en/latest/src/key_topics/variants.html">詳細</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">mi</span><span class="o">.</span><span class="n">variants</span><span class="p">()</span>
+</span></span></code></pre></div><pre><code>['scalar_rgb', 'scalar_spectral', 'cuda_ad_rgb', 'llvm_ad_rgb']
+</code></pre>
+<p>この4つの以外のバリアントを必要とする場合は、<code>pip</code>ではなく自力でコンパイルする必要がある（ソースからのコンパイルに関するドキュメントは<a href="https://mitsuba.readthedocs.io/en/latest/src/developer_guide/compiling.html#sec-compiling">こちら</a>）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">mi</span><span class="o">.</span><span class="n">set_variant</span><span class="p">(</span><span class="s2">&#34;scalar_rgb&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><details><summary>計算バックエンド（Computational backend）の指定</summary>
+<p><code>scalar</code>：旧Mitsubaと同様にCPU上で浮動小数点演算を実行する（一度に個々のレイを処理するモードであるため、コンパイルエラーの修正やレンダラーのデバッグに適している）</p>
+<p><code>cuda</code>：Dr.JITが計算をCUDAカーネルに変換してGPUにオフロードする（GPUレイトレーシングにNVIDIAのOptiXライブラリを使用する）</p>
+<p><code>llvm</code>：Dr.JITが計算を並列CPUカーネルにコンパイルする（LLVMコンパイラフレームワークを使用する）（※ NVIDIA GPUを持っていない場合の代替手段）</p>
+</details>
+<details><summary>自動微分（Automatic differentiation）の指定</summary>
+<p><code>_ad</code>：自動微分を有効にする（<code>cuda</code>と<code>llvm</code>モードで指定可能）</p>
+<p>主に微分可能レンダリングを行う際に利用するモードで、光の動きを含めた複雑な逆問題を解く</p>
+</details>
+<details><summary>色の表現（Color representation）の指定</summary>
+<p><code>mono</code>：単色ベースの色表現</p>
+<p><code>rgb</code>：RGBベースの色表現</p>
+<p><code>spectral</code>：可視域をカバーする完全なスペクトルカラー表現</p>
+</details>
+<details><summary>偏光（Polarization）の指定</summary>
+<p>偏光の追跡が必要な場合に指定する追加オプション</p>
+<p>偏光は逆問題を解決するための強力なツールである</p>
+</details>
+<details><summary>精度（Precision）の指定</summary>
+<p><code>_double</code>：通常の演算で設定している単精度（32bit）から倍精度（64bit）に設定を変更する（EmbreeとOptiXが倍精度をサポートしていないことを考慮した設定が必要な場合がある）</p>
+</details>
+<h4 id="シーンのロード">シーンのロード</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">scene</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="s2">&#34;../scenes/cbox.xml&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><p>Mitsuba3ではシーンの記述にXMLベースの形式を利用する（シーンXMLファイルフォーマットに関するドキュメントは<a href="https://mitsuba.readthedocs.io/en/latest/src/key_topics/scene_format.html">こちら</a>）</p>
+<h4 id="シーンのレンダリング">シーンのレンダリング</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">image</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">spp</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+</span></span></code></pre></div><p><code>render()</code>関数を使用してシーンをレンダリング</p>
+<p><code>render()</code>は<strong>線形RGB色空間テンソル</strong>（NumPy配列に似た<code>mi.TensorXf</code>）を返す</p>
+<p>（APIリファレンスは<a href="https://mitsuba.readthedocs.io/en/latest/src/api_reference.html">こちら</a> ※サイトが重いので注意）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">mi</span><span class="o">.</span><span class="n">Bitmap</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</span></span></code></pre></div><p>レンダリング画像の表示</p>
+<details><summary>matplotlibを使っても画像を表示できる</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&#34;off&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span> <span class="o">**</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mf">2.2</span><span class="p">));</span>
+</span></span></code></pre></div></details>
+<details><summary>レンダリング画像の保存</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">mi</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">write_bitmap</span><span class="p">(</span><span class="s2">&#34;my_first_render.png&#34;</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">mi</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">write_bitmap</span><span class="p">(</span><span class="s2">&#34;my_first_render.exr&#34;</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
+</span></span></code></pre></div></details>
+<h2 id="勾配ベースの最適化gradient-based-optimization">勾配ベースの最適化（Gradient-based optimization）</h2>
+<hr>
+<h3 id="勾配ベースの最適化とは">勾配ベースの最適化とは</h3>
+<p>シーン入力$\textbf x$からレンダリング結果$\textbf y$を出力する関数$f(\textbf x)$をレンダリングアルゴリズムと解釈すると、関数$f$を微分して$\frac{d\textbf y}{d\textbf x}$を求めることで、シーン入力$\textbf x$の変化によるレンダリング出力$\textbf y$の変化を見ることができ、</p>
+<p>シーンパラメータの適合度（suitability）を定量化する微分可能な目的関数を$g(\textbf y)$とすると、</p>
+<p>確率的勾配降下法（SGD）やAdamなどの勾配ベースの最適化アルゴリズムを用いることで、目的関数$g(\textbf y)$を改善するシーンパラメータを求めることができる</p>
+<p>Mitsuba3公式ドキュメントでの説明は<a href="https://mitsuba.readthedocs.io/en/stable/src/inverse_rendering/gradient_based_opt.html">こちら</a></p>
+<p>ここではMitsuba3を用いて光の動きを含めた逆問題を解く</p>
+<h3 id="mitsuba3での実装">Mitsuba3での実装</h3>
+<h4 id="セットアップ">セットアップ</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">drjit</span> <span class="k">as</span> <span class="nn">dr</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">mitsuba</span> <span class="k">as</span> <span class="nn">mi</span>
+</span></span><span class="line"><span class="cl"><span class="n">mi</span><span class="o">.</span><span class="n">set_variant</span><span class="p">(</span><span class="s1">&#39;cuda_ad_rgb&#39;</span><span class="p">)</span>
+</span></span></code></pre></div><h4 id="シーンのロード-1">シーンのロード</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">scene</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="s1">&#39;scenes/cbox.xml&#39;</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">integrator</span><span class="o">=</span><span class="s1">&#39;prb&#39;</span><span class="p">)</span>
+</span></span></code></pre></div><h4 id="リファレンス画像">リファレンス画像</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">image_ref</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">spp</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">mi</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">convert_to_bitmap</span><span class="p">(</span><span class="n">image_ref</span><span class="p">)</span>
+</span></span></code></pre></div><h4 id="最適化するための設定">最適化するための設定</h4>
+<p>traverseメカニズムを使い、シーン内のパラメータを取得する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">scene_params</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">traverse</span><span class="p">(</span><span class="n">scene</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">type</span><span class="p">(</span><span class="n">scene_params</span><span class="p">)</span>
+</span></span></code></pre></div><pre><code>mitsuba.python.util.SceneParameters
+</code></pre>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">scene_params</span>
+</span></span></code></pre></div><pre><code>SceneParameters[
+  ----------------------------------------------------------------------------------------
+  Name                                 Flags    Type           Parent
+  ----------------------------------------------------------------------------------------
+  sensor.near_clip                              float          PerspectiveCamera
+  
+  ~省略~
+
+  gray.reflectance.value               ∂        Color3f        SRGBReflectanceSpectrum
+  white.reflectance.value              ∂        Color3f        SRGBReflectanceSpectrum
+  green.reflectance.value              ∂        Color3f        SRGBReflectanceSpectrum
+  red.reflectance.value                ∂        Color3f        SRGBReflectanceSpectrum
+  
+  ~省略~
+
+  redwall.vertex_texcoords             ∂        Float          OBJMesh
+  mirrorsphere.to_world                ∂, D     Transform4f    Sphere
+  glasssphere.to_world                 ∂, D     Transform4f    Sphere
+]
+</code></pre>
+<p>最適化するパラメータを選び、値を変更する（元の値を<code>param_ref</code>に保存しておく）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">param_key</span> <span class="o">=</span> <span class="s1">&#39;red.reflectance.value&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">param_ref</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">Color3f</span><span class="p">(</span><span class="n">scene_params</span><span class="p">[</span><span class="n">param_key</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">scene_params</span><span class="p">[</span><span class="n">param_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">Color3f</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">scene_params</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">image</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">spp</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">mi</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">convert_to_bitmap</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</span></span></code></pre></div><h4 id="最適化">最適化</h4>
+<p>勾配降下を使ってパラメータの値を変更する</p>
+<p>Momentum有り/無しの確率的勾配降下（SGD）を含む標準的なオプティマイザとAdamのうち、後者をインスタンス化し、学習率<code>0.05</code>でパラメータを最適化する</p>
+<p>オプティマイザはパラメータ情報を取得し、指定されたパラメータを常に更新する</p>
+<p>これらの変更をシーンに反映させる必要がある（<code>update</code>メソッドで呼び出す）</p>
+<p>オプティマイザクラスに関する公式ドキュメントは<a href="https://mitsuba.readthedocs.io/en/latest/src/how_to_guides/use_optimizers.html">こちら</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">opt</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">ad</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">opt</span><span class="p">[</span><span class="n">param_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">scene_params</span><span class="p">[</span><span class="n">param_key</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">scene_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">opt</span><span class="p">)</span>
+</span></span></code></pre></div><p>勾配降下する毎に、目的関数に関するパラメータの導関数を計算するため、画像間の平均二乗誤差（L2 error）を利用する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">mse</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">dr</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dr</span><span class="o">.</span><span class="n">sqr</span><span class="p">(</span><span class="n">image</span> <span class="o">-</span> <span class="n">image_ref</span><span class="p">))</span>
+</span></span></code></pre></div><p>最適化ループ回数を制御するハイパーパラメータを定義する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">iteration_count</span> <span class="o">=</span> <span class="mi">50</span>
+</span></span></code></pre></div><p>勾配降下ループによって、50回の微分可能レンダリングを行う</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iteration_count</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">image</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">scene_params</span><span class="p">,</span> <span class="n">spp</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">loss</span> <span class="o">=</span> <span class="n">mse</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">dr</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">opt</span><span class="p">[</span><span class="n">param_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">opt</span><span class="p">[</span><span class="n">param_key</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">scene_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">opt</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">err_ref</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dr</span><span class="o">.</span><span class="n">sqr</span><span class="p">(</span><span class="n">param_ref</span> <span class="o">-</span> <span class="n">scene_params</span><span class="p">[</span><span class="n">param_key</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Iteration </span><span class="si">{</span><span class="n">it</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">: paramerer error = </span><span class="si">{</span><span class="n">err_ref</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">6f</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Optimization complete.&#39;</span><span class="p">)</span>
+</span></span></code></pre></div><h4 id="結果">結果</h4>
+<p>最適化結果の確認</p>
+<p>最適化によって、壁の色が元の赤色に復元されることがわかる</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">image_final</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">spp</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">mi</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">convert_to_bitmap</span><span class="p">(</span><span class="n">image_final</span><span class="p">)</span>
+</span></span></code></pre></div>
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/nishihi6" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="https://www.facebook.com/profile.php?id=100034856812491" target="_blank" rel="noopener noreferrer me"
+    title="Facebook">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg>
+</a>
+<a href="https://twitter.com" target="_blank" rel="noopener noreferrer me"
+    title="X">
+    <svg viewBox="0 0 1200 1227" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"/>
+</svg>
+</a>
+<a href="https://connpass.com/user/nishihi6/" target="_blank" rel="noopener noreferrer me"
+    title="Connpass">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg>
+</a>
+<a href="http://www.igl.ise.shibaura-it.ac.jp/" target="_blank" rel="noopener noreferrer me"
+    title="Lab">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg>
+</a>
+<a href="index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2023 nishihi6.
+    </small>
+    
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+    
+    
+        
+    
+
+    
+    
+        
+    
+
+
+
+    
+    <script src="https://nishihi6.github.io/blog/js/main.min.35f435a5d8eac613c52daa28d8af544a4512337d3e95236e4a4978417b8dcb2f.js" integrity="sha256-NfQ1pdjqxhPFLaoo2K9USkUSM30&#43;lSNuSkl4QXuNyy8="></script>
+
+    
+
+</body>
+</html>

@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-10-04",
         "description": "",
-        "wordCount":  135 ,
+        "wordCount":  154 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-10-04",
         "image": {
@@ -223,7 +223,7 @@ stroke-linejoin="round" class="feather feather-home">
   <dd>カメラポーズ（姿勢）</dd>
   <dd>テクスチャ</dd>
   <dd>ライト</dd>
-  <dd>その他、レンダリングに重畳する概念ほぼ全て</dd>
+  <dd>その他、レンダリングに関する概念ほぼ全て</dd>
 </dl>
 <p><a href="https://speakerdeck.com/hsato/wei-fen-ke-neng-rendaranotukurikata-li-lun-karavulkanshi-zhuang-made?slide=10">参考：微分可能レンダラのつくりかた</a>
 <br><a href="https://tech.preferred.jp/ja/blog/differentiable_ray_sampling/">参考：ニューラルネット3D表現に対する微分可能レンダラー</a>
@@ -319,15 +319,62 @@ stroke-linejoin="round" class="feather feather-home">
 <br><a href="https://ai-trend.jp/basic-study/basic/central-limit-theorem/">参考：中心極限定理</a></p>
 </details>
 <h4 id="微分可能レンダラの例ライブラリ">微分可能レンダラの例（ライブラリ）</h4>
-<h5 id="mitsuba">Mitsuba</h5>
-<p>表現方法：メッシュ
-<br>レンダリング：レイトレーシング</p>
+<h5 id="mitsuba以下の内容はmitsuba3">Mitsuba（以下の内容はMitsuba3）</h5>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">表現方法</th>
+<th style="text-align:center">レインダリング</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">メッシュ</td>
+<td style="text-align:center">レイトレーシング</td>
+</tr>
+</tbody>
+</table>
+<br>
+<details><summary>Mitsuba3の詳細</summary>
+<p><a href="https://mitsuba.readthedocs.io/en/stable/index.html">公式ドキュメント</a>
+<br><a href="https://github.com/mitsuba-renderer/mitsuba3">GitHubリポジトリ</a></p>
+<p>Mitsuba3はスイス連邦工科大学ローザンヌ校（EPFL）で開発された<strong>順方向</strong>と<strong>逆方向</strong>の光輸送シミュレーションのための研究指向のレンダリングシステム</p>
+<p>基礎となる実装とデータ構造を変換して、さまざまな異なるタスクを実行できる</p>
+<p>just-in-timeコンパイラの<strong>Dr.Jit</strong>を基盤として構築されている</p>
+<p><a href="https://github.com/mitsuba-renderer/drjit">Dr.JitのGitHubリポジトリ</a></p>
+<p>Mitsuba3の主な特徴は<a href="https://github.com/mitsuba-renderer/mitsuba3#main-features">こちら</a></p>
+</details>
+<p><a href="https://nishihi6.github.io/blog/posts/devlog_cg-ml_02/">CG×ML #2 勾配ベースの最適化（Mitsuba3） [Devlog #011]</a></p>
 <h5 id="nvdiffrast">nvdiffrast</h5>
-<p>表現方法：メッシュ
-<br>レンダリング：ラスタライズ</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">表現方法</th>
+<th style="text-align:center">レインダリング</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">メッシュ</td>
+<td style="text-align:center">ラスタライズ</td>
+</tr>
+</tbody>
+</table>
 <h5 id="pytorch3d">PyTorch3D</h5>
-<p>表現方法：メッシュ
-<br>レンダリング：ラスタライズ</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">表現方法</th>
+<th style="text-align:center">レインダリング</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">メッシュ</td>
+<td style="text-align:center">ラスタライズ</td>
+</tr>
+</tbody>
+</table>
 <p><a href="https://pt.slideshare.net/SSII_Slides/ssii2020ss">参考：微分可能レンダリングの最新動向 〜「見比べる」ことによる３次元理解〜</a></p>
 
             </div>

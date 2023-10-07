@@ -6,7 +6,35 @@
     <description>Recent content in Home on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Wed, 04 Oct 2023 16:03:45 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 07 Oct 2023 15:36:49 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CG×ML #2 勾配ベースの最適化（Mitsuba3） [Devlog #011]</title>
+      <link>https://nishihi6.github.io/blog/posts/devlog_cg-ml_02/</link>
+      <pubDate>Sat, 07 Oct 2023 15:36:49 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/devlog_cg-ml_02/</guid>
+      <description>勾配ベースの最適化（Mitsuba3） Mitsuba3の動作確認 Mitsuba3はPyPIからpip経由でインストールすることが推奨されている 公式ドキュメントはこちら
+Mitsuba3の使い方（Python） インポート import mitsuba as mi バリアントの選択 バリアントについての詳細
+mi.variants() [&#39;scalar_rgb&#39;, &#39;scalar_spectral&#39;, &#39;cuda_ad_rgb&#39;, &#39;llvm_ad_rgb&#39;] この4つの以外のバリアントを必要とする場合は、pipではなく自力でコンパイルする必要がある（ソースからのコンパイルに関するドキュメントはこちら）
+mi.set_variant(&amp;#34;scalar_rgb&amp;#34;) 計算バックエンド（Computational backend）の指定 scalar：旧Mitsubaと同様にCPU上で浮動小数点演算を実行する（一度に個々のレイを処理するモードであるため、コンパイルエラーの修正やレンダラーのデバッグに適している）
+cuda：Dr.JITが計算をCUDAカーネルに変換してGPUにオフロードする（GPUレイトレーシングにNVIDIAのOptiXライブラリを使用する）
+llvm：Dr.JITが計算を並列CPUカーネルにコンパイルする（LLVMコンパイラフレームワークを使用する）（※ NVIDIA GPUを持っていない場合の代替手段）
+自動微分（Automatic differentiation）の指定 _ad：自動微分を有効にする（cudaとllvmモードで指定可能）
+主に微分可能レンダリングを行う際に利用するモードで、光の動きを含めた複雑な逆問題を解く
+色の表現（Color representation）の指定 mono：単色ベースの色表現
+rgb：RGBベースの色表現
+spectral：可視域をカバーする完全なスペクトルカラー表現
+偏光（Polarization）の指定 偏光の追跡が必要な場合に指定する追加オプション
+偏光は逆問題を解決するための強力なツールである
+精度（Precision）の指定 _double：通常の演算で設定している単精度（32bit）から倍精度（64bit）に設定を変更する（EmbreeとOptiXが倍精度をサポートしていないことを考慮した設定が必要な場合がある）
+シーンのロード scene = mi.load_file(&amp;#34;../scenes/cbox.xml&amp;#34;) Mitsuba3ではシーンの記述にXMLベースの形式を利用する（シーンXMLファイルフォーマットに関するドキュメントはこちら）
+シーンのレンダリング image = mi.render(scene, spp=256) render()関数を使用してシーンをレンダリング
+render()は線形RGB色空間テンソル（NumPy配列に似たmi.TensorXf）を返す
+（APIリファレンスはこちら ※サイトが重いので注意）
+mi.Bitmap(image) レンダリング画像の表示
+matplotlibを使っても画像を表示できる import matplotlib.pyplot as plt plt.axis(&amp;#34;off&amp;#34;) plt.imshow(image ** (1.0 / 2.2)); レンダリング画像の保存 mi.util.write_bitmap(&amp;#34;my_first_render.png&amp;#34;, image) mi.</description>
+    </item>
+    
     <item>
       <title>CG×ML #1 微分可能レンダリング [Devlog #010]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_cg-ml_01/</link>
@@ -21,7 +49,7 @@
 微分可能レンダラとは レンダリング画像における入力画像（教師データ）との差分を誤差逆伝播させてニューラルネットを学習させるには、レンダリング箇所が微分可能である必要がある
 つまり、レンダリング画像と入力画像（教師データ）との差分からパラメータの更新ができる（ロスからBackwardできる）レンダラを微分可能レンダラという
 勾配ベースの最適化アルゴリズム（SGD、Adam等）で3Dシーンを最適化できるレンダラ
-最適化する3Dシーンの例 頂点位置 カメラポーズ（姿勢） テクスチャ ライト その他、レンダリングに重畳する概念ほぼ全て 参考：微分可能レンダラのつくりかた 参考：ニューラルネット3D表現に対する微分可能レンダラー 参考：微分可能レンダリング
+最適化する3Dシーンの例 頂点位置 カメラポーズ（姿勢） テクスチャ ライト その他、レンダリングに関する概念ほぼ全て 参考：微分可能レンダラのつくりかた 参考：ニューラルネット3D表現に対する微分可能レンダラー 参考：微分可能レンダリング
 3次元構造の表現方法（研究発展中） ボクセル（Voxel） 点群（Point） メッシュ（Mesh） +α ニューラルネットワーク表現（ニューラル場） +α 点群-&amp;gt;ガウス メッシュ（Mesh） メッシュ表現を用いる場合は、何らかの初期形状を仮定して、それを変形させることで3次元構造の再構成を行う手法が主流である
 レンダリング方式（研究発展中） ラスタライズ レイトレーシング +α Radiance Field +α 微分可能ガウスラスタライズ ラスタライズは視界の範囲だけ、レイトレーシングは視界範囲外の考慮してレンダリングする
 参考：レイトレーシングとラスタライズの違い - NVIDIA
