@@ -232,7 +232,7 @@ stroke-linejoin="round" class="feather feather-home">
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">mi</span><span class="o">.</span><span class="n">variants</span><span class="p">()</span>
 </span></span></code></pre></div><pre><code>['scalar_rgb', 'scalar_spectral', 'cuda_ad_rgb', 'llvm_ad_rgb']
 </code></pre>
-<p>この4つの以外のバリアントを必要とする場合は、<code>pip</code>ではなく自力でコンパイルする必要がある（ソースからのコンパイルに関するドキュメントは<a href="https://mitsuba.readthedocs.io/en/latest/src/developer_guide/compiling.html#sec-compiling">こちら</a>）</p>
+<p>この4つ以外のバリアントを必要とする場合は、<code>pip</code>ではなく自力でコンパイルする必要がある（ソースからのコンパイルに関するドキュメントは<a href="https://mitsuba.readthedocs.io/en/latest/src/developer_guide/compiling.html#sec-compiling">こちら</a>）</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">mi</span><span class="o">.</span><span class="n">set_variant</span><span class="p">(</span><span class="s2">&#34;scalar_rgb&#34;</span><span class="p">)</span>
 </span></span></code></pre></div><details><summary>計算バックエンド（Computational backend）の指定</summary>
 <p><code>scalar</code>：旧Mitsubaと同様にCPU上で浮動小数点演算を実行する（一度に個々のレイを処理するモードであるため、コンパイルエラーの修正やレンダラーのデバッグに適している）</p>

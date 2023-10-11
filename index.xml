@@ -6,7 +6,16 @@
     <description>Recent content in Home on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Sat, 07 Oct 2023 15:36:49 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 11 Oct 2023 23:55:00 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DirectX12の描画処理 #5 [Devlog #012]</title>
+      <link>https://nishihi6.github.io/blog/posts/devlog_dx12_05/</link>
+      <pubDate>Wed, 11 Oct 2023 23:55:00 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/devlog_dx12_05/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>CG×ML #2 勾配ベースの最適化（Mitsuba3） [Devlog #011]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_cg-ml_02/</link>
@@ -15,7 +24,7 @@
       <guid>https://nishihi6.github.io/blog/posts/devlog_cg-ml_02/</guid>
       <description>勾配ベースの最適化（Mitsuba3） Mitsuba3の動作確認 Mitsuba3はPyPIからpip経由でインストールすることが推奨されている 公式ドキュメントはこちら
 Mitsuba3の使い方（Python） インポート import mitsuba as mi バリアントの選択 バリアントについての詳細
-mi.variants() [&#39;scalar_rgb&#39;, &#39;scalar_spectral&#39;, &#39;cuda_ad_rgb&#39;, &#39;llvm_ad_rgb&#39;] この4つの以外のバリアントを必要とする場合は、pipではなく自力でコンパイルする必要がある（ソースからのコンパイルに関するドキュメントはこちら）
+mi.variants() [&#39;scalar_rgb&#39;, &#39;scalar_spectral&#39;, &#39;cuda_ad_rgb&#39;, &#39;llvm_ad_rgb&#39;] この4つ以外のバリアントを必要とする場合は、pipではなく自力でコンパイルする必要がある（ソースからのコンパイルに関するドキュメントはこちら）
 mi.set_variant(&amp;#34;scalar_rgb&amp;#34;) 計算バックエンド（Computational backend）の指定 scalar：旧Mitsubaと同様にCPU上で浮動小数点演算を実行する（一度に個々のレイを処理するモードであるため、コンパイルエラーの修正やレンダラーのデバッグに適している）
 cuda：Dr.JITが計算をCUDAカーネルに変換してGPUにオフロードする（GPUレイトレーシングにNVIDIAのOptiXライブラリを使用する）
 llvm：Dr.JITが計算を並列CPUカーネルにコンパイルする（LLVMコンパイラフレームワークを使用する）（※ NVIDIA GPUを持っていない場合の代替手段）
