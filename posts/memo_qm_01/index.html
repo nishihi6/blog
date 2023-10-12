@@ -3,11 +3,11 @@
 <meta http-equiv="content-type" content="text/html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title itemprop="name">Posts | nishihi6</title>
-<meta property="og:title" content="Posts | nishihi6" />
-<meta name="twitter:title" content="Posts | nishihi6" />
-<meta itemprop="name" content="Posts | nishihi6" />
-<meta name="application-name" content="Posts | nishihi6" />
+<title itemprop="name">量子情報工学メモ #1 量子力学 [Memo #003] | nishihi6</title>
+<meta property="og:title" content="量子情報工学メモ #1 量子力学 [Memo #003] | nishihi6" />
+<meta name="twitter:title" content="量子情報工学メモ #1 量子力学 [Memo #003] | nishihi6" />
+<meta itemprop="name" content="量子情報工学メモ #1 量子力学 [Memo #003] | nishihi6" />
+<meta name="application-name" content="量子情報工学メモ #1 量子力学 [Memo #003] | nishihi6" />
 <meta property="og:site_name" content="nishihi6" />
 
 <meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
@@ -32,11 +32,6 @@
     
     
     
-    <link rel="first" href="/blog/posts/" />
-    <link rel="last" href="/blog/posts/" />
-    
-    
-    
 
     <meta property="og:type" content="article" />
     <meta property="og:article:published_time" content=2023-10-12T19:45:54&#43;0900 />
@@ -50,14 +45,14 @@
     {
         "@context": "http://schema.org",
         "@type": "Article",
-        "headline": "Posts",
+        "headline": "量子情報工学メモ #1 量子力学 [Memo #003]",
         "author": {
         "@type": "Person",
         "name": ""
         },
         "datePublished": "2023-10-12",
         "description": "",
-        "wordCount":  0 ,
+        "wordCount":  197 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-10-12",
         "image": {
@@ -76,9 +71,7 @@
 
     
 
-    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/">
-    <link href="/blog/posts/index.xml" rel="alternate" type="application/rss+xml" title="nishihi6">
-    <link href="/blog/posts/index.xml" rel="feed" type="application/rss+xml" title="nishihi6">
+    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/memo_qm_01/">
     <link href="/blog/style.min.840eada6dfddec7b8ccfcf867f039bf80b1f16a265ec6e01dc553a3dddc9d509.css" rel="stylesheet">
     <link href="/blog/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
 
@@ -179,247 +172,138 @@ stroke-linejoin="round" class="feather feather-home">
         </div>
     </nav>
 </div>
-<div class="wrapper list-page">
-    <header class="header">
-        <h1 class="header-title center">Posts</h1>
-    </header>
+
+<div class="wrapper post">
     <main class="page-content" aria-label="Content">
-        
-        
-        <h2 class="post-year">2023</h2>
+        <article>
+            <header class="header">
+                <h1 class="header-title">量子情報工学メモ #1 量子力学 [Memo #003]</h1>
+                
+                
+                <div class="post-meta">
+                    <time datetime="2023-10-12T19:45:54&#43;09:00" itemprop="datePublished"> 12 Oct 2023 </time>
+                </div>
+                
+            </header>
+            <details class="toc">
+                <summary><b>Table of Contents</b></summary>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#量子力学quantum-mechanics">量子力学（Quantum Mechanics）</a>
+      <ul>
+        <li><a href="#システムと実験---systems-and-experiments">システムと実験 - Systems and Experiments</a>
+          <ul>
+            <li><a href="#quantum-mechanics-is-different">Quantum Mechanics Is Different</a></li>
+            <li><a href="#spins-and-qubits">Spins and Qubits</a></li>
+            <li><a href="#an-experiment">An Experiment</a></li>
+            <li><a href="#experiments-are-never-gentle">Experiments Are Never Gentle</a></li>
+            <li><a href="#proposition">Proposition</a></li>
+            <li><a href="#古典的な命題のテスト---testing-classical-propositions">古典的な命題のテスト - Testing Classical Propositions</a></li>
+            <li><a href="#量子的な命題のテスト---testing-quantum-proposition">量子的な命題のテスト - Testing Quantum Proposition</a></li>
+            <li><a href="#mathematical-interlude-complex-number">Mathematical Interlude: Complex Number</a></li>
+            <li><a href="#mathematical-interlude-vector-spaces">Mathematical Interlude: Vector Spaces</a></li>
+          </ul>
+        </li>
+        <li><a href="#量子状態---quantumn-states">量子状態 - Quantumn States</a>
+          <ul>
+            <li><a href="#状態とベクトル---states-and-vectors">状態とベクトル - States and Vectors</a></li>
+            <li><a href="#スピン状態の表現---representing-spin-states">スピン状態の表現 - Representing Spin States</a></li>
+            <li><a href="#along-the-x-axis">Along the x Axis</a></li>
+            <li><a href="#along-the-y-axis">Along the y Axis</a></li>
+            <li><a href="#パラメータのカウント---counting-parameters">パラメータのカウント - Counting Parameters</a></li>
+            <li><a href="#スピン状態を列ベクトルとして表現---representing-spin-states-as-column-vectors">スピン状態を列ベクトルとして表現 - Representing Spin States as Column Vectors</a></li>
+            <li><a href="#これまでのまとめ---putting-it-all-together">これまでのまとめ - Putting It All Together</a></li>
+          </ul>
+        </li>
+        <li><a href="#量子力学の原理---principles-of-quantum-mechanics">量子力学の原理 - Principles of Quantum Mechanics</a>
+          <ul>
+            <li><a href="#数学上の補説線形演算子---mathematical-interlude-liner-operators">数学上の補説：線形演算子 - Mathematical Interlude: Liner Operators</a></li>
+            <li><a href="#原理---the-principles">原理 - The Principles</a></li>
+            <li><a href="#スピン演算子---an-example-spin-operator">スピン演算子 - An Example: Spin Operator</a></li>
+            <li><a href="#スピン演算子の構成---constructing-spin-operators">スピン演算子の構成 - Constructing Spin Operators</a></li>
+          </ul>
+        </li>
+        <li><a href="#よくある誤解---a-common-misconception">よくある誤解 - A Common Misconception</a></li>
+        <li><a href="#3-ベクトル演算子の再考---3-vector-operators-revisited">3-ベクトル演算子の再考 - 3-Vector Operators Revisited</a></li>
+        <li><a href="#計算を行って結果を得る---reaping-the-results">計算を行って結果を得る - Reaping the Results</a></li>
+        <li><a href="#スピン偏極の原理---the-spin-polarization-principle">スピン偏極の原理 - The Spin-Polarization Principle</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+            </details><div class="page-content">
+                <h1 id="量子コンピューティングを学ぶ">量子コンピューティングを学ぶ</h1>
+<hr>
+<p>我々が目指している未来を少しでも理解できるようになることが、今後の自らの興味やスキルを発展させていくことで重要と考えたため、量子情報について学びます（CV・CGとは現状関わりの薄い分野ですが…）</p>
+<h2 id="背景">背景</h2>
+<p>2050年頃（自分の子供が社会で活躍し始める頃）には、従来の情報通信技術に<strong>量子インターネット</strong>や<strong>量子センサ</strong>などの量子技術が加わり、<strong>量子コンピュータ</strong>を自由自在に組み合わせて使いこなす<strong>「量子前提社会」</strong>が到来すると考えられている<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
+<p>情報化社会が到来し、インターネットやコンピュータが多くの社会課題を解決してきたが、これの延長線上にあるものとして、量子情報技術はより難しい課題を解決すると考えられる</p>
+<p>量子前提社会で必要とされる<strong>誤り耐性量子コンピュータの大規模化</strong>の実装は、操作精度や実装精度などに何万倍もの向上が必要になるが、原理的に実現を妨げる障壁は無い</p>
+<p>また、大規模化を達成した誤り耐性量子コンピュータの実現は、内閣府が2020年に設定した<strong>ムーンショット計画</strong>でも目標とされている<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></p>
+<dl>
+  <dt>※誤り耐性型汎用量子コンピュータ</dt>
+  <dd>大規模な集積化を実現しつつ、様々な用途に応用する上で十分な精度を保証できる量子コンピュータ</dd>
+</dl>
+<dl>
+  <dt>※ムーンショット計画</dt>
+  <dd>従来技術の延長を担い、より大胆な発想に基づく挑戦的な研究開発の推進を目的とした計画（名前の由来はケネディ大統領のアポロ計画に関する演説で用いられた言葉からきている）</dd>
+</dl>
+<h2 id="量子力学quantum-mechanics">量子力学（Quantum Mechanics）</h2>
+<h3 id="システムと実験---systems-and-experiments">システムと実験 - Systems and Experiments</h3>
+<h4 id="quantum-mechanics-is-different">Quantum Mechanics Is Different</h4>
+<h4 id="spins-and-qubits">Spins and Qubits</h4>
+<h4 id="an-experiment">An Experiment</h4>
+<h4 id="experiments-are-never-gentle">Experiments Are Never Gentle</h4>
+<h4 id="proposition">Proposition</h4>
+<h4 id="古典的な命題のテスト---testing-classical-propositions">古典的な命題のテスト - Testing Classical Propositions</h4>
+<h4 id="量子的な命題のテスト---testing-quantum-proposition">量子的な命題のテスト - Testing Quantum Proposition</h4>
+<h4 id="mathematical-interlude-complex-number">Mathematical Interlude: Complex Number</h4>
+<h4 id="mathematical-interlude-vector-spaces">Mathematical Interlude: Vector Spaces</h4>
+<h5 id="公理---axioms">公理 - Axioms</h5>
+<h5 id="関数と列ベクトル---functions-and-column-vectors">関数と列ベクトル - Functions and Column Vectors</h5>
+<h5 id="ブラとケット---bras-and-kets">ブラとケット - Bras and Kets</h5>
+<h5 id="内積---inner-products">内積 - Inner Products</h5>
+<h5 id="正規直交基底---orthonormal-bases">正規直交基底 - Orthonormal Bases</h5>
+<h3 id="量子状態---quantumn-states">量子状態 - Quantumn States</h3>
+<h4 id="状態とベクトル---states-and-vectors">状態とベクトル - States and Vectors</h4>
+<h4 id="スピン状態の表現---representing-spin-states">スピン状態の表現 - Representing Spin States</h4>
+<h4 id="along-the-x-axis">Along the x Axis</h4>
+<h4 id="along-the-y-axis">Along the y Axis</h4>
+<h4 id="パラメータのカウント---counting-parameters">パラメータのカウント - Counting Parameters</h4>
+<h4 id="スピン状態を列ベクトルとして表現---representing-spin-states-as-column-vectors">スピン状態を列ベクトルとして表現 - Representing Spin States as Column Vectors</h4>
+<h4 id="これまでのまとめ---putting-it-all-together">これまでのまとめ - Putting It All Together</h4>
+<h3 id="量子力学の原理---principles-of-quantum-mechanics">量子力学の原理 - Principles of Quantum Mechanics</h3>
+<h4 id="数学上の補説線形演算子---mathematical-interlude-liner-operators">数学上の補説：線形演算子 - Mathematical Interlude: Liner Operators</h4>
+<h5 id="機会と行列---machines-and-matrices">機会と行列 - Machines and Matrices</h5>
+<h5 id="固有値と固有ベクトル---eigenvalues-and-eigenvectors">固有値と固有ベクトル - Eigenvalues and EigenVectors</h5>
+<h5 id="エルミート共役---hermitian-conjugation">エルミート共役 - Hermitian Conjugation</h5>
+<h5 id="エルミート演算子---hermitian-operators">エルミート演算子 - Hermitian Operators</h5>
+<h5 id="エルミート演算子と正規直交基底---hermitian-operators-and-orthonormal-bases">エルミート演算子と正規直交基底 - Hermitian Operators and Orthonormal Bases</h5>
+<h5 id="グラムシュミット法---the-gram-schmidt-procedure">グラム・シュミット法 - The Gram-Schmidt Procedure</h5>
+<h4 id="原理---the-principles">原理 - The Principles</h4>
+<h4 id="スピン演算子---an-example-spin-operator">スピン演算子 - An Example: Spin Operator</h4>
+<h4 id="スピン演算子の構成---constructing-spin-operators">スピン演算子の構成 - Constructing Spin Operators</h4>
+<h3 id="よくある誤解---a-common-misconception">よくある誤解 - A Common Misconception</h3>
+<h3 id="3-ベクトル演算子の再考---3-vector-operators-revisited">3-ベクトル演算子の再考 - 3-Vector Operators Revisited</h3>
+<h3 id="計算を行って結果を得る---reaping-the-results">計算を行って結果を得る - Reaping the Results</h3>
+<h3 id="スピン偏極の原理---the-spin-polarization-principle">スピン偏極の原理 - The Spin-Polarization Principle</h3>
+<br><div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://www.ohmsha.co.jp/book/9784274226212/">量子コンピューティング 基本アルゴリズムから量子機械学習まで - 嶋田 義皓</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://www8.cao.go.jp/cstp/moonshot/sub6.html">ムーンショット目標６ - 内閣府</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
 
-        
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/memo_qm_01/">量子情報工学メモ #1 量子力学 [Memo #003]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-10-12T19:45:54&#43;0900">
-        12 Oct 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_05/">DirectX12の描画処理 #5 [Devlog #012]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-10-11T23:55:00&#43;0900">
-        11 Oct 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_cg-ml_02/">CG×ML #2 勾配ベースの最適化（Mitsuba3） [Devlog #011]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-10-07T15:36:49&#43;0900">
-        7 Oct 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_cg-ml_01/">CG×ML #1 微分可能レンダリング [Devlog #010]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-10-04T16:03:45&#43;0900">
-        4 Oct 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_cg_04/">CG理論 #4 シェーディング [Devlog #009]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-09-30T22:43:30&#43;0900">
-        30 Sep 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_cg_03/">CG理論 #3 変換 [Devlog #008]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-09-29T23:41:38&#43;0900">
-        29 Sep 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_04/">DirectX12の描画処理 #4 [Devlog #007]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-09-20T22:48:58&#43;0900">
-        20 Sep 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_unity-vr_01/">Unity-VR 備忘録 #1 [Devlog #006]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-09-06T17:42:09&#43;0900">
-        6 Sep 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_cg_02/">CG理論 #2 グラフィクス処理 [Devlog #005]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-30T03:46:40&#43;0900">
-        30 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/memo_cmake_01/">CMakeについてのメモ [Memo #002]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-29T15:43:33&#43;0900">
-        29 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/memo_links_01/">メモリンク集 [Memo #001]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-28T21:43:10&#43;0900">
-        28 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_03/">DirectX12の描画処理 #3 [Devlog #004]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-27T21:44:55&#43;0900">
-        27 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_02/">DirectX12の描画処理 #2 [Devlog #003]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-26T18:46:37&#43;0900">
-        26 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_cg_01/">CG理論 #1 レンダリングパイプライン [Devlog #002]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-24T15:22:11&#43;0900">
-        24 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_dx12_01/">DirectX12の描画処理 #1 [Devlog #001]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-23T01:19:34&#43;0900">
-        23 Aug 2023
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/my-first-post/">My First Post（記事作成に関する備忘録）</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2023-08-22T06:05:10&#43;0900">
-        22 Aug 2023
-    </time>
-</article>
-
-
-         
-
-         
-
-    </main>
-</div><footer class="footer">
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
     <span class="footer_item"> </span>
     &nbsp;
 
