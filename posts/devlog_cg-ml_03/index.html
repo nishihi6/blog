@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ja-jp"><head><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">CG×ML #3 DRを可能にするMitsuba3の中身 [Devlog #013] | nishihi6</title>
+<meta property="og:title" content="CG×ML #3 DRを可能にするMitsuba3の中身 [Devlog #013] | nishihi6" />
+<meta name="twitter:title" content="CG×ML #3 DRを可能にするMitsuba3の中身 [Devlog #013] | nishihi6" />
+<meta itemprop="name" content="CG×ML #3 DRを可能にするMitsuba3の中身 [Devlog #013] | nishihi6" />
+<meta name="application-name" content="CG×ML #3 DRを可能にするMitsuba3の中身 [Devlog #013] | nishihi6" />
+<meta property="og:site_name" content="nishihi6" />
+
+<meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
+<meta itemprop="description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta property="og:description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta name="twitter:description" content="Minimal Hugo blog theme with light and dark mode support" />
+
+<meta property="og:locale" content="ja-jp" />
+<meta name="language" content="ja-jp" />
+
+
+
+  <meta itemprop="image" content="https://nishihi6.github.io/blog/" />
+  <meta property="og:image" content="https://nishihi6.github.io/blog/" />
+  <meta name="twitter:image" content="https://nishihi6.github.io/blog/" />
+  <meta name="twitter:image:src" content="https://nishihi6.github.io/blog/" />
+
+
+
+
+    
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2023-10-14T23:00:08&#43;0900 />
+    <meta property="article:published_time" content=2023-10-14T23:00:08&#43;0900 />
+
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "CG×ML #3 DRを可能にするMitsuba3の中身 [Devlog #013]",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2023-10-14",
+        "description": "",
+        "wordCount":  378 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2023-10-14",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "nishihi6"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.117.0">
+
+    
+
+    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/devlog_cg-ml_03/">
+    <link href="/blog/style.min.840eada6dfddec7b8ccfcf867f039bf80b1f16a265ec6e01dc553a3dddc9d509.css" rel="stylesheet">
+    <link href="/blog/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/blog/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/blog/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/blog/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/blog/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/blog/favicon.ico">
+
+
+
+
+<link rel="manifest" href="https://nishihi6.github.io/blog/site.webmanifest">
+
+<meta name="msapplication-config" content="/blog/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/blog/icons/favicon.svg">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"
+    integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous" />
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"
+    integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4"
+    crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"
+    integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false}
+      ]
+    });"></script>
+
+    </head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/blog/js/theme.min.8961c317c5b88b953fe27525839672c9343f1058ab044696ca225656c8ba2ab0.js" integrity="sha256-iWHDF8W4i5U/4nUlg5ZyyTQ/EFirBEaWyiJWVsi6KrA="></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="https://nishihi6.github.io/blog/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/blog/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/blog/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/blog/pages/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">CG×ML #3 DRを可能にするMitsuba3の中身 [Devlog #013]</h1>
+                
+                
+                <div class="post-meta">
+                    <time datetime="2023-10-14T23:00:08&#43;09:00" itemprop="datePublished"> 14 Oct 2023 </time>
+                </div>
+                
+            </header>
+            <details class="toc">
+                <summary><b>Table of Contents</b></summary>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#drjitジャストインタイムコンパイラ">Dr.Jit（ジャストインタイムコンパイラ）</a>
+      <ul>
+        <li><a href="#drjitとは">Dr.Jitとは</a>
+          <ul>
+            <li><a href="#目的">目的</a></li>
+          </ul>
+        </li>
+        <li><a href="#introduction">Introduction</a>
+          <ul>
+            <li><a href="#物理ベースの微分可能レンダリングpbdr">物理ベースの微分可能レンダリング（PBDR）</a></li>
+            <li><a href="#pbdrの課題">PBDRの課題</a></li>
+            <li><a href="#drjitの設計原理">Dr.Jitの設計原理</a></li>
+            <li><a href="#drjitのアプローチ">Dr.Jitのアプローチ</a></li>
+          </ul>
+        </li>
+        <li><a href="#related-work-and-background">Related Work and Background</a>
+          <ul>
+            <li><a href="#配列プログラミングarray-programming">配列プログラミング（Array programming）</a></li>
+            <li><a href="#自動微分automatic-differentiation">自動微分（Automatic Differentiation）</a></li>
+          </ul>
+        </li>
+        <li><a href="#ジャストインタイムコンパイルjust-in-time-compilation">ジャストインタイムコンパイル（Just-in-Time Compilation）</a>
+          <ul>
+            <li><a href="#実行例running-example">実行例（Running example）</a></li>
+            <li><a href="#議論discussion">議論（Discussion）</a></li>
+            <li><a href="#最適化oprimizations">最適化（Oprimizations）</a></li>
+            <li><a href="#その他の特徴additional-features">その他の特徴（Additional features）</a></li>
+            <li><a href="#結果results">結果（Results）</a></li>
+          </ul>
+        </li>
+        <li><a href="#微分法differentiation">微分法（Differentiation）</a>
+          <ul>
+            <li><a href="#物理ベースの微分可能レンダリングphisically-based-differentiable-rendering-pbdr">物理ベースの微分可能レンダリング（Phisically Based Differentiable Rendering; PBDR）</a></li>
+            <li><a href="#目的objectives">目的（Objectives）</a></li>
+            <li><a href="#動的コンパイルによるトレースtracing-with-dynamic-compilation">動的コンパイルによるトレース（Tracing with dynamic compilation）</a></li>
+            <li><a href="#カスタムアジョイントcustom-adjoints">カスタムアジョイント（Custom adjoints）</a></li>
+            <li><a href="#微分ポリモーフィズムdifferentiating-polymorphism">微分ポリモーフィズム（Differentiating polymorphism）</a></li>
+            <li><a href="#分離境界isolation-boundaries">分離境界（Isolation boundaries）</a></li>
+            <li><a href="#再パラメータ化reparameterizations">再パラメータ化（Reparameterizations）</a></li>
+            <li><a href="#偏微分の選択的評価selective-evaluation-of-partial-derivatives">偏微分の選択的評価（Selective evaluation of partial derivatives）</a></li>
+            <li><a href="#ad-tape-surgery">AD tape surgery</a></li>
+            <li><a href="#結果results-1">結果（Results）</a></li>
+          </ul>
+        </li>
+        <li><a href="#結論conclusion">結論（Conclusion）</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+            </details><div class="page-content">
+                <h1 id="微分可能レンダリングを行うmitsuba3の仕組み">微分可能レンダリングを行うMitsuba3の仕組み</h1>
+<h2 id="drjitジャストインタイムコンパイラ">Dr.Jit（ジャストインタイムコンパイラ）</h2>
+<hr>
+<p>ここでは微分可能なレンダリングのためのジャストインタイムコンパイラについての論文<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>を理解する</p>
+<blockquote>
+<p>Wenzel Jakob, Sébastien Speierer, Nicolas Roussel, and Delio Vicini. 2022. Dr.Jit: A Just-In-Time Compiler for Differentiable Rendering. In Transactions on Graphics (Proceedings of SIGGRAPH) 41(4).</p>
+</blockquote>
+<h3 id="drjitとは">Dr.Jitとは</h3>
+<hr>
+<p>物理ベース微分可能レンダリング（PBDR）のためのジャストインタイムコンパイラ</p>
+<p>レンダリングアルゴリズムを実行すると<strong>グラフ</strong>を生成</p>
+<details><summary>グラフとは</summary>
+<p>算術、ループ、レイトレーシングの操作、およびレンダリングアルゴリズムとシーンオブジェクト（形状、BSDF、テクスチャ、エミッターなど）間の情報を交換する多態的な呼び出し</p>
+</details>
+<p>Dr.Jitは提供されるシーンにグラフを特化させ、LLVMまたはOptiXを介してデータ並列カーネル（megakernel）にコンパイルする</p>
+<p>通常のレンダリングのほか、<strong>微分シミュレーション（differential simulations）</strong>を動的にコンパイルする</p>
+<p>大きな微分タスクを一連の漸近的なステップに分解するため、自動微分（automatic differentiation）の細かい実行をサポート</p>
+<p>画像空間における摂動（perturbation）を計算してデバッグやvisualizationに利用する<strong>Forwardモード</strong>と、たくさんの未知数を同次最適化するためのパラメータ空間の導関数を提供する<strong>Reverseモード</strong>を実装している</p>
+<details><summary>パラメータ空間の例</summary>
+<p>壁紙のテクセル（テクスチャ空間の基本単位）</p>
+</details>
+<h4 id="目的">目的</h4>
+<ol>
+<li>
+<p>Python等の高レベル言語で記述されたシミュレーションコードの実行を追跡し、どの部分のコードがどのように動作しているのか、どの部分が計算負荷が高いのかなどの情報をもとに、コードを効率的に最適化・変換し、高速なデータ並列カーネルを生成する</p>
+</li>
+<li>
+<p>微分の過程をより効率的に、かつ細かい制御のもとで行うことをサポートし、微分可能なレンダリングアルゴリズムの開発を簡易化する（効率的な方法として<strong>シミュレーションの微分を微分のシミュレーションに変える</strong>）</p>
+</li>
+</ol>
+<details><summary>"シミュレーションの微分を微分のシミュレーションに変える"とは</summary>
+<p><strong>Derivative of a simulation（シミュレーションの微分）</strong>：</p>
+<p>シミュレーションが入力に対してどのように変化するかを示す</p>
+<p>例えば、物理ベースのレンダリングの場合、光の強度や物質の性質などの入力パラメータに微小な変化を加えたときの出力画像の変化量がこれに該当する</p>
+<p><strong>Simulation of the derivative（微分のシミュレーション）</strong>：</p>
+<p>微分そのものを新しいシミュレーションとして扱う考え方</p>
+<p>つまり、入力の変化に対する出力の変化を直接シミュレートすることで、微分の効果を視覚化や解析するためのツールとして利用する</p>
+<br>
+この変換は重要。なぜなら、
+<p>多くのアルゴリズムや最適化手法は、微分の情報を使用して動作する</p>
+<p>微分可能なレンダリングは、シーンのパラメータを最適化するための勾配情報を提供する能力が求められる</p>
+<p>この勾配情報は、シーンの照明や材料の性質、カメラの位置などのパラメータを調整して、目的の画像や効果に近づけるために使用される</p>
+</details>
+<br>
+Dr.Jitは自動微分のプロセスを細かく制御してこの変換を支援する
+<p>また、Dr.Jitはデータの依存関係をグローバルに追跡し、最終的に勾配に影響を与えない計算（冗長なシミュレーション）を削除することで効率を上げる</p>
+<h3 id="introduction">Introduction</h3>
+<hr>
+<h4 id="物理ベースの微分可能レンダリングpbdr">物理ベースの微分可能レンダリング（PBDR）</h4>
+<p>PBDRは、任意のシーンパラメータに基づいて光輸送シミュレーションを微分できる</p>
+<p>勾配ベースの最適化と組み合わせ、多くの未知数を持つ非線形の問題を解決する</p>
+<p>この技術は、画像の逆解析が必要な多くの分野での利用が期待される</p>
+<h4 id="pbdrの課題">PBDRの課題</h4>
+<p>実用的な実装が難しい</p>
+<p>例えば、パストレーシングのような基本的なアルゴリズムの逆モード導関数は非常に複雑になる可能性がある</p>
+<p>最適化は数千回の反復を行うかもしれないため、正確さだけでなく効率も重要となる</p>
+<h4 id="drjitの設計原理">Dr.Jitの設計原理</h4>
+<p>PBDRのための実用的かつ効率的なプラットフォーム</p>
+<p>アーキテクチャ内の決定は、開発の簡素化と効率の向上を目指す</p>
+<p>手動の微分は面倒でエラーが発生しやすいため、開発を簡素化するために自動微分（AD）に基づいて構築する</p>
+<p>自動微分を標準的に使うと、PBDRの要求を満たすのが難しく、その結果として得られる導関数は効率的でなく偏ってしまう</p>
+<p>非効率性を解消するために、データを集める範囲や方法を再調整することで偏りを取り除く<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup><sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup><sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
+<p>微分演算はランダムウォークに移行し、散乱がおこるたびに新しい偏微分項が導入されるが、微分は何らかの形で事前にコンパイルされなければならない（計算速度の問題で）</p>
+<p>最適化がシーンのパラメータの一部のみを対象とする場合、計算された勾配に影響を与えることがないステップを削除する</p>
+<p>このような問題には動的なコンパイルのアプローチが必要となるため、ジャストインタイム（JIT）コンパイルを中心としたアプローチを行う</p>
+<p>モンテカルロ積分は、カーネル（megakernel）内で行われ、ほとんどのサンプル状態をレジスタに格納することで、メモリ使用量やカーネル間通信を削減することができる</p>
+<h4 id="drjitのアプローチ">Dr.Jitのアプローチ</h4>
+<p>Dr.Jitの微分レンダリングステップはループ、ポリモーフィズム、レイの交差操作を中断することなく記録し、レンダリングアルゴリズムと、参照されるすべてのシーンオブジェクト（マテリアル、テクスチャ、ボリューム、光源など）の実装を包含する非常に大きな<strong>トレース</strong>の形で評価されていない画像を返す</p>
+<details><summary>トレースとは</summary>
+<p>トレースは、プログラムの実行中に行われる操作の記録または追跡を指す</p>
+<p>具体的には、プログラムがどのような手順で実行され、どの関数や命令が順番に呼び出され、どのようなデータが処理されたかなどの情報が、時間の流れに沿って記録される</p>
+<p>Dr.Jitの文脈でのトレースは、レンダリングのシミュレーションコードの実行中に行われるすべての操作を逐次的に記録することを指している</p>
+<p>このトレースは、後でのコンパイルやターゲットデバイスでの実行のために用いられ、シミュレーションの各ステップや詳細を後から正確に再現または解析することが可能となる</p>
+</details>
+<p>生成されるトレースは、全体のレンダリングプロセスを表しており（グローバルな表現であり）、最適化の機会を明らかにする</p>
+<h3 id="related-work-and-background">Related Work and Background</h3>
+<hr>
+<h4 id="配列プログラミングarray-programming">配列プログラミング（Array programming）</h4>
+<p>（省略）</p>
+<h4 id="自動微分automatic-differentiation">自動微分（Automatic Differentiation）</h4>
+<p>（省略）</p>
+<h3 id="ジャストインタイムコンパイルjust-in-time-compilation">ジャストインタイムコンパイル（Just-in-Time Compilation）</h3>
+<hr>
+<h4 id="実行例running-example">実行例（Running example）</h4>
+<p>（省略）</p>
+<h4 id="議論discussion">議論（Discussion）</h4>
+<p>（省略）</p>
+<h4 id="最適化oprimizations">最適化（Oprimizations）</h4>
+<p>（省略）</p>
+<h4 id="その他の特徴additional-features">その他の特徴（Additional features）</h4>
+<p>（省略）</p>
+<h4 id="結果results">結果（Results）</h4>
+<p>（省略）</p>
+<h3 id="微分法differentiation">微分法（Differentiation）</h3>
+<hr>
+<h4 id="物理ベースの微分可能レンダリングphisically-based-differentiable-rendering-pbdr">物理ベースの微分可能レンダリング（Phisically Based Differentiable Rendering; PBDR）</h4>
+<h5 id="パストレーシング">パストレーシング</h5>
+<p>典型的なレンダリングアルゴリズムの<strong>パストレーシング</strong><sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>は、光源からセンサーへと光の放射を伝播させるため、センサーから始めて連続するパスの頂点を繰り返し処理する
+<br><a href="https://blogs.nvidia.com/blog/2022/03/23/what-is-path-tracing/">What Is Path Tracing? - NVIDIA</a></p>
+<p>シーンが散乱メディア（入射光がその中を通過する際に方向を変えるか、強度を変える物質や物体）を含む場合、多くの反復処理が必要となる可能性があり、このループが微分の際に問題となる</p>
+<p>逆モードの導関数を計算するためには、生成された各反復ごとに中間の状態を再び組み立てる必要がある</p>
+<p>パストレーシングの場合、何回の反復になるか予測できないため、モンテカルロ法のサンプルが数百万回ループを並列に実行することとなり、その結果として生じる中間の状態を保存するためには大量のメモリが必要となる</p>
+<p>一般的に、ループの自動微分はほとんど満足のいくものではなく、同等かつより効率的なカスタムアジョイントを実装するために、ユーザには専門的な知識が必要になる</p>
+<details><summary>カスタムアジョイント（custom adjoint）とは</summary>
+<p>カスタムアジョイントは、微分の文脈、特に逆モード自動微分（reverse-mode automatic differentiation）の中で使用される用語</p>
+<p>自動微分技術は、コンピュータプログラムを通じて関数の導関数を効率的に計算するための手法の一つ</p>
+<p>この技術の中で、「アジョイント」とは、ある関数の出力に関するある入力の導関数を意味する</p>
+<p>通常、基本的な演算や関数については既知の導関数を持っているが、特定の領域や複雑な関数に関しては自動で効率的に微分するのが難しい場合がある</p>
+<p>このような場合、専門的な知識を持つユーザがその関数の微分を効率的に計算するための「カスタムアジョイント」を提供することが求められることがある</p>
+<p>例えば、複雑な物理シミュレーションや特定の数値手法など、特定の計算手順の導関数が一般的な方法での自動微分では非効率的または不正確になる可能性がある場合、カスタムアジョイントを使用して、その計算の微分をより効率的または正確に行うことができる</p>
+</details>
+<h5 id="放射線逆伝播radiative-backpropagation-rb">放射線逆伝播（Radiative Backpropagation; RB）</h5>
+<p>カスタムアジョイントの一つである<strong>放射線逆伝播</strong><sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup>は、物理的な相互作用を利用して、シミュレーションの微分を「アジョイント放射線」という等価なシミュレーションに置き換えることで、ループの状態を保存する必要をなくす</p>
+<p>画像の損失を微分すると、最初にアジョイント放射線が画像空間で得られ、レンダリングされた画像のピクセルがどのように変化すれば損失を減少させるかを示す</p>
+<p>ビデオプロジェクターのように、カメラはこの符号付きの放射線をシーンに放出し、通常の光のように散乱させる</p>
+<p>従来のレンダリングがシーンの表現を読み取るのに対して、放射線逆伝播は書き込みを行う</p>
+<p>アジョイント放射線が<strong>微分可能なパラメータ（BSDFパラメータなど - 4-1図の𝛼）</strong>を持つ面に衝突するたびに、そのパラメータの勾配（どのように調整すれば最も画像の損失を減少させるかの情報）を保存する</p>
+<p>微分可能なパラメータ（4-1図の𝛼）に対する微分も入射放射線の量に比例するため、アジョイント放射線と基本放射線のシミュレーションを同時に考慮しなければならず、その複雑な計算とその計算コストの高さが課題となる</p>
+<h5 id="パスリプレイ逆伝播path-replay-backpropagation-prb">パスリプレイ逆伝播（Path Replay Backpropagation; PRB）</h5>
+<p>上記の課題を解決するため、<strong>パスリプレイ逆伝播</strong><sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup>は以下の手順を行う</p>
+<ol>
+<li>
+<p>モンテカルロ法を用いてランダムなサンプルデータを生成し、保存する</p>
+</li>
+<li>
+<p>保存されたデータに<strong>算術の反転性</strong>を利用してサンプルを再生成し、シーンの各頂点の光の強度や方向（入射放射線）を復元する
+<br>-&gt;これにより、望む勾配を蓄積することができる</p>
+</li>
+<li>
+<p>異なるサンプル間での依存関係を持たない独立したレンダリング（非相関の基本レンダリング）を計算し、それを損失関数に提供する</p>
+</li>
+</ol>
+<h6 id="パスリプレイ逆伝播におけるオクルージョンの問題">パスリプレイ逆伝播におけるオクルージョンの問題</h6>
+<p>描画の過程で物体が他の物体の背後に隠れて見えなくなる、または明るさや色の突然の変化など、シーン内には<strong>非連続性</strong>の変化が起こる可能性がある</p>
+<p>この非連続性を持つシーンを正確に計算・評価するのは難しく、特に積分の過程での計算は複雑になる</p>
+<p>微分可能なパラメータを変更して物体の配置や光の動きなどを変化させた際に、もし上述の非連続性や可視性の変化が起こると、微分結果が予想よりも大きく変わる、つまり「偏る」可能性がある</p>
+<p>したがって、この問題を解決するための特別な予防措置や修正手法が必要になる</p>
+<br>
+従来のような<strong>基本的な積分</strong>を計算するために考えられたサンプリング戦略を、<strong>微分された関数（導関数）</strong>に対して使うと、その性能や精度が下がってしまう
+<p>この場合、微分された関数（導関数）の特性をよく考慮して、その特性に合わせた新しいサンプリング戦略を考える必要がある</p>
+<h4 id="目的objectives">目的（Objectives）</h4>
+<p>微分やモンテカルロ積分を効果的に扱うためのシステムの詳細とその課題</p>
+<h5 id="システムの中心的な原則">システムの中心的な原則</h5>
+<p>カーネル間の送信コストを避けるため、モンテカルロ積分は複数のカーネルに分割してはならない</p>
+<p>ループの繰り返し処理を直列的に実行するような大きなカーネルの生成を避けるため、ループやポリモーフィズムを持った呼び出しは保存されるべき</p>
+<h5 id="微分に関する課題">微分に関する課題</h5>
+<p>パスリプレイ逆伝播（PRB）は、各散乱の相互作用ごとに微分可能な計算を実行し、その後、関連する導関数を後方または前方に伝播させるための自動微分（AD）を呼び出す</p>
+<p>微分可能な計算には多くのポリモーフィズムを持った関数呼び出しが含まれている</p>
+<p>導関数は、滑らかな法線やMIPマップの計算のような典型的な前処理ステップを通過するべきである</p>
+<p>Dr.Jitは、微分タスクを複数のフェーズに分割し、情報の効率的な交換を行う必要がある</p>
+<h5 id="トレースに関する詳細">トレースに関する詳細</h5>
+<p>Dr.Jitは、トレースに基づくアプローチで問題に対処している</p>
+<p>このトレーシングは、より高いアーキテクチャレベルで行われ、JITコンパイラの基盤に依存している</p>
+<p>この組み合わせは調和しており、Dr.Jitは微分アルゴリズムをシーンや問題文に動的に特化させることができる</p>
+<p>しかし、Dr.Jitは開発者が微分過程の微妙な詳細について考えることから解放するものではない</p>
+<p>トレースは、微分伝播の操作をキャプチャする計算グラフ、または(Wengert)テープを指す</p>
+<h4 id="動的コンパイルによるトレースtracing-with-dynamic-compilation">動的コンパイルによるトレース（Tracing with dynamic compilation）</h4>
+<h4 id="カスタムアジョイントcustom-adjoints">カスタムアジョイント（Custom adjoints）</h4>
+<h4 id="微分ポリモーフィズムdifferentiating-polymorphism">微分ポリモーフィズム（Differentiating polymorphism）</h4>
+<h4 id="分離境界isolation-boundaries">分離境界（Isolation boundaries）</h4>
+<h4 id="再パラメータ化reparameterizations">再パラメータ化（Reparameterizations）</h4>
+<h4 id="偏微分の選択的評価selective-evaluation-of-partial-derivatives">偏微分の選択的評価（Selective evaluation of partial derivatives）</h4>
+<h4 id="ad-tape-surgery">AD tape surgery</h4>
+<h4 id="結果results-1">結果（Results）</h4>
+<h3 id="結論conclusion">結論（Conclusion）</h3>
+<hr>
+<br><div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Wenzel Jakob, Sébastien Speierer, Nicolas Roussel, and Delio Vicini. 2022. Dr.Jit: A Just-In-Time Compiler for Differentiable Rendering. In Transactions on Graphics (Proceedings of SIGGRAPH) 41(4).&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>Merlin Nimier-David, Sébastien Speierer, Benoît Ruiz, and Wenzel Jakob. 2020. Radiative Backpropagation: An Adjoint Method for Lightning-Fast Differentiable Rendering. ACM Trans. Graph. (SIGGRAPH) 39, 4 (July 2020).&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>Delio Vicini, Sébastien Speierer, and Wenzel Jakob. 2021. Path Replay Backpropagation: Differentiating Light Paths Using Constant Memory and Linear Time. ACM Trans. Graph. (SIGGRAPH) 40, 4 (Aug. 2021).&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p>Guillaume Loubet, Nicolas Holzschuch, and Wenzel Jakob. 2019. Reparameterizing Discontinuous Integrands for Differentiable Rendering. ACM Trans. Graph. (SIGGRAPH Asia) 38, 6 (Nov. 2019).&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5">
+<p>James T. Kajiya. 1986. The Rendering Equation. SIGGRAPH Comput. Graph. 20, 4 (Aug. 1986).&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6">
+<p>Merlin Nimier-David, Sébastien Speierer, Benoît Ruiz, and Wenzel Jakob. 2020. Radiative Backpropagation: An Adjoint Method for Lightning-Fast Differentiable Rendering. ACM Trans. Graph. (SIGGRAPH) 39, 4 (July 2020).&#160;<a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:7">
+<p>Delio Vicini, Sébastien Speierer, and Wenzel Jakob. 2021. Path Replay Backpropagation: Differentiating Light Paths Using Constant Memory and Linear Time. ACM Trans. Graph. (SIGGRAPH) 40, 4 (Aug. 2021).&#160;<a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/nishihi6" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="https://www.facebook.com/profile.php?id=100034856812491" target="_blank" rel="noopener noreferrer me"
+    title="Facebook">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg>
+</a>
+<a href="https://twitter.com" target="_blank" rel="noopener noreferrer me"
+    title="X">
+    <svg viewBox="0 0 1200 1227" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"/>
+</svg>
+</a>
+<a href="https://connpass.com/user/nishihi6/" target="_blank" rel="noopener noreferrer me"
+    title="Connpass">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg>
+</a>
+<a href="http://www.igl.ise.shibaura-it.ac.jp/" target="_blank" rel="noopener noreferrer me"
+    title="Lab">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg>
+</a>
+<a href="index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2023 nishihi6.
+    </small>
+    
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+    
+    
+        
+    
+
+    
+    
+        
+    
+
+
+
+    
+    <script src="https://nishihi6.github.io/blog/js/main.min.35f435a5d8eac613c52daa28d8af544a4512337d3e95236e4a4978417b8dcb2f.js" integrity="sha256-NfQ1pdjqxhPFLaoo2K9USkUSM30&#43;lSNuSkl4QXuNyy8="></script>
+
+    
+
+</body>
+</html>

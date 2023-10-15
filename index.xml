@@ -6,7 +6,41 @@
     <description>Recent content in Home on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Thu, 12 Oct 2023 19:45:54 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 14 Oct 2023 23:00:08 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CG×ML #3 DRを可能にするMitsuba3の中身 [Devlog #013]</title>
+      <link>https://nishihi6.github.io/blog/posts/devlog_cg-ml_03/</link>
+      <pubDate>Sat, 14 Oct 2023 23:00:08 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/devlog_cg-ml_03/</guid>
+      <description>微分可能レンダリングを行うMitsuba3の仕組み Dr.Jit（ジャストインタイムコンパイラ） ここでは微分可能なレンダリングのためのジャストインタイムコンパイラについての論文1を理解する
+Wenzel Jakob, Sébastien Speierer, Nicolas Roussel, and Delio Vicini. 2022. Dr.Jit: A Just-In-Time Compiler for Differentiable Rendering. In Transactions on Graphics (Proceedings of SIGGRAPH) 41(4).
+Dr.Jitとは 物理ベース微分可能レンダリング（PBDR）のためのジャストインタイムコンパイラ
+レンダリングアルゴリズムを実行するとグラフを生成
+グラフとは 算術、ループ、レイトレーシングの操作、およびレンダリングアルゴリズムとシーンオブジェクト（形状、BSDF、テクスチャ、エミッターなど）間の情報を交換する多態的な呼び出し
+Dr.Jitは提供されるシーンにグラフを特化させ、LLVMまたはOptiXを介してデータ並列カーネル（megakernel）にコンパイルする
+通常のレンダリングのほか、微分シミュレーション（differential simulations）を動的にコンパイルする
+大きな微分タスクを一連の漸近的なステップに分解するため、自動微分（automatic differentiation）の細かい実行をサポート
+画像空間における摂動（perturbation）を計算してデバッグやvisualizationに利用するForwardモードと、たくさんの未知数を同次最適化するためのパラメータ空間の導関数を提供するReverseモードを実装している
+パラメータ空間の例 壁紙のテクセル（テクスチャ空間の基本単位）
+目的 Python等の高レベル言語で記述されたシミュレーションコードの実行を追跡し、どの部分のコードがどのように動作しているのか、どの部分が計算負荷が高いのかなどの情報をもとに、コードを効率的に最適化・変換し、高速なデータ並列カーネルを生成する
+微分の過程をより効率的に、かつ細かい制御のもとで行うことをサポートし、微分可能なレンダリングアルゴリズムの開発を簡易化する（効率的な方法としてシミュレーションの微分を微分のシミュレーションに変える）
+&#34;シミュレーションの微分を微分のシミュレーションに変える&#34;とは Derivative of a simulation（シミュレーションの微分）：
+シミュレーションが入力に対してどのように変化するかを示す
+例えば、物理ベースのレンダリングの場合、光の強度や物質の性質などの入力パラメータに微小な変化を加えたときの出力画像の変化量がこれに該当する
+Simulation of the derivative（微分のシミュレーション）：
+微分そのものを新しいシミュレーションとして扱う考え方
+つまり、入力の変化に対する出力の変化を直接シミュレートすることで、微分の効果を視覚化や解析するためのツールとして利用する
+この変換は重要。なぜなら、 多くのアルゴリズムや最適化手法は、微分の情報を使用して動作する
+微分可能なレンダリングは、シーンのパラメータを最適化するための勾配情報を提供する能力が求められる
+この勾配情報は、シーンの照明や材料の性質、カメラの位置などのパラメータを調整して、目的の画像や効果に近づけるために使用される
+Dr.Jitは自動微分のプロセスを細かく制御してこの変換を支援する また、Dr.Jitはデータの依存関係をグローバルに追跡し、最終的に勾配に影響を与えない計算（冗長なシミュレーション）を削除することで効率を上げる
+Introduction 物理ベースの微分可能レンダリング（PBDR） PBDRは、任意のシーンパラメータに基づいて光輸送シミュレーションを微分できる
+勾配ベースの最適化と組み合わせ、多くの未知数を持つ非線形の問題を解決する
+この技術は、画像の逆解析が必要な多くの分野での利用が期待される
+PBDRの課題 実用的な実装が難しい</description>
+    </item>
+    
     <item>
       <title>量子情報工学メモ #1 量子力学 [Memo #003]</title>
       <link>https://nishihi6.github.io/blog/posts/memo_qm_01/</link>
@@ -18,7 +52,7 @@
 情報化社会が到来し、インターネットやコンピュータが多くの社会課題を解決してきたが、これの延長線上にあるものとして、量子情報技術はより難しい課題を解決すると考えられる
 量子前提社会で必要とされる誤り耐性量子コンピュータの大規模化の実装は、操作精度や実装精度などに何万倍もの向上が必要になるが、原理的に実現を妨げる障壁は無い
 また、大規模化を達成した誤り耐性量子コンピュータの実現は、内閣府が2020年に設定したムーンショット計画でも目標とされている2
-※誤り耐性型汎用量子コンピュータ 大規模な集積化を実現しつつ、様々な用途に応用する上で十分な精度を保証できる量子コンピュータ ※ムーンショット計画 従来技術の延長を担い、より大胆な発想に基づく挑戦的な研究開発の推進を目的とした計画（名前の由来はケネディ大統領のアポロ計画に関する演説で用いられた言葉からきている） 量子力学（Quantum Mechanics） システムと実験 - Systems and Experiments Quantum Mechanics Is Different Spins and Qubits An Experiment Experiments Are Never Gentle Proposition 古典的な命題のテスト - Testing Classical Propositions 量子的な命題のテスト - Testing Quantum Proposition Mathematical Interlude: Complex Number Mathematical Interlude: Vector Spaces 公理 - Axioms 関数と列ベクトル - Functions and Column Vectors ブラとケット - Bras and Kets 内積 - Inner Products 正規直交基底 - Orthonormal Bases 量子状態 - Quantumn States 状態とベクトル - States and Vectors スピン状態の表現 - Representing Spin States Along the x Axis Along the y Axis パラメータのカウント - Counting Parameters スピン状態を列ベクトルとして表現 - Representing Spin States as Column Vectors これまでのまとめ - Putting It All Together 量子力学の原理 - Principles of Quantum Mechanics 数学上の補説：線形演算子 - Mathematical Interlude: Liner Operators 機会と行列 - Machines and Matrices 固有値と固有ベクトル - Eigenvalues and EigenVectors エルミート共役 - Hermitian Conjugation エルミート演算子 - Hermitian Operators エルミート演算子と正規直交基底 - Hermitian Operators and Orthonormal Bases グラム・シュミット法 - The Gram-Schmidt Procedure 原理 - The Principles スピン演算子 - An Example: Spin Operator スピン演算子の構成 - Constructing Spin Operators よくある誤解 - A Common Misconception 3-ベクトル演算子の再考 - 3-Vector Operators Revisited 計算を行って結果を得る - Reaping the Results スピン偏極の原理 - The Spin-Polarization Principle 量子コンピューティング 基本アルゴリズムから量子機械学習まで - 嶋田 義皓&amp;#160;&amp;#x21a9;&amp;#xfe0e;</description>
+※誤り耐性型汎用量子コンピュータ 大規模な集積化を実現しつつ、様々な用途に応用する上で十分な精度を保証できる量子コンピュータ ※ムーンショット計画 従来技術の延長を担い、より大胆な発想に基づく挑戦的な研究開発の推進を目的とした計画（名前の由来はケネディ大統領のアポロ計画に関する演説で用いられた言葉からきている） 関連動画 量子力学（Quantum Mechanics） システムと実験 - Systems and Experiments Quantum Mechanics Is Different Spins and Qubits An Experiment Experiments Are Never Gentle Proposition 古典的な命題のテスト - Testing Classical Propositions 量子的な命題のテスト - Testing Quantum Proposition Mathematical Interlude: Complex Number Mathematical Interlude: Vector Spaces 公理 - Axioms 関数と列ベクトル - Functions and Column Vectors ブラとケット - Bras and Kets 内積 - Inner Products 正規直交基底 - Orthonormal Bases 量子状態 - Quantumn States 状態とベクトル - States and Vectors スピン状態の表現 - Representing Spin States Along the x Axis Along the y Axis パラメータのカウント - Counting Parameters スピン状態を列ベクトルとして表現 - Representing Spin States as Column Vectors これまでのまとめ - Putting It All Together 量子力学の原理 - Principles of Quantum Mechanics 数学上の補説：線形演算子 - Mathematical Interlude: Liner Operators 機会と行列 - Machines and Matrices 固有値と固有ベクトル - Eigenvalues and EigenVectors エルミート共役 - Hermitian Conjugation エルミート演算子 - Hermitian Operators エルミート演算子と正規直交基底 - Hermitian Operators and Orthonormal Bases グラム・シュミット法 - The Gram-Schmidt Procedure 原理 - The Principles スピン演算子 - An Example: Spin Operator スピン演算子の構成 - Constructing Spin Operators よくある誤解 - A Common Misconception 3-ベクトル演算子の再考 - 3-Vector Operators Revisited 計算を行って結果を得る - Reaping the Results スピン偏極の原理 - The Spin-Polarization Principle 量子コンピューティング 基本アルゴリズムから量子機械学習まで - 嶋田 義皓&amp;#160;&amp;#x21a9;&amp;#xfe0e;</description>
     </item>
     
     <item>
