@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-10-12",
         "description": "",
-        "wordCount":  198 ,
+        "wordCount":  275 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-10-12",
         "image": {
@@ -222,12 +222,30 @@ stroke-linejoin="round" class="feather feather-home">
             <li><a href="#原理---the-principles">原理 - The Principles</a></li>
             <li><a href="#スピン演算子---an-example-spin-operator">スピン演算子 - An Example: Spin Operator</a></li>
             <li><a href="#スピン演算子の構成---constructing-spin-operators">スピン演算子の構成 - Constructing Spin Operators</a></li>
+            <li><a href="#よくある誤解---a-common-misconception">よくある誤解 - A Common Misconception</a></li>
+            <li><a href="#3-ベクトル演算子の再考---3-vector-operators-revisited">3-ベクトル演算子の再考 - 3-Vector Operators Revisited</a></li>
+            <li><a href="#計算を行って結果を得る---reaping-the-results">計算を行って結果を得る - Reaping the Results</a></li>
+            <li><a href="#スピン偏極の原理---the-spin-polarization-principle">スピン偏極の原理 - The Spin-Polarization Principle</a></li>
           </ul>
         </li>
-        <li><a href="#よくある誤解---a-common-misconception">よくある誤解 - A Common Misconception</a></li>
-        <li><a href="#3-ベクトル演算子の再考---3-vector-operators-revisited">3-ベクトル演算子の再考 - 3-Vector Operators Revisited</a></li>
-        <li><a href="#計算を行って結果を得る---reaping-the-results">計算を行って結果を得る - Reaping the Results</a></li>
-        <li><a href="#スピン偏極の原理---the-spin-polarization-principle">スピン偏極の原理 - The Spin-Polarization Principle</a></li>
+        <li><a href="#時間と変化---time-and-change">時間と変化 - Time and Change</a>
+          <ul>
+            <li><a href="#古典力学の考え方---a-classical-reminder">古典力学の考え方 - A Classical Reminder</a></li>
+            <li><a href="#ユニタリー---unitarity">ユニタリー - Unitarity</a></li>
+            <li><a href="#量子力学の決定論的性質---determinism-in-quantum-mechanics">量子力学の決定論的性質 - Determinism in Quantum Mechanics</a></li>
+            <li><a href="#utを詳しく調べる---a-closer-look-at-ut">U(t)を詳しく調べる - A Closer Look at U(t)</a></li>
+            <li><a href="#ハミルトニアン---the-hamiltonian">ハミルトニアン - The Hamiltonian</a></li>
+            <li><a href="#hはどうなった---what-ever-happended-to-h">hはどうなった - What Ever Happended to h?</a></li>
+            <li><a href="#期待値---expectation-value">期待値 - Expectation Value</a></li>
+            <li><a href="#位相因子を無視する---ignoring-the-phase-factor">位相因子を無視する - Ignoring the Phase-Factor</a></li>
+            <li><a href="#古典力学とのつながり---connections-to-classical-mechanics">古典力学とのつながり - Connections to Classical Mechanics</a></li>
+            <li><a href="#エネルギー保存---conservation-of-energy">エネルギー保存 - Conservation of Energy</a></li>
+            <li><a href="#--spin-in-a-magnetic-field">- Spin in a Magnetic Field</a></li>
+            <li><a href="#--solving-the-schrodinger-equation">- Solving the Schrodinger Equation</a></li>
+            <li><a href="#--recipe-for-a-schrodinger-ket">- Recipe for a Schrodinger Ket</a></li>
+            <li><a href="#--collapse">- Collapse</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -303,10 +321,26 @@ stroke-linejoin="round" class="feather feather-home">
 <h4 id="原理---the-principles">原理 - The Principles</h4>
 <h4 id="スピン演算子---an-example-spin-operator">スピン演算子 - An Example: Spin Operator</h4>
 <h4 id="スピン演算子の構成---constructing-spin-operators">スピン演算子の構成 - Constructing Spin Operators</h4>
-<h3 id="よくある誤解---a-common-misconception">よくある誤解 - A Common Misconception</h3>
-<h3 id="3-ベクトル演算子の再考---3-vector-operators-revisited">3-ベクトル演算子の再考 - 3-Vector Operators Revisited</h3>
-<h3 id="計算を行って結果を得る---reaping-the-results">計算を行って結果を得る - Reaping the Results</h3>
-<h3 id="スピン偏極の原理---the-spin-polarization-principle">スピン偏極の原理 - The Spin-Polarization Principle</h3>
+<h4 id="よくある誤解---a-common-misconception">よくある誤解 - A Common Misconception</h4>
+<h4 id="3-ベクトル演算子の再考---3-vector-operators-revisited">3-ベクトル演算子の再考 - 3-Vector Operators Revisited</h4>
+<h4 id="計算を行って結果を得る---reaping-the-results">計算を行って結果を得る - Reaping the Results</h4>
+<h4 id="スピン偏極の原理---the-spin-polarization-principle">スピン偏極の原理 - The Spin-Polarization Principle</h4>
+<h3 id="時間と変化---time-and-change">時間と変化 - Time and Change</h3>
+<h4 id="古典力学の考え方---a-classical-reminder">古典力学の考え方 - A Classical Reminder</h4>
+<h4 id="ユニタリー---unitarity">ユニタリー - Unitarity</h4>
+<p>時間発展演算子</p>
+<h4 id="量子力学の決定論的性質---determinism-in-quantum-mechanics">量子力学の決定論的性質 - Determinism in Quantum Mechanics</h4>
+<h4 id="utを詳しく調べる---a-closer-look-at-ut">U(t)を詳しく調べる - A Closer Look at U(t)</h4>
+<h4 id="ハミルトニアン---the-hamiltonian">ハミルトニアン - The Hamiltonian</h4>
+<h4 id="hはどうなった---what-ever-happended-to-h">hはどうなった - What Ever Happended to h?</h4>
+<h4 id="期待値---expectation-value">期待値 - Expectation Value</h4>
+<h4 id="位相因子を無視する---ignoring-the-phase-factor">位相因子を無視する - Ignoring the Phase-Factor</h4>
+<h4 id="古典力学とのつながり---connections-to-classical-mechanics">古典力学とのつながり - Connections to Classical Mechanics</h4>
+<h4 id="エネルギー保存---conservation-of-energy">エネルギー保存 - Conservation of Energy</h4>
+<h4 id="--spin-in-a-magnetic-field">- Spin in a Magnetic Field</h4>
+<h4 id="--solving-the-schrodinger-equation">- Solving the Schrodinger Equation</h4>
+<h4 id="--recipe-for-a-schrodinger-ket">- Recipe for a Schrodinger Ket</h4>
+<h4 id="--collapse">- Collapse</h4>
 <br><div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
