@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-10-07",
         "description": "",
-        "wordCount":  253 ,
+        "wordCount":  262 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-10-07",
         "image": {
@@ -216,6 +216,15 @@ stroke-linejoin="round" class="feather feather-home">
         </li>
       </ul>
     </li>
+    <li><a href="#最適化についての詳細mistuba3--drjit">最適化についての詳細（Mistuba3 + Dr.Jit）</a>
+      <ul>
+        <li><a href="#最適化の仕組み">最適化の仕組み</a>
+          <ul>
+            <li><a href="#heading"></a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
   </ul>
 </nav>
             </details><div class="page-content">
@@ -336,12 +345,19 @@ stroke-linejoin="round" class="feather feather-home">
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">opt</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">ad</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="n">opt</span><span class="p">[</span><span class="n">param_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">scene_params</span><span class="p">[</span><span class="n">param_key</span><span class="p">]</span>
 </span></span><span class="line"><span class="cl"><span class="n">scene_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">opt</span><span class="p">)</span>
-</span></span></code></pre></div><p>勾配降下する毎に、目的関数に関するパラメータの導関数を計算するため、画像間の平均二乗誤差（L2 error）を利用する</p>
+</span></span></code></pre></div><br>
+勾配降下する毎に、目的関数に関するパラメータの導関数を計算するため、画像間の平均二乗誤差（L2 error）を利用する
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">mse</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">dr</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dr</span><span class="o">.</span><span class="n">sqr</span><span class="p">(</span><span class="n">image</span> <span class="o">-</span> <span class="n">image_ref</span><span class="p">))</span>
-</span></span></code></pre></div><p>最適化ループ回数を制御するハイパーパラメータを定義する</p>
+</span></span></code></pre></div><br>
+最適化ループ回数を制御するハイパーパラメータを定義する
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">iteration_count</span> <span class="o">=</span> <span class="mi">50</span>
-</span></span></code></pre></div><p>勾配降下ループによって、50回の微分可能レンダリングを行う</p>
+</span></span></code></pre></div><br>
+勾配降下ループによって、50回の微分可能レンダリングを行う
+<p>ロスに基づいて勾配を計算しているのが<code>dr.backward(loss)</code>であり、
+<br>計算された勾配に基づいてパラメータを更新するのが<code>opt.step()</code>である</p>
+<p>ここではパラメータの値を0.0~1.0にクランプし、updateメソッドで<code>opt</code>の内容を反映してパラメータを更新する</p>
+<p>それ以降はデバッグ用のコードになる</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
 </span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iteration_count</span><span class="p">):</span>
 </span></span><span class="line"><span class="cl">    <span class="n">image</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">scene_params</span><span class="p">,</span> <span class="n">spp</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
@@ -363,7 +379,11 @@ stroke-linejoin="round" class="feather feather-home">
 <p>最適化によって、壁の色が元の赤色に復元されることがわかる</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">image_final</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">spp</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="n">mi</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">convert_to_bitmap</span><span class="p">(</span><span class="n">image_final</span><span class="p">)</span>
-</span></span></code></pre></div>
+</span></span></code></pre></div><h2 id="最適化についての詳細mistuba3--drjit">最適化についての詳細（Mistuba3 + Dr.Jit）</h2>
+<p><a href="https://mitsuba.readthedocs.io/en/latest/src/how_to_guides/use_optimizers.html">参考公式ドキュメント</a></p>
+<h3 id="最適化の仕組み">最適化の仕組み</h3>
+<h4 id="heading"></h4>
+
             </div>
         </article></main>
 </div>
