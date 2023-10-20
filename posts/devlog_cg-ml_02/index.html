@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-10-07",
         "description": "",
-        "wordCount":  262 ,
+        "wordCount":  659 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-10-07",
         "image": {
@@ -220,7 +220,8 @@ stroke-linejoin="round" class="feather feather-home">
       <ul>
         <li><a href="#最適化の仕組み">最適化の仕組み</a>
           <ul>
-            <li><a href="#heading"></a></li>
+            <li><a href="#基本---optimizerのapi">基本 - OptimizerのAPI</a></li>
+            <li><a href="#シーンパラメータの最適化">シーンパラメータの最適化</a></li>
           </ul>
         </li>
       </ul>
@@ -382,7 +383,162 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span></code></pre></div><h2 id="最適化についての詳細mistuba3--drjit">最適化についての詳細（Mistuba3 + Dr.Jit）</h2>
 <p><a href="https://mitsuba.readthedocs.io/en/latest/src/how_to_guides/use_optimizers.html">参考公式ドキュメント</a></p>
 <h3 id="最適化の仕組み">最適化の仕組み</h3>
-<h4 id="heading"></h4>
+<h4 id="基本---optimizerのapi">基本 - OptimizerのAPI</h4>
+<p>自動微分に互換性のあるバリアントを選択</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">mitsuba</span> <span class="k">as</span> <span class="nn">mi</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">drjit</span> <span class="k">as</span> <span class="nn">dr</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">mi</span><span class="o">.</span><span class="n">set_variant</span><span class="p">(</span><span class="s1">&#39;cuda_ad_rgb&#39;</span><span class="p">)</span>
+</span></span></code></pre></div><br>
+Adamと同様に、運動量あり/なしの確率的勾配降下（SGD）を含む標準的なオプティマイザを同梱している
+<p>学習率<code>0.25</code>の単純なSGDオプティマイザを作成</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">opt</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">ad</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)})</span>
+</span></span><span class="line"><span class="cl"><span class="n">opt</span>
+</span></span></code></pre></div><pre><code>SGD[
+  variables = ['x', 'y'],
+  lr = {'default': 0.25},
+  momentum = 0
+]
+</code></pre>
+<br>
+勾配がオプティマイザの変数に適切に伝搬されることを確認する
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Optimizer: </span><span class="si">{</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, grad_enabled=</span><span class="si">{</span><span class="n">dr</span><span class="o">.</span><span class="n">grad_enabled</span><span class="p">(</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Optimizer: </span><span class="si">{</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, grad_enabled=</span><span class="si">{</span><span class="n">dr</span><span class="o">.</span><span class="n">grad_enabled</span><span class="p">(</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">.&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><pre><code>Original:  [2.0], grad_enabled=True.
+Optimizer: [2.0], grad_enabled=True.
+</code></pre>
+<br>
+<p><code>dr.backward(z)</code>では、レンダリングプロセスを誤差逆伝播している</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">z</span> <span class="o">=</span> <span class="n">opt</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">opt</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">dr</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;x grad=</span><span class="si">{</span><span class="n">dr</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;y grad=</span><span class="si">{</span><span class="n">dr</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><pre><code>x grad=[1.0]
+y grad=[2.0]
+</code></pre>
+<br>
+<p><code>opt.step()</code>では、変数（パラメータ）の更新を適用している</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Before the gradient step: x=</span><span class="si">{</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, y=</span><span class="si">{</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;After the gradient step:  x=</span><span class="si">{</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, y=</span><span class="si">{</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><pre><code>Before the gradient step: x=[1.0], y=[2.0]
+After the gradient step:  x=[0.75], y=[1.5]
+</code></pre>
+<br>
+<h4 id="シーンパラメータの最適化">シーンパラメータの最適化</h4>
+<p>自動微分に互換性のあるバリアントを選択</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">mitsuba</span> <span class="k">as</span> <span class="nn">mi</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">drjit</span> <span class="k">as</span> <span class="nn">dr</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">mi</span><span class="o">.</span><span class="n">set_variant</span><span class="p">(</span><span class="s1">&#39;cuda_ad_rgb&#39;</span><span class="p">)</span>
+</span></span></code></pre></div><br>
+<p><code>mi.traverse()</code>は<code>SceneParameters</code>を返す</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">scene</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="s1">&#39;../scenes/cbox.xml&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">params</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">traverse</span><span class="p">(</span><span class="n">scene</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">params</span>
+</span></span></code></pre></div><pre><code>SceneParameters[
+  ----------------------------------------------------------------------------------------
+  Name                                 Flags    Type            Parent
+  ----------------------------------------------------------------------------------------
+  sensor.near_clip                              float           PerspectiveCamera
+  sensor.far_clip                               float           PerspectiveCamera
+  sensor.shutter_open                           float           PerspectiveCamera
+  sensor.shutter_open_time                      float           PerspectiveCamera
+  sensor.x_fov                                  float           PerspectiveCamera
+  sensor.to_world                               Transform4f     PerspectiveCamera
+  gray.reflectance.value               ∂        Color3f         SRGBReflectanceSpectrum
+  white.reflectance.value              ∂        Color3f         SRGBReflectanceSpectrum
+  green.reflectance.value              ∂        Color3f         SRGBReflectanceSpectrum
+  red.reflectance.value                ∂        Color3f         SRGBReflectanceSpectrum
+  glass.eta                                     float           SmoothDielectric
+  mirror.eta.value                     ∂, D     Float           UniformSpectrum
+  mirror.k.value                       ∂, D     Float           UniformSpectrum
+  mirror.specular_reflectance.value    ∂        Float           UniformSpectrum
+  light.emitter.radiance.value         ∂        Color3f         SRGBEmitterSpectrum
+  light.vertex_count                            int             OBJMesh
+  light.face_count                              int             OBJMesh
+  light.faces                                   UInt            OBJMesh
+  light.vertex_positions               ∂, D     Float           OBJMesh
+  light.vertex_normals                 ∂, D     Float           OBJMesh
+  light.vertex_texcoords               ∂        Float           OBJMesh
+  floor.vertex_count                            int             OBJMesh
+  floor.face_count                              int             OBJMesh
+  floor.faces                                   UInt            OBJMesh
+  floor.vertex_positions               ∂, D     Float           OBJMesh
+  floor.vertex_normals                 ∂, D     Float           OBJMesh
+  floor.vertex_texcoords               ∂        Float           OBJMesh
+  ceiling.vertex_count                          int             OBJMesh
+  ceiling.face_count                            int             OBJMesh
+  ceiling.faces                                 UInt            OBJMesh
+  ceiling.vertex_positions             ∂, D     Float           OBJMesh
+  ceiling.vertex_normals               ∂, D     Float           OBJMesh
+  ceiling.vertex_texcoords             ∂        Float           OBJMesh
+  back.vertex_count                             int             OBJMesh
+  back.face_count                               int             OBJMesh
+  back.faces                                    UInt            OBJMesh
+  back.vertex_positions                ∂, D     Float           OBJMesh
+  back.vertex_normals                  ∂, D     Float           OBJMesh
+  back.vertex_texcoords                ∂        Float           OBJMesh
+  greenwall.vertex_count                        int             OBJMesh
+  greenwall.face_count                          int             OBJMesh
+  greenwall.faces                               UInt            OBJMesh
+  greenwall.vertex_positions           ∂, D     Float           OBJMesh
+  greenwall.vertex_normals             ∂, D     Float           OBJMesh
+  greenwall.vertex_texcoords           ∂        Float           OBJMesh
+  redwall.vertex_count                          int             OBJMesh
+  redwall.face_count                            int             OBJMesh
+  redwall.faces                                 UInt            OBJMesh
+  redwall.vertex_positions             ∂, D     Float           OBJMesh
+  redwall.vertex_normals               ∂, D     Float           OBJMesh
+  redwall.vertex_texcoords             ∂        Float           OBJMesh
+  mirrorsphere.to_world                         Transform4f     Sphere
+  glasssphere.to_world                          Transform4f     Sphere
+]
+</code></pre>
+<br>
+<p><code>keep()</code>は<code>params</code>オブジェクトの項目をフィルタリングしている</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">params</span><span class="o">.</span><span class="n">keep</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;.*\.reflectance\.value&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">params</span>
+</span></span></code></pre></div><pre><code>SceneParameters[
+  ------------------------------------------------------------------------------
+  Name                       Flags    Type            Parent
+  ------------------------------------------------------------------------------
+  gray.reflectance.value     ∂        Color3f         SRGBReflectanceSpectrum
+  white.reflectance.value    ∂        Color3f         SRGBReflectanceSpectrum
+  green.reflectance.value    ∂        Color3f         SRGBReflectanceSpectrum
+  red.reflectance.value      ∂        Color3f         SRGBReflectanceSpectrum
+]
+</code></pre>
+<br>
+<p>よって、反射率の値を最適化するオプティマイザをコンストラクタする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">opt</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">ad</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">opt</span>
+</span></span></code></pre></div><pre><code>SGD[
+  variables = ['gray.reflectance.value', 'white.reflectance.value', 'green.reflectance.value', 'red.reflectance.value'],
+  lr = {'default': 0.25},
+  momentum = 0
+]
+</code></pre>
+<br>
+<p>ロードされたパラメータは内部的にコピーされるため、オプティマイザーでパラメータ値を変更しようとしても、直接paramsに反映されることはない</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;red.reflectance.value&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="mf">0.5</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;params:   </span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;red.reflectance.value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;optimize: </span><span class="si">{</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;red.reflectance.value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><pre><code>params:   [[0.5700680017471313, 0.043013498187065125, 0.04437059909105301]]
+optimize: [[0.2850340008735657, 0.021506749093532562, 0.022185299545526505]]
+</code></pre>
+<br>
+<p>これらの変更を<code>params</code>に（そしてScene自体にも）伝えるため、<code>SceneParameters</code>の<code>update()</code>メソッドを使用する</p>
+<p>オプティマイザの変数キーが<code>params</code>のものと一致するのを探し、対応する値を上書きする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">opt</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;params:   </span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;red.reflectance.value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;optimize: </span><span class="si">{</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;red.reflectance.value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><pre><code>params:   [[0.2850340008735657, 0.021506749093532562, 0.022185299545526505]]
+optimize: [[0.2850340008735657, 0.021506749093532562, 0.022185299545526505]]
+</code></pre>
 
             </div>
         </article></main>
