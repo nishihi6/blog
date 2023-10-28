@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-10-14",
         "description": "",
-        "wordCount":  378 ,
+        "wordCount":  404 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-10-14",
         "image": {
@@ -221,7 +221,7 @@ stroke-linejoin="round" class="feather feather-home">
         </li>
         <li><a href="#微分法differentiation">微分法（Differentiation）</a>
           <ul>
-            <li><a href="#物理ベースの微分可能レンダリングphisically-based-differentiable-rendering-pbdr">物理ベースの微分可能レンダリング（Phisically Based Differentiable Rendering; PBDR）</a></li>
+            <li><a href="#物理ベースの微分可能レンダリングphysically-based-differentiable-rendering-pbdr">物理ベースの微分可能レンダリング（Physically Based Differentiable Rendering; PBDR）</a></li>
             <li><a href="#目的objectives">目的（Objectives）</a></li>
             <li><a href="#動的コンパイルによるトレースtracing-with-dynamic-compilation">動的コンパイルによるトレース（Tracing with dynamic compilation）</a></li>
             <li><a href="#カスタムアジョイントcustom-adjoints">カスタムアジョイント（Custom adjoints）</a></li>
@@ -251,14 +251,14 @@ stroke-linejoin="round" class="feather feather-home">
 <p>物理ベース微分可能レンダリング（PBDR）のためのジャストインタイムコンパイラ</p>
 <p>レンダリングアルゴリズムを実行すると<strong>グラフ</strong>を生成</p>
 <details><summary>グラフとは</summary>
-<p>算術、ループ、レイトレーシングの操作、およびレンダリングアルゴリズムとシーンオブジェクト（形状、BSDF、テクスチャ、エミッターなど）間の情報を交換する多態的な呼び出し</p>
+<p>算術、ループ、レイトレーシングの操作、およびレンダリングアルゴリズムとシーンオブジェクト（形状、BSDF、テクスチャ、エミッターなど）間の情報を交換する多態的な呼び出し（例えば、BRDFのspecularの値を勾配方向に変えながらレイトレーシング操作を繰り返す）</p>
 </details>
 <p>Dr.Jitは提供されるシーンにグラフを特化させ、LLVMまたはOptiXを介してデータ並列カーネル（megakernel）にコンパイルする</p>
 <p>通常のレンダリングのほか、<strong>微分シミュレーション（differential simulations）</strong>を動的にコンパイルする</p>
 <p>大きな微分タスクを一連の漸近的なステップに分解するため、自動微分（automatic differentiation）の細かい実行をサポート</p>
 <p>画像空間における摂動（perturbation）を計算してデバッグやvisualizationに利用する<strong>Forwardモード</strong>と、たくさんの未知数を同次最適化するためのパラメータ空間の導関数を提供する<strong>Reverseモード</strong>を実装している</p>
 <details><summary>パラメータ空間の例</summary>
-<p>壁紙のテクセル（テクスチャ空間の基本単位）</p>
+<p>シーン上での壁紙のテクセル（テクスチャ空間の基本単位）</p>
 </details>
 <h4 id="目的">目的</h4>
 <ol>
@@ -277,7 +277,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>微分そのものを新しいシミュレーションとして扱う考え方</p>
 <p>つまり、入力の変化に対する出力の変化を直接シミュレートすることで、微分の効果を視覚化や解析するためのツールとして利用する</p>
 <br>
-この変換は重要。なぜなら、
+この変換はMitsubaにおいて重要。なぜなら、
 <p>多くのアルゴリズムや最適化手法は、微分の情報を使用して動作する</p>
 <p>微分可能なレンダリングは、シーンのパラメータを最適化するための勾配情報を提供する能力が求められる</p>
 <p>この勾配情報は、シーンの照明や材料の性質、カメラの位置などのパラメータを調整して、目的の画像や効果に近づけるために使用される</p>
@@ -304,9 +304,18 @@ Dr.Jitは自動微分のプロセスを細かく制御してこの変換を支�
 <p>微分演算はランダムウォークに移行し、散乱がおこるたびに新しい偏微分項が導入されるが、微分は何らかの形で事前にコンパイルされなければならない（計算速度の問題で）</p>
 <p>最適化がシーンのパラメータの一部のみを対象とする場合、計算された勾配に影響を与えることがないステップを削除する</p>
 <p>このような問題には動的なコンパイルのアプローチが必要となるため、ジャストインタイム（JIT）コンパイルを中心としたアプローチを行う</p>
+<details><summary>JITとは？</summary>
+<p>ジャストインタイムコンパイル（Just-In-Time Compilation、略してJIT）は、プログラムの実行時にその一部をネイティブのマシンコードに変換する技術のことを指し、インタープリタベースの実行よりも高速にコードを実行することができる</p>
+<p>JITコンパイルの基本的な考え方は次のとおり：</p>
+<ul>
+<li>プログラムの実行が開始されると、最初はインタープリタのようにコードを逐次的に解釈しながら実行する</li>
+<li>ある部分のコードが頻繁に実行されることを検知すると、その部分をネイティブのマシンコードにコンパイルする</li>
+<li>以降、その部分のコードが再度実行される際には、コンパイルされたネイティブのマシンコードを実行することで、インタープリタのオーバーヘッドを回避し、パフォーマンスを向上させる</li>
+</ul>
+</details>
 <p>モンテカルロ積分は、カーネル（megakernel）内で行われ、ほとんどのサンプル状態をレジスタに格納することで、メモリ使用量やカーネル間通信を削減することができる</p>
 <h4 id="drjitのアプローチ">Dr.Jitのアプローチ</h4>
-<p>Dr.Jitの微分レンダリングステップはループ、ポリモーフィズム、レイの交差操作を中断することなく記録し、レンダリングアルゴリズムと、参照されるすべてのシーンオブジェクト（マテリアル、テクスチャ、ボリューム、光源など）の実装を包含する非常に大きな<strong>トレース</strong>の形で評価されていない画像を返す</p>
+<p>Dr.Jitの微分レンダリングステップはループ、多態性（ポリモーフィズム）、レイの交差操作を中断することなく記録し、レンダリングアルゴリズムと、参照されるすべてのシーンオブジェクト（マテリアル、テクスチャ、ボリューム、光源など）の実装を包含する非常に大きな<strong>トレース</strong>の形で画像（未評価）を返す</p>
 <details><summary>トレースとは</summary>
 <p>トレースは、プログラムの実行中に行われる操作の記録または追跡を指す</p>
 <p>具体的には、プログラムがどのような手順で実行され、どの関数や命令が順番に呼び出され、どのようなデータが処理されたかなどの情報が、時間の流れに沿って記録される</p>
@@ -327,14 +336,28 @@ Dr.Jitは自動微分のプロセスを細かく制御してこの変換を支�
 <h4 id="議論discussion">議論（Discussion）</h4>
 <p>（省略）</p>
 <h4 id="最適化oprimizations">最適化（Oprimizations）</h4>
-<p>（省略）</p>
+<p>Dr.Jitはコード生成を改善するための最適化を行う</p>
+<p>LLVMやOptiX自体が洗練された最適化コンパイラであるため、標準的な最適化手法はバックエンドのコンパイルステップに取り込まれるが、実行時にオブジェクトの型に基づいて特定のメソッドを呼び出す<strong>動的ディスパッチ</strong>は、LLVM/OptiXにおける手続き間最適化を妨げる</p>
+<p>シーンを表す大きなデータ構造において、最適化に使用されるフィールド（複合的なデータ構造の一部分を形成する各要素）はほんの一部であるため、グローバルな最適化によって<strong>定数の伝播</strong>、変数の参照カウントに従う<strong>デッドコードの削除</strong>、値のナンバリングに基づく<strong>重複の排除</strong>が行われる</p>
+<details><summary>論文の図4を参照</summary>
+<p>Dr.Jitが多態的なメソッド呼び出しに遭遇すると、到達可能なすべてのインスタンスの実装をトレースし、複数の最適化を実行する</p>
+<p>図4で示されている例では、入力(𝑖1, 𝑖2, 𝑖3)を持つ呼び出しが出力(𝑜1, 𝑜2, 𝑜3)を返し、変数𝑖3は定数リテラルで、周囲のプログラムは出力𝑜2と𝑜3のみを参照する</p>
+<p>(a). Dr.Jitは、キャプチャされたサブトレースに定数を伝播させると同時に、呼び出し境界を越えてデッドコードを排除する</p>
+<p>(b). この例では、すべてのサブトレースが𝑜2を生成するための同じ計算を実行し、その計算はその後、デバーチャライズ（実仮想化解除）される（つまり、呼び出しから外される）</p>
+<p>(c). 最後に、サブトレースのうち2つが同一であることが分かり、カーネルのアセンブリ中に単一の関数定義のみを生成する</p>
+</details>
+<p>また、同一のトレースは１つのサブルーチンにまとめることができ、これはシーンが同じタイプのオブジェクトをたくさん含む可能性がある&quot;レンダリング&quot;において重要</p>
+<br>
+しかし、型の等価性が、2つのインスタンスが同じ操作のシーケンスを実行することを保証するわけではない
+<p>それぞれのインスタンスで基礎となる複数のパラメータの異なるサブセットがアクティブになる可能性がある</p>
+<p>最終的には、到達可能なすべてのインスタンスをトレースし、同一の関数をマージする方法が提案されている</p>
 <h4 id="その他の特徴additional-features">その他の特徴（Additional features）</h4>
 <p>（省略）</p>
 <h4 id="結果results">結果（Results）</h4>
 <p>（省略）</p>
 <h3 id="微分法differentiation">微分法（Differentiation）</h3>
 <hr>
-<h4 id="物理ベースの微分可能レンダリングphisically-based-differentiable-rendering-pbdr">物理ベースの微分可能レンダリング（Phisically Based Differentiable Rendering; PBDR）</h4>
+<h4 id="物理ベースの微分可能レンダリングphysically-based-differentiable-rendering-pbdr">物理ベースの微分可能レンダリング（Physically Based Differentiable Rendering; PBDR）</h4>
 <h5 id="パストレーシング">パストレーシング</h5>
 <p>典型的なレンダリングアルゴリズムの<strong>パストレーシング</strong><sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>は、光源からセンサーへと光の放射を伝播させるため、センサーから始めて連続するパスの頂点を繰り返し処理する
 <br><a href="https://blogs.nvidia.com/blog/2022/03/23/what-is-path-tracing/">What Is Path Tracing? - NVIDIA</a></p>

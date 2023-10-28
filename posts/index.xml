@@ -6,7 +6,33 @@
     <description>Recent content in Posts on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Sat, 14 Oct 2023 23:00:08 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 26 Oct 2023 18:53:04 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OpenGLを用いたGameDev #1 [Devlog #014]</title>
+      <link>https://nishihi6.github.io/blog/posts/devlog_gl_01/</link>
+      <pubDate>Thu, 26 Oct 2023 18:53:04 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/devlog_gl_01/</guid>
+      <description>ゲーム開発者の教科書：Game Programming in C++ を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します） https://github.com/gameprogcpp/code
+ゲームプログラミング in C++ 環境構築 VisualStudio2022でプロジェクトの作成 (新規作成-&amp;gt;プロジェクト-&amp;gt;)新しいプロジェクトの作成-&amp;gt;空のプロジェクト プロジェクト名（ソリューション名）と保存パスを指定 &amp;ldquo;ソリューションとプロジェクトを同じディレクトリに配置する&amp;quot;にチェック 作成 SDL等のライブラリを設置（$(SolutionDir)\External\フォルダ以下） ソリューションのプロパティを変更（参考サイト） インクルードディレクトリの指定 構成プロパティ-&amp;gt;C/C++-&amp;gt;全般-&amp;gt;追加のインクルードディレクトリ（注意点） 追加のライブラリディレクトリの指定 構成プロパティ-&amp;gt;リンカー-&amp;gt;全般-&amp;gt;追加のインクルードディレクトリ 追加の依存ファイルの指定 構成プロパティ-&amp;gt;リンカー-&amp;gt;入力-&amp;gt;追加の依存ファイル DLLをビルド時にコピー 構成プロパティ-&amp;gt;ビルドイベント-&amp;gt;ビルド後のイベント-&amp;gt;コマンドライン ※サンプルソースコードではプラットフォームをWin32に設定しているので注意
+ゲームプログラミング ゲームループとゲームクラス ゲームループ（game loop）は、ゲームプログラム全体の流れを制御するループである
+シングルスレッドのゲームループに対して、マルチスレッドのゲームループは複雑になる
+フレームの中身 ゲームは各フレームで次の3つのステップを実行する
+入力があれば処理する 例：デバイス入力、インターネット経由で受信したデータ、カメラ映像、GPS情報 ゲームワールドを更新する 例：キャラクター、ユーザインターフェースのパーツ、ゲームに与える全ての要素 出力するものを生成する 例：グラフィクス、オーディオ、フォースフィードバック（振動）、インターネット経由で送信するデータ ゲームクラスの骨組みを実装する Game.h Gameクラス bool Initialize()関数はGameクラスを初期化する
+void RunLoop()関数はゲームループを実行する
+void Shutdown()関数はゲームを終わらせる
+void ProcessInput()関数、void UpdateGame()関数、void GenerateOutput()関数はゲームループの3つのステップに対応する
+bool mIsRunningは、ゲームループを続行するか否かを示すフラグ
+Game.cpp Game::Initialize() SDL_Init()関数は、SDLライブラリを初期化する
+今のところ、初期化する必要があるのはビデオサブシステムだけ（SDL_INIT_VIDEO）
+SDL_Log(&amp;quot;Unable to initialize SDL: %s&amp;quot;, SDL_GetError())は、SDLでメッセージをコンソールに出力する簡単な方法である
+SDL_GetError()関数は、エラーメッセージを文字列で返す
+SDL_CreateWindow()関数でウィンドウを作る
+ウィンドウ作成にはフラグを設定できる（SDL_WINDOW_FULLSCREENでフルスクリーンモードを使う）
+Game::RunLoop() もしmIsRunningがfalseになったら繰り返しをやめる
+Game::Shutdown() SDL_DestroyWindow()関数を使ってSDL_Windowを破棄する</description>
+    </item>
+    
     <item>
       <title>CG×ML #3 DRを可能にするMitsuba3の中身 [Devlog #013]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_cg-ml_03/</link>
@@ -17,12 +43,12 @@
 Wenzel Jakob, Sébastien Speierer, Nicolas Roussel, and Delio Vicini. 2022. Dr.Jit: A Just-In-Time Compiler for Differentiable Rendering. In Transactions on Graphics (Proceedings of SIGGRAPH) 41(4).
 Dr.Jitとは 物理ベース微分可能レンダリング（PBDR）のためのジャストインタイムコンパイラ
 レンダリングアルゴリズムを実行するとグラフを生成
-グラフとは 算術、ループ、レイトレーシングの操作、およびレンダリングアルゴリズムとシーンオブジェクト（形状、BSDF、テクスチャ、エミッターなど）間の情報を交換する多態的な呼び出し
+グラフとは 算術、ループ、レイトレーシングの操作、およびレンダリングアルゴリズムとシーンオブジェクト（形状、BSDF、テクスチャ、エミッターなど）間の情報を交換する多態的な呼び出し（例えば、BRDFのspecularの値を勾配方向に変えながらレイトレーシング操作を繰り返す）
 Dr.Jitは提供されるシーンにグラフを特化させ、LLVMまたはOptiXを介してデータ並列カーネル（megakernel）にコンパイルする
 通常のレンダリングのほか、微分シミュレーション（differential simulations）を動的にコンパイルする
 大きな微分タスクを一連の漸近的なステップに分解するため、自動微分（automatic differentiation）の細かい実行をサポート
 画像空間における摂動（perturbation）を計算してデバッグやvisualizationに利用するForwardモードと、たくさんの未知数を同次最適化するためのパラメータ空間の導関数を提供するReverseモードを実装している
-パラメータ空間の例 壁紙のテクセル（テクスチャ空間の基本単位）
+パラメータ空間の例 シーン上での壁紙のテクセル（テクスチャ空間の基本単位）
 目的 Python等の高レベル言語で記述されたシミュレーションコードの実行を追跡し、どの部分のコードがどのように動作しているのか、どの部分が計算負荷が高いのかなどの情報をもとに、コードを効率的に最適化・変換し、高速なデータ並列カーネルを生成する
 微分の過程をより効率的に、かつ細かい制御のもとで行うことをサポートし、微分可能なレンダリングアルゴリズムの開発を簡易化する（効率的な方法としてシミュレーションの微分を微分のシミュレーションに変える）
 &#34;シミュレーションの微分を微分のシミュレーションに変える&#34;とは Derivative of a simulation（シミュレーションの微分）：
@@ -31,7 +57,7 @@ Dr.Jitは提供されるシーンにグラフを特化させ、LLVMまたはOpti
 Simulation of the derivative（微分のシミュレーション）：
 微分そのものを新しいシミュレーションとして扱う考え方
 つまり、入力の変化に対する出力の変化を直接シミュレートすることで、微分の効果を視覚化や解析するためのツールとして利用する
-この変換は重要。なぜなら、 多くのアルゴリズムや最適化手法は、微分の情報を使用して動作する
+この変換はMitsubaにおいて重要。なぜなら、 多くのアルゴリズムや最適化手法は、微分の情報を使用して動作する
 微分可能なレンダリングは、シーンのパラメータを最適化するための勾配情報を提供する能力が求められる
 この勾配情報は、シーンの照明や材料の性質、カメラの位置などのパラメータを調整して、目的の画像や効果に近づけるために使用される
 Dr.Jitは自動微分のプロセスを細かく制御してこの変換を支援する また、Dr.Jitはデータの依存関係をグローバルに追跡し、最終的に勾配に影響を与えない計算（冗長なシミュレーション）を削除することで効率を上げる
