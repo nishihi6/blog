@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-10-26",
         "description": "",
-        "wordCount":  77 ,
+        "wordCount":  166 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-10-26",
         "image": {
@@ -200,6 +200,29 @@ stroke-linejoin="round" class="feather feather-home">
           <ul>
             <li><a href="#フレームの中身">フレームの中身</a></li>
             <li><a href="#ゲームクラスの骨組みを実装する">ゲームクラスの骨組みを実装する</a></li>
+            <li><a href="#メイン関数">メイン関数</a></li>
+            <li><a href="#基本的な入力処理">基本的な入力処理</a></li>
+          </ul>
+        </li>
+        <li><a href="#基本的な2dグラフィクス">基本的な2Dグラフィクス</a>
+          <ul>
+            <li><a href="#カラーバッファ">カラーバッファ</a></li>
+            <li><a href="#ダブルバッファ">ダブルバッファ</a></li>
+            <li><a href="#基本的な2dグラフィクスの実装">基本的な2Dグラフィクスの実装</a></li>
+            <li><a href="#壁とボールとパドルの描画">壁とボールとパドルの描画</a></li>
+          </ul>
+        </li>
+        <li><a href="#ゲームの更新">ゲームの更新</a>
+          <ul>
+            <li><a href="#実時間とゲーム時間">実時間とゲーム時間</a></li>
+            <li><a href="#デルタタイムの関数としてのロジック">デルタタイムの関数としてのロジック</a></li>
+            <li><a href="#パドルの位置を更新する">パドルの位置を更新する</a></li>
+            <li><a href="#ボールの位置を更新する">ボールの位置を更新する</a></li>
+          </ul>
+        </li>
+        <li><a href="#ゲームプロジェクト">ゲームプロジェクト</a>
+          <ul>
+            <li><a href="#参考文献">参考文献</a></li>
           </ul>
         </li>
       </ul>
@@ -274,11 +297,11 @@ stroke-linejoin="round" class="feather feather-home">
 <h4 id="ゲームクラスの骨組みを実装する">ゲームクラスの骨組みを実装する</h4>
 <h5 id="gameh">Game.h</h5>
 <h6 id="gameクラス">Gameクラス</h6>
-<p><code>bool Initialize()</code>関数はGameクラスを初期化する</p>
-<p><code>void RunLoop()</code>関数はゲームループを実行する</p>
-<p><code>void Shutdown()</code>関数はゲームを終わらせる</p>
-<p><code>void ProcessInput()</code>関数、<code>void UpdateGame()</code>関数、<code>void GenerateOutput()</code>関数はゲームループの3つのステップに対応する</p>
-<p><code>bool mIsRunning</code>は、ゲームループを続行するか否かを示すフラグ</p>
+<p><code>Initialize()</code>関数はGameクラスを初期化する</p>
+<p><code>RunLoop()</code>関数はゲームループを実行する</p>
+<p><code>Shutdown()</code>関数はゲームを終わらせる</p>
+<p><code>ProcessInput()</code>関数、<code>UpdateGame()</code>関数、<code>GenerateOutput()</code>関数はゲームループの3つのステップに対応する</p>
+<p><code>mIsRunning</code>は、ゲームループを続行するか否かを示すフラグ</p>
 <h5 id="gamecpp">Game.cpp</h5>
 <h6 id="gameinitialize">Game::Initialize()</h6>
 <p><code>SDL_Init()</code>関数は、SDLライブラリを初期化する</p>
@@ -292,11 +315,103 @@ stroke-linejoin="round" class="feather feather-home">
 <h6 id="gameshutdown">Game::Shutdown()</h6>
 <p><code>SDL_DestroyWindow()</code>関数を使って<code>SDL_Window</code>を破棄する</p>
 <p><code>SDL_Quit()</code>でSDLを終わらせる</p>
+<h4 id="メイン関数">メイン関数</h4>
 <h5 id="maincpp">main.cpp</h5>
 <p>どんなC++プログラムでも入り口はmain関数である</p>
 <p>最初にGameクラスのインスタンスを作る</p>
 <p>ゲームを初期化（<code>game.Initialize()</code>）出来たら、<code>game.RunLoop()</code>を呼び出してゲームループに入る</p>
 <p>ループが終わったら<code>game.Shutdown()</code>を呼び出してゲームを終わらせる</p>
+<h4 id="基本的な入力処理">基本的な入力処理</h4>
+<p>SDLでは、OSから受け取ったイベントを内部のキューで管理する</p>
+<p>フレームごとにイベントがないかキューを調べて、キューに入っている個々のイベントについて処理を行う</p>
+<p>ウィンドウを動かす操作などのイベントは、（ただ無視するだけで）SDLが自動的に処理する</p>
+<h5 id="gamecpp-1">Game.cpp</h5>
+<h6 id="gameprocessinput">Game::ProcessInput()</h6>
+<p>イベントも一種の入力なので、イベント処理は<code>Game::ProcessInput()</code>関数の中で実装する</p>
+<p><code>SDL_PollEvent()</code>関数は、キューにイベントがあれば<code>true</code>を返す（<code>Game::ProcessInput()</code>関数はこの<code>true</code>が返される限り、<code>SDL_PollEvent()を呼び出す</code>）</p>
+<p><code>SDL_Event</code>の<code>type</code>メンバ変数には、受け取ったイベントの種類が入り、ここでは<code>SDL_QUIT</code>イベントを受け取ると<code>mIsRunning</code>に<code>false</code>を設定する（<code>RunLoop()</code>関数内部のwhileループを停止させる）</p>
+<br>
+<p><code>SDL_GetKeyboardState(NULL)</code>関数は、キーボードの現在の状態が格納された配列へのポインタを返す</p>
+<p>この配列のインデックス参照で特定のキーを確認できる（ここでは<code>SDL_SCANCODE_ESCAPE</code>でエスケープキーが押されたかを確認する）</p>
+<h3 id="基本的な2dグラフィクス">基本的な2Dグラフィクス</h3>
+<p>ほとんどのディスプレイは<strong>ラスターグラフィクス</strong>を使っており、最終的にほとんどのコンピュータゲームはピクセルごとにRGBの色を出力している</p>
+<h4 id="カラーバッファ">カラーバッファ</h4>
+<p>メモリ内の<strong>カラーバッファ</strong>に画面全体の色情報が置かれ、ゲームループの&quot;出力生成&quot;の段階で毎フレーム書き込まれる</p>
+<p>一般的な<strong>色深度</strong>は24ビットで、RGBの各要素に8ビット使われる（アルファも含めると色深度は32ビットになる）</p>
+<p>各画素4バイトの場合、1080pで約7.9MB</p>
+<p>最近では、RGBの各画素に16ビット使うゲームもある</p>
+<p>色成分の値をコードで参照する方法として、各チャンネルの値を<strong>0~255の符号なし整数</strong>とするか<strong>0.0~1.0の小数</strong>に正規化するかの2種類がある（SDLライブラリは符号なし整数値を期待する）</p>
+<h4 id="ダブルバッファ">ダブルバッファ</h4>
+<p><strong>画面のティアリング</strong>を防止するため、フロントバッファとバックバッファを用いる<strong>ダブルバッファ</strong>と呼ばれる方法を利用する</p>
+<p>ゲームがフロントバッファとバックバッファを交換する際に、バックバッファへの書き込みが完了するまで待機するアプローチを<strong>垂直同期（vsync）</strong>と呼ぶ</p>
+<h4 id="基本的な2dグラフィクスの実装">基本的な2Dグラフィクスの実装</h4>
+<h5 id="gamecpp-2">Game.cpp</h5>
+<h6 id="gameinitialize-1">Game::Initialize()</h6>
+<p><code>SDL_Renderer</code>オブジェクトを参照して、レンダラーに描画させるために、<code>SDL_CreateRenderer()</code>関数でSDLレンダラーを作成する</p>
+<h6 id="gameshutdown-1">Game::Shutdown()</h6>
+<p><code>SDL_DestroyRenderer()</code>関数を呼び出す</p>
+<br>
+<p>描画の全体的な流れは次の3つのステップとなる</p>
+<ol>
+<li>バックバッファを単色でクリアする</li>
+<li>ゲームのシーン全体を描画する</li>
+<li>フロントバッファとバックバッファを交換する</li>
+</ol>
+<h6 id="gamegenerateoutput">Game::GenerateOutput()</h6>
+<p><code>SDL_SetRenderDrawColor()</code>関数で、バックバッファをクリアする描画色を指定する</p>
+<p><code>SDL_RenderClear()</code>関数で、バックバッファを現在の描画色でクリアする</p>
+<p>ゲームシーン全体の描画は後で実装するとして、</p>
+<p>最後に<code>SDL_RenderPresent()</code>関数で、フロントバッファとバックバッファを交換する</p>
+<h4 id="壁とボールとパドルの描画">壁とボールとパドルの描画</h4>
+<h6 id="gamegenerateoutput-1">Game::GenerateOutput()</h6>
+<p>SDLで塗りつぶされた長方形を描くには、<code>SDL_RenderFillRect()</code>関数を使う</p>
+<h5 id="gameh-1">Game.h</h5>
+<p><code>x</code>と<code>y</code>の両成分を持つ単純な<code>Vector2</code>構造体を宣言し、</p>
+<h5 id="gamecpp-3">Game.cpp</h5>
+<h6 id="gameinitialize-2">Game::Initialize()</h6>
+<p>Gameクラスにパドルの位置<code>mPaddlePos</code>とボールの位置<code>mBallPos</code>を追加する</p>
+<p>長方形と同様に、<code>SDL_RenderFillRect()</code>関数を使ってパドルを描画する</p>
+<h3 id="ゲームの更新">ゲームの更新</h3>
+<p>ゲームループでは、1秒間に何度も実行され、離散的な時間のステップでゲームを更新する</p>
+<h4 id="実時間とゲーム時間">実時間とゲーム時間</h4>
+<p>経過する<strong>実時間</strong>とゲームの世界で経過する<strong>ゲーム時間</strong>とを区別することが重要</p>
+<h4 id="デルタタイムの関数としてのロジック">デルタタイムの関数としてのロジック</h4>
+<p><strong>デルタタイム</strong>は、最後のフレームから今までに経過した時間の長さを表す</p>
+<p>たとえば、理想的なスピードを毎秒150ピクセルとすると、</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">enemy</span><span class="p">.</span><span class="n">mPosition</span><span class="p">.</span><span class="n">x</span> <span class="o">+=</span> <span class="mi">150</span> <span class="o">*</span> <span class="n">deltaTime</span><span class="p">;</span>
+</span></span></code></pre></div><p>のように、プロセッサの速度に依存しない柔軟性の高いコードがかける</p>
+<h5 id="gamecpp-4">Game.cpp</h5>
+<h6 id="gameupdategame">Game::UpdateGame()</h6>
+<p>SDLは、<code>SDL_Init()</code>関数の呼び出しから経過した時間をミリ秒単位で返す<code>SDL_GetTicks</code>関数を提供している</p>
+<p>次のフレームのために、メンバー変数<code>mTicksCount</code>の時刻を更新する</p>
+<p>想定よりも早くフレーム処理が完了すると問題が発生する場合（物理法則で動くゲームなど）において、<strong>フレーム制限</strong>を実装するために<code>SDL_TICKS_PASSED()</code>関数を利用する</p>
+<p>デバッグ時のブレークポイントで発生する停止時間によって、巨大なデルタタイムが発生するのを防ぐために、デルタタイムの値に最大値を設定する</p>
+<h4 id="パドルの位置を更新する">パドルの位置を更新する</h4>
+<h5 id="gameh-2">Game.h</h5>
+<h5 id="gamecpp-5">Game.cpp</h5>
+<h6 id="gameprocessinput-1">Game::ProcessInput()</h6>
+<p>メンバ変数<code>mPaddleDir</code>は、パドルが動かないなら<code>0</code>、上に移動するなら<code>-1</code>（負のy）、下に移動するなら<code>1</code>（正のy）をセットする（こうすることで、両方のキーを押したら<code>0</code>になる）</p>
+<h6 id="gameupdategame-1">Game::UpdateGame()</h6>
+<p>デルタタイムに基づいてパドルのy座標位置を更新する（毎秒300.0fピクセル）</p>
+<p>パドルを画面内におさめるために、パドルのy座標に境界条件の制約を加える（<code>paddleH</code>はパドルの高さを示す定数）</p>
+<h4 id="ボールの位置を更新する">ボールの位置を更新する</h4>
+<p>ボールの動きを示すには<strong>速度</strong>と<strong>衝突検知</strong>が必要</p>
+<h5 id="gameh-3">Game.h</h5>
+<h5 id="gamecpp-6">Game.cpp</h5>
+<h6 id="gameinitialize-3">Game.Initialize()</h6>
+<p>Vector2変数のメンバ変数<code>mBallVel</code>を追加し、初期化する</p>
+<h6 id="gameupdategame-2">Game.UpdateGame()</h6>
+<p>ボールの位置を速度に応じて動かす（<code>mBallPos.x</code>と<code>mBallPos.y</code>を更新する）</p>
+<p>ボールが壁に衝突する際は、速度成分を反転させる（反転の更新がその場で繰り返されてボールが壁にくっつく問題は、速度方向に状態の制約をかけることで解決する）</p>
+<p>ボールがパドルに衝突するかは、x位置とy位置とx速度の条件によって判定する</p>
+<h3 id="ゲームプロジェクト">ゲームプロジェクト</h3>
+<p>単純化したPong（ポン）ゲームが完成</p>
+<h4 id="参考文献">参考文献</h4>
+<p><a href="https://www.gameenginebook.com/">Game Engine Architecture</a>
+<br></p>
+<p><a href="https://documentation.help/SDL/">SDL API Reference Guide</a>
+<br></p>
+<p><a href="http://sdl2referencejp.osdn.jp/">SDL APIのリファレンス</a></p>
 
             </div>
         </article></main>
