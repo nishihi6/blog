@@ -18,11 +18,11 @@
 ゲームプログラミング ゲームループとゲームクラス ゲームループ（game loop）は、ゲームプログラム全体の流れを制御するループである
 シングルスレッドのゲームループに対して、マルチスレッドのゲームループは複雑になる
 フレームの中身 ゲームは各フレームで次の3つのステップを実行する
-入力があれば処理する 例：デバイス入力、インターネット経由で受信したデータ、カメラ映像、GPS情報 ゲームワールドを更新する 例：キャラクター、ユーザインターフェースのパーツ、ゲームに与える全ての要素 出力するものを生成する 例：グラフィクス、オーディオ、フォースフィードバック（振動）、インターネット経由で送信するデータ ゲームクラスの骨組みを実装する Game.h Gameクラス bool Initialize()関数はGameクラスを初期化する
-void RunLoop()関数はゲームループを実行する
-void Shutdown()関数はゲームを終わらせる
-void ProcessInput()関数、void UpdateGame()関数、void GenerateOutput()関数はゲームループの3つのステップに対応する
-bool mIsRunningは、ゲームループを続行するか否かを示すフラグ
+入力があれば処理する 例：デバイス入力、インターネット経由で受信したデータ、カメラ映像、GPS情報 ゲームワールドを更新する 例：キャラクター、ユーザインターフェースのパーツ、ゲームに与える全ての要素 出力するものを生成する 例：グラフィクス、オーディオ、フォースフィードバック（振動）、インターネット経由で送信するデータ ゲームクラスの骨組みを実装する Game.h Gameクラス Initialize()関数はGameクラスを初期化する
+RunLoop()関数はゲームループを実行する
+Shutdown()関数はゲームを終わらせる
+ProcessInput()関数、UpdateGame()関数、GenerateOutput()関数はゲームループの3つのステップに対応する
+mIsRunningは、ゲームループを続行するか否かを示すフラグ
 Game.cpp Game::Initialize() SDL_Init()関数は、SDLライブラリを初期化する
 今のところ、初期化する必要があるのはビデオサブシステムだけ（SDL_INIT_VIDEO）
 SDL_Log(&amp;quot;Unable to initialize SDL: %s&amp;quot;, SDL_GetError())は、SDLでメッセージをコンソールに出力する簡単な方法である
@@ -30,7 +30,11 @@ SDL_GetError()関数は、エラーメッセージを文字列で返す
 SDL_CreateWindow()関数でウィンドウを作る
 ウィンドウ作成にはフラグを設定できる（SDL_WINDOW_FULLSCREENでフルスクリーンモードを使う）
 Game::RunLoop() もしmIsRunningがfalseになったら繰り返しをやめる
-Game::Shutdown() SDL_DestroyWindow()関数を使ってSDL_Windowを破棄する</description>
+Game::Shutdown() SDL_DestroyWindow()関数を使ってSDL_Windowを破棄する
+SDL_Quit()でSDLを終わらせる
+メイン関数 main.cpp どんなC++プログラムでも入り口はmain関数である
+最初にGameクラスのインスタンスを作る
+ゲームを初期化（game.Initialize()）出来たら、game.RunLoop()を呼び出してゲームループに入る</description>
     </item>
     
     <item>
