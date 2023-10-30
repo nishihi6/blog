@@ -6,7 +6,37 @@
     <description>Recent content in Home on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Thu, 26 Oct 2023 18:53:04 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 30 Oct 2023 23:03:24 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OpenGLを用いたGameDev #2 [Devlog #015]</title>
+      <link>https://nishihi6.github.io/blog/posts/devlog_gl_02/</link>
+      <pubDate>Mon, 30 Oct 2023 23:03:24 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/devlog_gl_02/</guid>
+      <description>ゲーム開発者の教科書：Game Programming in C++ を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します） https://github.com/gameprogcpp/code
+ゲームプログラミング in C++ ゲームオブジェクトと2Dグラフィクス ゲームオブジェクト オブジェクト階層構造を利用するゲームもあれば、コンポジションを使うゲームもあり、もっと複雑な手法を用いるゲームもある
+ゲームオブジェクトの種類 ゲームオブジェクトには、毎フレーム更新されて出力生成で描画されるもの、描画するが更新しない静的オブジェクト、他のオブジェクトが触れた際に何かを発生させるトリガーなどがある
+ゲームオブジェクトのモデル ●クラス階層構造としてのゲームオブジェクト
+オブジェクト志向の標準的なクラス階層構造でゲームオブジェクトを宣言するゲームオブジェクトモデル（is-a関係）
+すべてのゲームオブジェクトが1つの基底クラスから派生されるので、モノリシックなクラス階層構造とも呼ばれる
+どのゲームオブジェクトも基底オブジェクトのプロパティと関数をすべて持たなければならないという欠点がある
+階層構造を拡張して、派生クラス群と基底クラスとの中間に新しいクラスを置くこともできるが、クラス階層構造が複雑化してしまう
+クラス階層構造を大きくすると、後に2つの子クラスに共通機能をもたせようとした際に、2つの別の経路で継承することになり（菱形継承）、派生クラスが仮想関数の複数のバージョンを継承する問題を起こしやすい
+●コンポーネントによるゲームオブジェクト
+コンポーネント（構成要素）をベースとするゲームオブジェクトモデル
+Unityが採用しているモデルである
+1つのゲームオブジェクトクラスがあるが派生クラスを持たず、代わりに必要な機能を実装するコンポーネントオブジェクトを持つ（has-a関係）
+このモデルを実装する方法の1つは、コンポーネントに暮らす階層構造を使う手法
+GameObjectに含まれるのは、コンポーネントを追加（Add）・削除（Remove）する関数だけである
+必要とする機能だけを追加しやすいという長所がある
+同じゲームオブジェクトにあるコンポーネント間の依存関係が明らかではないという欠点がある
+●階層構造とコンポーネントによるゲームオブジェクト
+モノリシックな階層構造とコンポーネントオブジェクトモデルのハイブリッド
+UE4のゲームオブジェクトモデルから部分的にヒントを得ている
+Actor.h いくつかの仮想関数を持つ基底クラスActorがあり、各基底クラスActorはコンポーネントを格納する動的配列（std::vector）を持つ
+列挙型のStateでクラスActorの状態管理を行う（Update()はEActive状態のクラスだけを更新し、EDead状態のクラスは削除を通知する）</description>
+    </item>
+    
     <item>
       <title>OpenGLを用いたGameDev #1 [Devlog #014]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_gl_01/</link>
