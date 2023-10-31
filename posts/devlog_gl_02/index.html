@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-10-30",
         "description": "",
-        "wordCount":  35 ,
+        "wordCount":  57 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-10-30",
         "image": {
@@ -195,6 +195,7 @@ stroke-linejoin="round" class="feather feather-home">
           <ul>
             <li><a href="#ゲームオブジェクトの種類">ゲームオブジェクトの種類</a></li>
             <li><a href="#ゲームオブジェクトのモデル">ゲームオブジェクトのモデル</a></li>
+            <li><a href="#ゲームオブジェクトをゲームループに統合する">ゲームオブジェクトをゲームループに統合する</a></li>
           </ul>
         </li>
       </ul>
@@ -230,8 +231,37 @@ stroke-linejoin="round" class="feather feather-home">
 <p>モノリシックな階層構造とコンポーネントオブジェクトモデルのハイブリッド</p>
 <p>UE4のゲームオブジェクトモデルから部分的にヒントを得ている</p>
 <h5 id="actorh">Actor.h</h5>
+<h5 id="actorcpp">Actor.cpp</h5>
 <p>いくつかの仮想関数を持つ基底クラス<code>Actor</code>があり、各基底クラス<code>Actor</code>はコンポーネントを格納する動的配列（<code>std::vector</code>）を持つ</p>
-<p>列挙型の<code>State</code>でクラス<code>Actor</code>の状態管理を行う（<code>Update()</code>は<code>EActive</code>状態のクラスだけを更新し、<code>EDead</code>状態のクラスは削除を通知する）</p>
+<p>列挙型の<code>State</code>でクラス<code>Actor</code>の状態管理を行う（<code>Update()</code>は<code>EActive</code>状態のクラスだけを更新し、<code>EDead</code>状態のクラスは削除する）</p>
+<p><code>UpdateComponents()</code>関数は、すべてのコンポーネントをループして順番に更新する</p>
+<p><code>UpdateActor()</code>関数は、派生クラスで独自の振る舞いを実装する</p>
+<p>基底クラス<code>Actor</code>では、アクターを追加で作成する際に<code>Game</code>クラスへのアクセスが必要になり、<strong>シングルトン</strong>で実装するアプローチ（そのクラスの複数のインスタンスに対応できない）もあるのだが、<strong>依存性の注入（dependency injection）</strong>で実装する（アクターがコンストラクタで<code>Game</code>クラスへのポインタを受け取り、別のアクターを追加作成する）</p>
+<h5 id="componenth">Component.h</h5>
+<h5 id="componentcpp">Component.cpp</h5>
+<p>メンバ変数<code>mUpdateOrder</code>はコンポーネントの更新順を前後させる（例えば、カメラコンポーネントは移動コンポーネントがプレイヤーを動かした後に更新する）</p>
+<p>処理順を管理するため、<code>Actor</code>の<code>AddComponent()</code>関数では新しいコンポーネントが追加される際にコンポーネントの配列をソートする</p>
+<p><code>Component</code>クラスは、その所有者のアクターへのポイントを持つことで、コンポーネントからアクターの情報にアクセスできる</p>
+<p>このハイブリッドアプローチは、モノリシックなオブジェクトモデルの&quot;深いクラス階層構造&quot;を避けるという点で有効である</p>
+<p>座標データなどの重要なプロパティを個々のアクターにもたせているため、コンポーネント間のオーバーヘッドに関する問題を回避することができる</p>
+<p>●<strong>その他のアプローチ</strong></p>
+<ul>
+<li>
+<p>考えられるさまざまな機能をインターフェースクラスとして宣言し、個々のゲームオブジェクトで必要なインターフェースを実装する</p>
+</li>
+<li>
+<p>コンテナ的なゲームオブジェクトを完全に排除し、代わりにIDでオブジェクトを管理するコンポーネントのデータベースを利用する</p>
+</li>
+<li>
+<p>オブジェクトをプロパティによって定義する</p>
+</li>
+</ul>
+<h4 id="ゲームオブジェクトをゲームループに統合する">ゲームオブジェクトをゲームループに統合する</h4>
+<h5 id="gameh">Game.h</h5>
+<p><code>Actor</code>クラスへのポインタである、アクティブなアクター群を含む<code>mActors</code>と待ち状態のアクター群を含む<code>mPendingActors</code>（<code>std::vector</code>）を<code>Game</code>クラスに追加</p>
+<p>新しいアクターは巡回処理が終わるまでは<code>mPendingActors</code>に追加しておく</p>
+<h5 id="gamecpp">Game.cpp</h5>
+<p>受け取った<code>Actor</code>クラスへのポインタを、<code>mUpdatingActors</code>フラグによって<code>mPendingActors</code>か<code>mActors</code>に追加する<code>AddActor()</code>関数を追加</p>
 
             </div>
         </article></main>
