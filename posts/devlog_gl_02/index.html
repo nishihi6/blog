@@ -3,11 +3,11 @@
 <meta http-equiv="content-type" content="text/html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title itemprop="name">OpenGLを用いたGameDev #2 [Devlog #015] | nishihi6</title>
-<meta property="og:title" content="OpenGLを用いたGameDev #2 [Devlog #015] | nishihi6" />
-<meta name="twitter:title" content="OpenGLを用いたGameDev #2 [Devlog #015] | nishihi6" />
-<meta itemprop="name" content="OpenGLを用いたGameDev #2 [Devlog #015] | nishihi6" />
-<meta name="application-name" content="OpenGLを用いたGameDev #2 [Devlog #015] | nishihi6" />
+<title itemprop="name">GameDev #2 ゲームオブジェクトと2Dグラフィクス [Devlog #015] | nishihi6</title>
+<meta property="og:title" content="GameDev #2 ゲームオブジェクトと2Dグラフィクス [Devlog #015] | nishihi6" />
+<meta name="twitter:title" content="GameDev #2 ゲームオブジェクトと2Dグラフィクス [Devlog #015] | nishihi6" />
+<meta itemprop="name" content="GameDev #2 ゲームオブジェクトと2Dグラフィクス [Devlog #015] | nishihi6" />
+<meta name="application-name" content="GameDev #2 ゲームオブジェクトと2Dグラフィクス [Devlog #015] | nishihi6" />
 <meta property="og:site_name" content="nishihi6" />
 
 <meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
@@ -45,14 +45,14 @@
     {
         "@context": "http://schema.org",
         "@type": "Article",
-        "headline": "OpenGLを用いたGameDev #2 [Devlog #015]",
+        "headline": "GameDev #2 ゲームオブジェクトと2Dグラフィクス [Devlog #015]",
         "author": {
         "@type": "Person",
         "name": ""
         },
         "datePublished": "2023-10-30",
         "description": "",
-        "wordCount":  57 ,
+        "wordCount":  149 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-10-30",
         "image": {
@@ -177,7 +177,7 @@ stroke-linejoin="round" class="feather feather-home">
     <main class="page-content" aria-label="Content">
         <article>
             <header class="header">
-                <h1 class="header-title">OpenGLを用いたGameDev #2 [Devlog #015]</h1>
+                <h1 class="header-title">GameDev #2 ゲームオブジェクトと2Dグラフィクス [Devlog #015]</h1>
                 
                 
                 <div class="post-meta">
@@ -198,13 +198,30 @@ stroke-linejoin="round" class="feather feather-home">
             <li><a href="#ゲームオブジェクトをゲームループに統合する">ゲームオブジェクトをゲームループに統合する</a></li>
           </ul>
         </li>
+        <li><a href="#スプライト">スプライト</a>
+          <ul>
+            <li><a href="#画像ファイルのロード">画像ファイルのロード</a></li>
+            <li><a href="#スプライトの描画">スプライトの描画</a></li>
+            <li><a href="#スプライトアニメーション">スプライトアニメーション</a></li>
+          </ul>
+        </li>
+        <li><a href="#背景のスクロール">背景のスクロール</a>
+          <ul>
+            <li></li>
+          </ul>
+        </li>
+        <li><a href="#ゲームプロジェクト">ゲームプロジェクト</a>
+          <ul>
+            <li></li>
+            <li><a href="#参考文献">参考文献</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
 </nav>
             </details><div class="page-content">
-                <p>ゲーム開発者の教科書：<a href="https://www.shoeisha.co.jp/book/detail/9784798157610">Game Programming in C++</a> を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します）
-<br><a href="https://github.com/gameprogcpp/code">https://github.com/gameprogcpp/code</a></p>
+                <p>ゲーム開発者の教科書：<a href="https://www.shoeisha.co.jp/book/detail/9784798157610">Game Programming in C++</a> を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します）</p>
 <h1 id="ゲームプログラミング-in-c">ゲームプログラミング in C++</h1>
 <hr>
 <h2 id="ゲームオブジェクトと2dグラフィクス">ゲームオブジェクトと2Dグラフィクス</h2>
@@ -258,10 +275,97 @@ stroke-linejoin="round" class="feather feather-home">
 </ul>
 <h4 id="ゲームオブジェクトをゲームループに統合する">ゲームオブジェクトをゲームループに統合する</h4>
 <h5 id="gameh">Game.h</h5>
-<p><code>Actor</code>クラスへのポインタである、アクティブなアクター群を含む<code>mActors</code>と待ち状態のアクター群を含む<code>mPendingActors</code>（<code>std::vector</code>）を<code>Game</code>クラスに追加</p>
+<p><code>Actor</code>クラスへのポインタの、アクティブなアクター群を含む<code>mActors</code>と待ち状態のアクター群を含む<code>mPendingActors</code>（<code>std::vector</code>）を<code>Game</code>クラスに追加</p>
 <p>新しいアクターは巡回処理が終わるまでは<code>mPendingActors</code>に追加しておく</p>
 <h5 id="gamecpp">Game.cpp</h5>
-<p>受け取った<code>Actor</code>クラスへのポインタを、<code>mUpdatingActors</code>フラグによって<code>mPendingActors</code>か<code>mActors</code>に追加する<code>AddActor()</code>関数を追加</p>
+<p>受け取った<code>Actor</code>クラスへのポインタを、<code>mUpdatingActors</code>フラグによって<code>mPendingActors</code>か<code>mActors</code>に追加する<code>Game::AddActor()</code>関数を追加</p>
+<p><code>Actor</code>クラスへのポインタを受け取って、そのアクターを削除する<code>Game::RemoveActor()</code>関数を追加する</p>
+<h5 id="gameupdategame">Game::UpdateGame()</h5>
+<p>デルタタイムの計算後に<code>mActors</code>にあるアクターをループ処理して、それぞれの<code>Actor::Update()</code>を呼び出す</p>
+<p><code>mPendingActors</code>に追加したアクターを<code>mActors</code>に移動する</p>
+<p>死んだアクターを<code>deadActors</code>に移動して削除する</p>
+<h5 id="gameunloaddata">Game::UnloadData()</h5>
+<p><code>Actor</code>オブジェクトはコンストラクタとデストラクタで自動的に追加・削除されるため、<code>mActosr</code>をループ処理してアクターを削除するには別のスタイルのループを行う</p>
+<h3 id="スプライト">スプライト</h3>
+<p>2Dゲームの視覚的オブジェクトの<strong>スプライト</strong>は、キャラクター、背景、その他の動的なオブジェクトを表現するのに使われる</p>
+<p>それぞれのスプライトには、1つ以上の画像ファイルが割り当てられる</p>
+<p>iOSではPVR、PC及びXBoxではDXTなどの画像フォーマットを利用する</p>
+<p>このコードではPNGを利用する（PNGは圧縮された画像フォーマットであり、ハードウェアはPNGファイルをネイティブで描画できないため時間が掛かるが…）</p>
+<h4 id="画像ファイルのロード">画像ファイルのロード</h4>
+<h5 id="gamecpp-1">Game.cpp</h5>
+<h5 id="gameinitialize">Game::Initialize()</h5>
+<p><code>SDL_Init()</code>関数でSDL Imageを初期化する</p>
+<h5 id="gamegettexture">Game::GetTexture()</h5>
+<p><code>Game::GetTexture()</code>関数は<code>Game::LoadData()</code>関数の中での実行であり、<code>SDL_Texture</code>と、それに対応するファイル名との連想配列を作る</p>
+<p><code>IMG_Load()</code>関数で画像ファイルを<code>SDL_Surface</code>構造体にロードする</p>
+<p><code>SDL_CreateTextureFromSurface()</code>関数で<code>SDL_Surface</code>構造体を<code>SDL_Texture</code>に変換する</p>
+<p>ゲーム開発では基本的に、あらゆる種類のアセットを一括して処理する<strong>アセット管理システム</strong>を利用するが、ここでは利用しない</p>
+<p><code>Game::LoadData()</code>関数の役割は、ゲームワールドのすべてのアクターを作成することである</p>
+<h4 id="スプライトの描画">スプライトの描画</h4>
+<p><strong>画像のアルゴリズム</strong>によって、奥から手前の順序でスプライトを描画する</p>
+<p>コンポーネントを利用するゲームオブジェクトモデルを使うので、<code>Component</code>クラスを継承した<code>SpriteComponent</code>クラスを作成する</p>
+<h5 id="spritecomponenth">SpriteComponent.h</h5>
+<h5 id="spritecomponentcpp">SpriteComponent.cpp</h5>
+<p><code>mDrawOrder</code>メンバ変数で指定された順序でスプライトコンポーネントを描画する</p>
+<p><code>Game::AddSprite()</code>関数を通して、<code>Game</code>クラスのスプライトコンポーネントの配列に追加される</p>
+<h5 id="gamecpp-2">Game.cpp</h5>
+<h5 id="gameaddsprite">Game::AddSprite()</h5>
+<p><code>mDrawOrder</code>の順でスプライトコンポーネントがソートされる</p>
+<p><code>Game::GenerateOutput()</code>関数では、単純にスプライトコンポーネントの配列をループ処理してそれぞれの<code>SpriteComponent::Draw()</code>関数を呼ぶ</p>
+<p>バックバッファをクリアして、バックバッファとフロントバッファを交換する間に処理を行う</p>
+<p>画像のアルゴリズムは3Dを考慮するといくつかの難点があるが、2Dだと非常にうまく機能する</p>
+<h5 id="spritecomponenth-1">SpriteComponent.h</h5>
+<h5 id="spritecomponentcpp-1">SpriteComponent.cpp</h5>
+<h5 id="spritecomponentsettexture">SpriteComponent::SetTexture()</h5>
+<p><code>mTexture</code>メンバ変数を設定し、<code>SDL_QueryTexture()</code>関数を呼び出してテクスチャの幅と高さを得る</p>
+<h5 id="spritecomponentdraw">SpriteComponent::Draw()</h5>
+<p>テクスチャを描画する関数として、シンプルな<code>SDL_RenderCopy()</code>関数、高度な挙動に対応した<code>SDL_RenderCopyEx()</code>関数がある</p>
+<p><code>SDL_Rect</code>構造体のx/y座標は、描画先の左上隅の座標に対応する</p>
+<p>SDLは角度を<strong>度数</strong>で受け取るが、<code>Actor</code>クラスは<strong>ラジアン</strong>を使うため、<code>Math::ToDegrees</code>を用いる</p>
+<p>SDLでは正の角度が<strong>時計回り</strong>だが、数学で通常使われる単位円では<strong>反時計回り</strong>なので、正負逆転による調整を行う</p>
+<h4 id="スプライトアニメーション">スプライトアニメーション</h4>
+<h5 id="animspritecomponenth">AnimSpriteComponent.h</h5>
+<p>スプライトアニメーションの実現には、各フレームに対応する画像を配列に格納する</p>
+<p><code>mAnimFPS</code>変数は、異なるフレームレートでスプライトアニメーションを再生させるために利用できる</p>
+<p><code>mCurrFrame</code>変数は、現在んおアニメーションを表示している期間を追跡管理できる</p>
+<h5 id="animspritecomponentcpp">AnimSpriteComponent.cpp</h5>
+<h5 id="animspritecomponentsetanimtextures">AnimSpriteComponent::SetAnimTextures()</h5>
+<p>渡された配列をメンバ変数<code>mAnimTextures</code>に設定し、<code>mCurrFrame</code>を0にリセットする</p>
+<p><code>SpriteComponent</code>クラスから継承した<code>SetTexture()</code>関数を呼び出して、アニメーションの最初のフレームを渡す</p>
+<h5 id="animspritecomponentupdate">AnimSpriteComponent::Update()</h5>
+<p>アニメーションのFPSとデルタタイムの関数として<code>mCurrFrame</code>を更新する</p>
+<p><code>mCurrFrame</code>を<code>int</code>にキャストして、<code>mAnimTextures</code>から適切なテクスチャを選択して<code>SetTexture</code>を呼び出す</p>
+<h3 id="背景のスクロール">背景のスクロール</h3>
+<h5 id="bgspritecomponenth">BGSpriteComponent.h</h5>
+<p>背景用に<code>SpriteComponent</code>クラスを派生する</p>
+<p><code>BGTexture</code>構造体にそれぞれの背景テクスチャに対応するオフセットを割り当てる（このオフセットを毎フレーム更新することで、スクロール効果を生み出す）</p>
+<h5 id="bgspritecomponentcpp">BGSpriteComponent.cpp</h5>
+<h5 id="bgspritecomponentsetbgtextures">BGSpriteComponent::SetBGTextures()</h5>
+<p>オフセット値は<code>SetBGTextures()</code>で初期化される</p>
+<p>追加される背景テクスチャの内部では、それぞれのテクスチャは直前の背景テクスチャの右側に配置される</p>
+<h5 id="bgspritecomponentupdate">BGSpriteComponent::Update()</h5>
+<p>それぞれの画像が完全に画面外に出た場合を考慮しながら、背景テクスチャのオフセットを更新する</p>
+<h5 id="bgspritecomponentdraw">BGSpriteComponent::Draw()</h5>
+<p>所有アクターの位置と背景のオフセット情報によって位置を調節しながら、<code>SDL_RenderCopy()</code>関数を用いて背景テクスチャを描画する</p>
+<br>
+<p>背景に複数のレイヤーを使い、各レイヤーを別々の速度で動かすことで奥行きを感じさせる<strong>視差スクロール</strong>という実装がある</p>
+<p>これを実装するには、1つのアクターに複数の<code>BGSpriteComponents</code>をもたせ、それぞれに異なる描画順序を指定し、個々の背景に異なるスクロール速度を割り当てる</p>
+<h3 id="ゲームプロジェクト">ゲームプロジェクト</h3>
+<h5 id="shiph">Ship.h</h5>
+<p><code>Actor</code>クラスの派生クラスとして宇宙船を表す</p>
+<p>左右と上下の速度を制御する2つの速度の変数を持つ</p>
+<h5 id="shipcpp">Ship.cpp</h5>
+<p>コンストラクタでは、<code>mRightSpeed</code>と<code>mDownSpeed</code>を0で初期化して、宇宙船に使うための<code>AnimSpriteComponent</code>を作成してテクスチャを設定する</p>
+<h5 id="shipprocesskeyboard">Ship::ProcessKeyboard()</h5>
+<p>キーボード入力で船の速度を変更する</p>
+<h5 id="shipupdateactor">Ship::UpdateActor()</h5>
+<p>ゲームの更新時に宇宙船を動かす</p>
+<p>動きに関しては別のコンポーネントとして実装するべきであるが、今回は<code>Ship::UpdateActor()</code>関数の中で実装する</p>
+<h4 id="参考文献">参考文献</h4>
+<p><a href="https://www.borndigital.co.jp/book/19115.html">ゲームエンジンアーキテクチャ 第3版</a>
+<br>
+↑ Naughty Dogは&quot;クラッシュ・バンディクー&quot;や&quot;アンチャーテッド&quot;で有名</p>
+<p><a href="https://wgn-obs.shop-pro.jp/?pid=151992764">Game Programming Gems 6 日本語版</a></p>
 
             </div>
         </article></main>

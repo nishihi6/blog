@@ -8,12 +8,12 @@
     <language>ja-jp</language>
     <lastBuildDate>Mon, 30 Oct 2023 23:03:24 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>OpenGLを用いたGameDev #2 [Devlog #015]</title>
+      <title>GameDev #2 ゲームオブジェクトと2Dグラフィクス [Devlog #015]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_gl_02/</link>
       <pubDate>Mon, 30 Oct 2023 23:03:24 +0900</pubDate>
       
       <guid>https://nishihi6.github.io/blog/posts/devlog_gl_02/</guid>
-      <description>ゲーム開発者の教科書：Game Programming in C++ を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します） https://github.com/gameprogcpp/code
+      <description>ゲーム開発者の教科書：Game Programming in C++ を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します）
 ゲームプログラミング in C++ ゲームオブジェクトと2Dグラフィクス ゲームオブジェクト オブジェクト階層構造を利用するゲームもあれば、コンポジションを使うゲームもあり、もっと複雑な手法を用いるゲームもある
 ゲームオブジェクトの種類 ゲームオブジェクトには、毎フレーム更新されて出力生成で描画されるもの、描画するが更新しない静的オブジェクト、他のオブジェクトが触れた際に何かを発生させるトリガーなどがある
 ゲームオブジェクトのモデル ●クラス階層構造としてのゲームオブジェクト
@@ -47,18 +47,28 @@ Componentクラスは、その所有者のアクターへのポイントを持�
 考えられるさまざまな機能をインターフェースクラスとして宣言し、個々のゲームオブジェクトで必要なインターフェースを実装する
 コンテナ的なゲームオブジェクトを完全に排除し、代わりにIDでオブジェクトを管理するコンポーネントのデータベースを利用する
 オブジェクトをプロパティによって定義する
-ゲームオブジェクトをゲームループに統合する Game.h Actorクラスへのポインタである、アクティブなアクター群を含むmActorsと待ち状態のアクター群を含むmPendingActors（std::vector）をGameクラスに追加
+ゲームオブジェクトをゲームループに統合する Game.h Actorクラスへのポインタの、アクティブなアクター群を含むmActorsと待ち状態のアクター群を含むmPendingActors（std::vector）をGameクラスに追加
 新しいアクターは巡回処理が終わるまではmPendingActorsに追加しておく
-Game.cpp 受け取ったActorクラスへのポインタを、mUpdatingActorsフラグによってmPendingActorsかmActorsに追加するAddActor()関数を追加</description>
+Game.cpp 受け取ったActorクラスへのポインタを、mUpdatingActorsフラグによってmPendingActorsかmActorsに追加するGame::AddActor()関数を追加
+Actorクラスへのポインタを受け取って、そのアクターを削除するGame::RemoveActor()関数を追加する
+Game::UpdateGame() デルタタイムの計算後にmActorsにあるアクターをループ処理して、それぞれのActor::Update()を呼び出す
+mPendingActorsに追加したアクターをmActorsに移動する
+死んだアクターをdeadActorsに移動して削除する
+Game::UnloadData() Actorオブジェクトはコンストラクタとデストラクタで自動的に追加・削除されるため、mActosrをループ処理してアクターを削除するには別のスタイルのループを行う
+スプライト 2Dゲームの視覚的オブジェクトのスプライトは、キャラクター、背景、その他の動的なオブジェクトを表現するのに使われる
+それぞれのスプライトには、1つ以上の画像ファイルが割り当てられる
+iOSではPVR、PC及びXBoxではDXTなどの画像フォーマットを利用する
+このコードではPNGを利用する（PNGは圧縮された画像フォーマットであり、ハードウェアはPNGファイルをネイティブで描画できないため時間が掛かるが…）
+画像ファイルのロード Game.cpp Game::Initialize() SDL_Init()関数でSDL Imageを初期化する</description>
     </item>
     
     <item>
-      <title>OpenGLを用いたGameDev #1 [Devlog #014]</title>
+      <title>GameDev #1 ゲームプログラミング [Devlog #014]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_gl_01/</link>
       <pubDate>Thu, 26 Oct 2023 18:53:04 +0900</pubDate>
       
       <guid>https://nishihi6.github.io/blog/posts/devlog_gl_01/</guid>
-      <description>ゲーム開発者の教科書：Game Programming in C++ を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します） https://github.com/gameprogcpp/code
+      <description>ゲーム開発者の教科書：Game Programming in C++ を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します）
 ゲームプログラミング in C++ 環境構築 VisualStudio2022でプロジェクトの作成 (新規作成-&amp;gt;プロジェクト-&amp;gt;)新しいプロジェクトの作成-&amp;gt;空のプロジェクト プロジェクト名（ソリューション名）と保存パスを指定 &amp;ldquo;ソリューションとプロジェクトを同じディレクトリに配置する&amp;quot;にチェック 作成 SDL等のライブラリを設置（$(SolutionDir)\External\フォルダ以下） ソリューションのプロパティを変更（参考サイト） インクルードディレクトリの指定 構成プロパティ-&amp;gt;C/C++-&amp;gt;全般-&amp;gt;追加のインクルードディレクトリ（注意点） 追加のライブラリディレクトリの指定 構成プロパティ-&amp;gt;リンカー-&amp;gt;全般-&amp;gt;追加のインクルードディレクトリ 追加の依存ファイルの指定 構成プロパティ-&amp;gt;リンカー-&amp;gt;入力-&amp;gt;追加の依存ファイル DLLをビルド時にコピー 構成プロパティ-&amp;gt;ビルドイベント-&amp;gt;ビルド後のイベント-&amp;gt;コマンドライン ※サンプルソースコードではプラットフォームをWin32に設定しているので注意
 ゲームプログラミング ゲームループとゲームクラス ゲームループ（game loop）は、ゲームプログラム全体の流れを制御するループである
 シングルスレッドのゲームループに対して、マルチスレッドのゲームループは複雑になる
@@ -79,7 +89,8 @@ Game::Shutdown() SDL_DestroyWindow()関数を使ってSDL_Windowを破棄する
 SDL_Quit()でSDLを終わらせる
 メイン関数 main.cpp どんなC++プログラムでも入り口はmain関数である
 最初にGameクラスのインスタンスを作る
-ゲームを初期化（game.Initialize()）出来たら、game.RunLoop()を呼び出してゲームループに入る</description>
+ゲームを初期化（game.Initialize()）出来たら、game.RunLoop()を呼び出してゲームループに入る
+ループが終わったらgame.Shutdown()を呼び出してゲームを終わらせる</description>
     </item>
     
     <item>
