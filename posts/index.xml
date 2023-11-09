@@ -6,7 +6,16 @@
     <description>Recent content in Posts on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Sat, 04 Nov 2023 15:14:20 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 09 Nov 2023 20:57:20 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OpenCVについてのメモ [Memo #004]</title>
+      <link>https://nishihi6.github.io/blog/posts/memo_opencv_01/</link>
+      <pubDate>Thu, 09 Nov 2023 20:57:20 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/memo_opencv_01/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>GameDev #3 ベクトルと物理法則 [Devlog #016]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_gl_03/</link>
