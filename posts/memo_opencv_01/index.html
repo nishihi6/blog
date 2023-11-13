@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-11-09",
         "description": "",
-        "wordCount":  19 ,
+        "wordCount":  234 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-11-09",
         "image": {
@@ -193,6 +193,7 @@ stroke-linejoin="round" class="feather feather-home">
       <ul>
         <li><a href="#opencvopen-source-computer-vision-library">OpenCV（Open Source Computer Vision Library）</a></li>
         <li><a href="#opencvをvisual-studio2022で利用する">OpenCVをVisual Studio2022で利用する</a></li>
+        <li><a href="#簡単な2値化処理">簡単な2値化処理</a></li>
       </ul>
     </li>
   </ul>
@@ -212,7 +213,58 @@ stroke-linejoin="round" class="feather feather-home">
 <h3 id="opencvをvisual-studio2022で利用する">OpenCVをVisual Studio2022で利用する</h3>
 <p>以下のサイトを参考にOpenCVをダウンロード＆インストールし、Visual Studio2022のプロジェクトを設定する</p>
 <p><a href="https://qiita.com/h-adachi/items/aad3401b8900438b2acd">https://qiita.com/h-adachi/items/aad3401b8900438b2acd</a></p>
-
+<h3 id="簡単な2値化処理">簡単な2値化処理</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 引数チェック
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">if</span><span class="p">(</span><span class="n">argc</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Usage: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &lt;input_image_path&gt; &lt;output_directory&gt;&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 画像をカラーで読み込む
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">src</span> <span class="o">=</span> <span class="n">cv</span><span class="o">::</span><span class="n">imread</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">cv</span><span class="o">::</span><span class="n">IMREAD_COLOR</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="n">src</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Error: Could not open or find the image!&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// グレースケール変換
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">gray</span><span class="p">(</span><span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="p">,</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">CV_8UC1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">src</span><span class="p">.</span><span class="n">rows</span><span class="p">;</span> <span class="n">y</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">src</span><span class="p">.</span><span class="n">cols</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">cv</span><span class="o">::</span><span class="n">Vec3b</span> <span class="n">pixel</span> <span class="o">=</span> <span class="n">src</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">cv</span><span class="o">::</span><span class="n">Vec3b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">uchar</span> <span class="n">grayscale</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(</span><span class="mf">0.3</span> <span class="o">*</span> <span class="n">pixel</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.59</span> <span class="o">*</span> <span class="n">pixel</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.11</span> <span class="o">*</span> <span class="n">pixel</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span> <span class="c1">// RGB to Grayscale
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">gray</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="n">grayscale</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 単純2値化
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">dst</span> <span class="o">=</span> <span class="n">gray</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">uchar</span> <span class="n">threshold</span> <span class="o">=</span> <span class="mi">128</span><span class="p">;</span> <span class="c1">// 閾値
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">gray</span><span class="p">.</span><span class="n">rows</span><span class="p">;</span> <span class="n">y</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">gray</span><span class="p">.</span><span class="n">cols</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">dst</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">gray</span><span class="p">.</span><span class="n">at</span><span class="o">&lt;</span><span class="n">uchar</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span> <span class="o">?</span> <span class="mi">255</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 画像を保存するパスを生成
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">inputFileName</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">size_t</span> <span class="n">lastSlash</span> <span class="o">=</span> <span class="n">inputFileName</span><span class="p">.</span><span class="n">find_last_of</span><span class="p">(</span><span class="s">&#34;/</span><span class="se">\\</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">outputFilePath</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="s">&#34;/&#34;</span> <span class="o">+</span> <span class="p">(</span><span class="n">lastSlash</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span> <span class="o">?</span> <span class="n">inputFileName</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="n">lastSlash</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">:</span> <span class="n">inputFileName</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 画像を保存
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">cv</span><span class="o">::</span><span class="n">imwrite</span><span class="p">(</span><span class="n">outputFilePath</span><span class="p">,</span> <span class="n">dst</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Error: Could not save the image to &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">outputFilePath</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Processed image saved to &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">outputFilePath</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
             </div>
         </article></main>
 </div>

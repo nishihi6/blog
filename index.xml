@@ -22,7 +22,8 @@ OpenCVとは OpenCV（Open Source Computer Vision Library） オープンソー�
 機械学習：k-最近傍アルゴリズム、サポートベクターマシン、人工ニューラルネットワークなどのアルゴリズムをサポート
 ビデオ分析：ビデオのキャプチャ、ビデオファイルからのフレームの抽出、背景差分法など
 OpenCVをVisual Studio2022で利用する 以下のサイトを参考にOpenCVをダウンロード＆インストールし、Visual Studio2022のプロジェクトを設定する
-https://qiita.com/h-adachi/items/aad3401b8900438b2acd</description>
+https://qiita.com/h-adachi/items/aad3401b8900438b2acd
+簡単な2値化処理 #include &amp;lt;iostream&amp;gt; #include &amp;lt;opencv2/opencv.hpp&amp;gt; int main(int argc, char** argv) { // 引数チェック if(argc != 3) { std::cout &amp;lt;&amp;lt; &amp;#34;Usage: &amp;#34; &amp;lt;&amp;lt; argv[0] &amp;lt;&amp;lt; &amp;#34; &amp;lt;input_image_path&amp;gt; &amp;lt;output_directory&amp;gt;&amp;#34; &amp;lt;&amp;lt; std::endl; return -1; } // 画像をカラーで読み込む cv::Mat src = cv::imread(argv[1], cv::IMREAD_COLOR); if(src.empty()) { std::cerr &amp;lt;&amp;lt; &amp;#34;Error: Could not open or find the image!&amp;#34; &amp;lt;&amp;lt; std::endl; return -1; } // グレースケール変換 cv::Mat gray(src.</description>
     </item>
     
     <item>
