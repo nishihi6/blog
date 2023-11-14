@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-11-04",
         "description": "",
-        "wordCount":  206 ,
+        "wordCount":  301 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-11-04",
         "image": {
@@ -213,6 +213,20 @@ stroke-linejoin="round" class="feather feather-home">
         <li><a href="#ニュートン物理学">ニュートン物理学</a>
           <ul>
             <li><a href="#質点の力学の概要">質点の力学の概要</a></li>
+            <li><a href="#オイラー積分で位置を計算する">オイラー積分で位置を計算する</a></li>
+            <li><a href="#可変タイムステップの問題点">可変タイムステップの問題点</a></li>
+          </ul>
+        </li>
+        <li><a href="#円と円の交差">円と円の交差</a>
+          <ul>
+            <li><a href="#circlecomponent派生クラスを作る">CircleComponent派生クラスを作る</a></li>
+          </ul>
+        </li>
+        <li><a href="#ゲームプロジェクト">ゲームプロジェクト</a>
+          <ul>
+            <li><a href="#小惑星と宇宙船との衝突">小惑星と宇宙船との衝突</a></li>
+            <li><a href="#ニュートン物理学の実装">ニュートン物理学の実装</a></li>
+            <li><a href="#レーザーオブジェクトの作成処理">レーザーオブジェクトの作成処理</a></li>
           </ul>
         </li>
       </ul>
@@ -343,6 +357,63 @@ $$</p>
 <p>このコードで扱うのは、ニュートン物理学の分野のうち、回転しない運動の<strong>質点の力学</strong>のみを考慮する</p>
 <p>より複雑なニュートン物理学についての議論は<a href="https://www.amazon.co.jp/Game-Physics-Engine-Development-Commercial-Grade/dp/0123819768">参考文献：Game Physics Engine Development</a>を参照</p>
 <h4 id="質点の力学の概要">質点の力学の概要</h4>
+<p>質点の力学に必要不可欠な2つの要素が<strong>力</strong>と<strong>質量</strong>であり、それぞれベクトルとスカラーで表される</p>
+<p><strong>運動の第２法則</strong>に従うと、力は質量と加速度の積に等しい</p>
+<p>$$
+F = m\cdot a
+$$</p>
+<p>ゲームに必要なのは、物体に力をかけて、その力から加速度を割り出すこと</p>
+<p>これを離散的な時間間隔（デルタタイム）で計算し、<strong>数値積分</strong>（積分の近似）を行う</p>
+<h4 id="オイラー積分で位置を計算する">オイラー積分で位置を計算する</h4>
+<p>重力などはフレームに共通した一定の力だが、<strong>撃力（impulse）</strong>は1フレームだけにかかる力である</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// 加速度 = 力の合計 / 質量
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">accelaration</span> <span class="o">=</span> <span class="n">sumOfForces</span> <span class="o">/</span> <span class="n">mass</span><span class="p">;</span>
+</span></span></code></pre></div><p>以下のように、力・加速度・速度・位置をすべてベクトルで計算することができる</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// 半陰的オイラー積分（修正されたオイラー法）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">velocity</span> <span class="o">+=</span> <span class="n">acceleration</span> <span class="o">*</span> <span class="n">deltaTime</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">position</span> <span class="o">+=</span> <span class="n">velocity</span> <span class="o">*</span> <span class="n">deltaTime</span><span class="p">;</span>
+</span></span></code></pre></div><h4 id="可変タイムステップの問題点">可変タイムステップの問題点</h4>
+<p>可変フレーム時間（タイムステップ）は、物理シミュレーションを使うゲームで問題を起こすことがある</p>
+<p>フレームごとにフレームレートが変化すると、数値積分の精度も変化する</p>
+<p>例えば、フレームレートが低いほど加速度の減少が遅れ、ジャンプできる距離が大きくなる</p>
+<p>そのため、フレーム制限のアプローチや、長いタイムステップを複数の固定サイズのタイムステップに分割するアプローチによって対策する</p>
+<h3 id="円と円の交差">円と円の交差</h3>
+<p>交差判定をするには、まず2つの円の中心を結ぶベクトルを作り、そのベクトルの大きさを算出する</p>
+<p>次に、その距離を2つの円の半径の和と比較する</p>
+<h4 id="circlecomponent派生クラスを作る">CircleComponent派生クラスを作る</h4>
+<h5 id="circlecomponenth">CircleComponent.h</h5>
+<p>Component派生クラスとして衝突検知を行う</p>
+<p>円の中心位置はこのコンポーネントを所有するアクターに依存しているので、メンバデータは半径だけである</p>
+<h5 id="circlecomponentcpp">CircleComponent.cpp</h5>
+<h5 id="circlecomponentcirclecomponent">CircleComponent::CircleComponent()</h5>
+<h5 id="intersect">Intersect()</h5>
+<p>2つのCircleComponentを参照の形で受け取るグローバルな関数</p>
+<p>2つの円が交差すると<code>true</code>を返す</p>
+<h5 id="asteroidcpp-1">Asteroid.cpp</h5>
+<h5 id="asteroidasteroid">Asteroid::Asteroid()</h5>
+<p>1個の<code>CircleComponent</code>を<code>Asteroid</code>オブジェクトに追加する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Create a circle component (for collision)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">mCircle</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CircleComponent</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">mCircle</span><span class="o">-&gt;</span><span class="n">SetRadius</span><span class="p">(</span><span class="mf">40.0f</span><span class="p">);</span>
+</span></span></code></pre></div><h5 id="gameh">Game.h</h5>
+<p><code>Asteroid</code>ポインタ群の配列（std::vector）を追加</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">Asteroid</span><span class="o">*&gt;&amp;</span> <span class="n">GetAsteroids</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">mAsteroids</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">Asteroid</span><span class="o">*&gt;</span> <span class="n">mAsteroids</span><span class="p">;</span>
+</span></span></code></pre></div><h5 id="laserh">laser.h</h5>
+<h5 id="lasercpp">laser.cpp</h5>
+<h5 id="laserupdateactor">Laser::UpdateActor()</h5>
+<p>小惑星それぞれに対する交差テストを実行する</p>
+<p><code>GetCircle()</code>関数は、その小惑星の<code>CircleComponent</code>へのポイントを返すpublicなメンバ関数である</p>
+<h3 id="ゲームプロジェクト">ゲームプロジェクト</h3>
+<h4 id="小惑星と宇宙船との衝突">小惑星と宇宙船との衝突</h4>
+<h4 id="ニュートン物理学の実装">ニュートン物理学の実装</h4>
+<h4 id="レーザーオブジェクトの作成処理">レーザーオブジェクトの作成処理</h4>
+<p>クールダウンを導入して、1/2秒に1回だけレーザーを発射できるようにする</p>
+<h5 id="shiph">Ship.h</h5>
+<h5 id="shipcpp">Ship.cpp</h5>
+<h5 id="shipactorinput">Ship::ActorInput()</h5>
 
             </div>
         </article></main>
