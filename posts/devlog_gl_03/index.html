@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-11-04",
         "description": "",
-        "wordCount":  301 ,
+        "wordCount":  308 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-11-04",
         "image": {
@@ -408,12 +408,20 @@ $$</p>
 <p><code>GetCircle()</code>関数は、その小惑星の<code>CircleComponent</code>へのポイントを返すpublicなメンバ関数である</p>
 <h3 id="ゲームプロジェクト">ゲームプロジェクト</h3>
 <h4 id="小惑星と宇宙船との衝突">小惑星と宇宙船との衝突</h4>
+<p>()</p>
 <h4 id="ニュートン物理学の実装">ニュートン物理学の実装</h4>
+<p>()</p>
 <h4 id="レーザーオブジェクトの作成処理">レーザーオブジェクトの作成処理</h4>
 <p>クールダウンを導入して、1/2秒に1回だけレーザーを発射できるようにする</p>
-<h5 id="shiph">Ship.h</h5>
+<h5 id="shiphactorクラスを継承">Ship.h（Actorクラスを継承）</h5>
 <h5 id="shipcpp">Ship.cpp</h5>
 <h5 id="shipactorinput">Ship::ActorInput()</h5>
+<p>float型のメンバ変数<code>mLaserCooldown</code>を<code>0.0f</code>で初期化し、&ldquo;スペースキーが押されている&quot;かつ&rdquo;<code>mLaserCooldown</code>が<code>0</code>以下&quot;であるかによってレーザーの発射を実行する</p>
+<p>条件が満たされている場合、レーザーを作り、その位置と無機を宇宙船に合わせて、<code>mLaserCooldown</code>を<code>0.5f</code>に設定する</p>
+<h5 id="shipupdateactor">Ship::UpdateActor()</h5>
+<p><code>mLaserCooldown</code>をデルタタイムだけ減らす</p>
+<p><br><br>
+<code>Laser</code>は一定時間後に強制的に消去する</p>
 
             </div>
         </article></main>
