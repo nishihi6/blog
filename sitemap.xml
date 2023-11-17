@@ -2,13 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://nishihi6.github.io/blog/</loc>
-    <lastmod>2023-11-09T20:57:20+09:00</lastmod>
+    <loc>https://nishihi6.github.io/blog/posts/devlog_gl_04/</loc>
+    <lastmod>2023-11-17T23:52:09+09:00</lastmod>
   </url><url>
-    <loc>https://nishihi6.github.io/blog/posts/memo_opencv_01/</loc>
-    <lastmod>2023-11-09T20:57:20+09:00</lastmod>
+    <loc>https://nishihi6.github.io/blog/</loc>
+    <lastmod>2023-11-17T23:52:09+09:00</lastmod>
   </url><url>
     <loc>https://nishihi6.github.io/blog/posts/</loc>
+    <lastmod>2023-11-17T23:52:09+09:00</lastmod>
+  </url><url>
+    <loc>https://nishihi6.github.io/blog/posts/memo_opencv_01/</loc>
     <lastmod>2023-11-09T20:57:20+09:00</lastmod>
   </url><url>
     <loc>https://nishihi6.github.io/blog/posts/devlog_gl_03/</loc>
