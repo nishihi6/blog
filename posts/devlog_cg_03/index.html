@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-09-29",
         "description": "",
-        "wordCount":  59 ,
+        "wordCount":  506 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-09-29",
         "image": {
@@ -244,11 +244,170 @@ $$
 k\textbf{f}(\textbf{x}) = \textbf{f}(k\textbf{x})
 $$
 これが満たされれば線形であるといえる</p>
-<p><strong>スケール変換</strong>や<strong>回転変換</strong>など、3要素ベクトルに対するすべての線形変換は3×3行列で表せる</p>
-<p>3要素ベクトル $\textbf{x}$ への写像 $\textbf{f}(\textbf{x}) = \textbf{x} + (7, 3, 2)$ のような<strong>平行移動</strong>は線形ではない</p>
+<p><strong>スケール変換</strong>や<strong>回転変換</strong>など、3要素ベクトルに対するすべての線形変換は3×3行列で表せる
+<br>線形変換は原点を不動点とする変換であり、原点は変換されずにそのままの位置に残る</p>
+<p>3要素ベクトル $\textbf{x}$ への写像 $\textbf{f}(\textbf{x}) = \textbf{x} + (7, 3, 2)$ のような<strong>平行移動</strong>は線形ではない
+<br>平行移動は、原点の位置が変わるという特性がある</p>
+<p>線形変換と平行移動の結合は、一般に4×4行列で格納される<strong>アフィン変換</strong>を使って表す</p>
+<p><strong>同次表記</strong>は点と方向（ベクトル）を同じ形式で扱うことを可能にする</p>
+<p>同次座標系では、 $n$ 次元空間における点を $n+1$ に拡張し、例えば3次元点 $(x,y,z)$ はベクトル $(x,y,z,1)$ と表現する</p>
+<p>$$
+\textbf{v} =
+\begin{pmatrix}
+x &amp; y &amp; z &amp; 1\
+\end{pmatrix}^T
+$$</p>
+<p>方向（ベクトル）についても、$n$ 次元空間であれば $n+1$ に拡張し、3次元ベクトル $(v_x,v_y,v_z)$ はベクトル $(v_x,v_y,v_z,0)$ と表現する</p>
+<p>$$
+\textbf{v} =
+\begin{pmatrix}
+v_x &amp; v_y &amp; v_z &amp; 0\
+\end{pmatrix}^T
+$$</p>
+<p>ここでの $0$ は、ベクトルが原点に固定されないことを示す</p>
 <h2 id="基本的な変換">基本的な変換</h2>
 <h3 id="平行移動">平行移動</h3>
+<p>ある位置から別の位置への移動変化は ベクトル $\textbf{t}=(t_x,t_y,t_z)$ を用いて平行移動行列 $\textbf{T}$ で表される
+$$
+\textbf{T}(\textbf{t}) = \textbf{T}(t_x,t_y,t_z)
+=\begin{pmatrix}
+1 &amp; 0 &amp; 0 &amp; t_x \\\
+0 &amp; 1 &amp; 0 &amp; t_y \\\
+0 &amp; 0 &amp; 1 &amp; t_z \\\
+0 &amp; 0 &amp; 0 &amp; 1
+\end{pmatrix}
+$$
+点 $\textbf{p}$ の平行移動の例：
+$$
+\text{新しい点}
+\textbf{p}^\prime
+=\textbf{T}(\textbf{t})\textbf{p}
+=\begin{pmatrix}
+1 &amp; 0 &amp; 0 &amp; t_x \\\
+0 &amp; 1 &amp; 0 &amp; t_y \\\
+0 &amp; 0 &amp; 1 &amp; t_z \\\
+0 &amp; 0 &amp; 0 &amp; 1
+\end{pmatrix}
+\begin{pmatrix}
+p_x \\\
+p_y \\\
+p_z \\\
+1
+\end{pmatrix}
+=\begin{pmatrix}
+p_x+t_x \\\
+p_y+t_y \\\
+p_z+t_z \\\
+1
+\end{pmatrix}
+$$</p>
+<p>平行移動行列の逆行列は $\textbf{T}^{-1}(\textbf{t})=\textbf{T}(-\textbf{t})$ となり、ベクトル $\textbf{t}$ の符号反転になる</p>
+<p>行列をメモリに格納する際の配置は表記法によって異なり、ここでは変換の順序が<strong>左から右</strong>になる<strong>列優先</strong>形式で表されている（OpenGLはこれ）（平行移動ベクトルが最右列）</p>
+<p>一方、DirectXなどは<strong>右から左</strong>の順序で変換する<strong>行優先</strong>形式が使われる（平行移動ベクトルが最下行）
+$$
+\text{新しい点}
+\textbf{p}^\prime
+=\textbf{p}\textbf{T}(\textbf{t})
+=\begin{pmatrix}
+p_x &amp; p_y &amp; p_z &amp; 1
+\end{pmatrix}
+\begin{pmatrix}
+1 &amp; 0 &amp; 0 &amp; 0 \\\
+0 &amp; 1 &amp; 0 &amp; 0 \\\
+0 &amp; 0 &amp; 1 &amp; 0 \\\
+t_x &amp; t_y &amp; t_z &amp; 1
+\end{pmatrix}
+$$
+$$
+=\begin{pmatrix}
+p_x+t_x &amp; p_y+t_y &amp; p_z+t_z &amp; 1
+\end{pmatrix}
+$$</p>
+<p>以降、列優先（OpenGLと同じ形式）を考慮する</p>
 <h3 id="回転">回転</h3>
+<p>回転変換は、ベクトル（位置や方向）を<strong>与えられた原点を通る軸</strong>の周りに<strong>与えられた角度</strong>で回転する</p>
+<p>平行移動行列と同様に<strong>剛体変換</strong>である（点の間の距離と座標系の向きを保存する）</p>
+<p><strong>姿勢行列</strong>は、空間中の姿勢（カメラビューやオブジェクトの上と前の方向）を定義する回転行列である</p>
+<p>2次元空間において、ベクトル $\textbf{v}=(v_x,v_y)$ があるとすると、
+$$
+\textbf{v}=(v_x,v_y)=(rcos(\theta),rsin(\theta))
+$$
+とパラメータ化できる</p>
+<p>このベクトルを反時計回りに $\phi$ ラジアン回転することを考えると、
+$$
+\textbf{u}
+=\begin{pmatrix}
+rcos(\theta+\phi) \\\
+rsin(\theta+\phi)
+\end{pmatrix}
+=\begin{pmatrix}
+r(cos\theta cos\phi-sin\theta sin\phi) \\\
+r(sin\theta cos\phi+cos\theta sin\phi)
+\end{pmatrix}
+$$
+$$
+=\begin{pmatrix}
+cos\phi &amp; -sin\phi \\\
+sin\phi &amp; cos\phi
+\end{pmatrix}
+\begin{pmatrix}
+rcos\theta \\\
+rsin\theta
+\end{pmatrix}
+=\textbf{R}(\phi)\textbf{v}
+$$
+と、うまいこと行列の計算に変換できる</p>
+<p>これを3次元空間に拡張すると、 $x$ 軸、 $y$ 軸、 $z$ 軸の周りに $\phi$ ラジアン回転する回転行列を $\textbf{R}_x(\phi)$ 、 $\textbf{R}_y(\phi)$ 、 $\textbf{R}_z(\phi)$ と表すことができる</p>
+<p>$$
+\textbf{R}_x(\phi)
+=\begin{pmatrix}
+1 &amp; 0 &amp; 0 &amp; 0 \\\
+0 &amp; cos\phi &amp; -sin\phi &amp; 0 \\\
+0 &amp; sin\phi &amp; cos\phi &amp; 0 \\\
+0 &amp; 0 &amp; 0 &amp; 1
+\end{pmatrix}
+$$
+$$
+\textbf{R}_y(\phi)
+=\begin{pmatrix}
+cos\phi &amp; 0 &amp; sin\phi &amp; 0 \\\
+0 &amp; 1 &amp; 0 &amp; 0 \\\
+-sin\phi &amp; 0 &amp; cos\phi &amp; 0 \\\
+0 &amp; 0 &amp; 0 &amp; 1
+\end{pmatrix}
+$$
+$$
+\textbf{R}_z(\phi)
+=\begin{pmatrix}
+cos\phi &amp; -sin\phi &amp; 0 &amp; 0 \\\
+sin\phi &amp; cos\phi &amp; 0 &amp; 0 \\\
+0 &amp; 0 &amp; 1 &amp; 0 \\\
+0 &amp; 0 &amp; 0 &amp; 1
+\end{pmatrix}
+$$</p>
+<p>最下行と最右列を削った3×3行列 $\textbf{R}$ のトレースは回転の角度 $\phi$ に関連している（剛体の回転運動の解析に使える）
+$$
+\textbf{R}
+=\begin{pmatrix}
+r_{11} &amp; r_{12} &amp; r_{13} \\\
+r_{21} &amp; r_{22} &amp; r_{23} \\\
+r_{31} &amp; r_{32} &amp; r_{33}
+\end{pmatrix},
+\quad tr(\textbf{R})=r_{11} + r_{22} + r_{33} = 1+2cos\phi
+$$</p>
+<p>回転行列は直交し、行列式は1となる（回転変換をいくつ連結しても成り立つ）</p>
+<p>回転行列の逆行列は、 $\textbf{R}_i^{-1}(\phi)=\textbf{R}_i(-\phi)$ となり、同じ軸での反対方向の回転となる</p>
+<br>
+【点の周りの回転の例】
+<p>点 $\textbf{p}$ を回転の中心として、オブジェクトを $z$ 軸周りで $\phi$ ラジアン回転させる
+$$
+\textbf{X}=\textbf{T}(\textbf{p})\textbf{R}_z(\phi)\textbf{T}(-\textbf{p})
+$$</p>
+<ol>
+<li>$\textbf{p}$ が原点と一致するように平行移動 $\textbf{T}(-\textbf{p})$</li>
+<li>回転 $\textbf{R}_z(\phi)$</li>
+<li>元の位置に平行移動で戻す $\textbf{T}(\textbf{p})$</li>
+</ol>
 <h3 id="拡大縮小スケール">拡大縮小（スケール）</h3>
 <h3 id="せん断">せん断</h3>
 <h3 id="変換の連結">変換の連結</h3>
