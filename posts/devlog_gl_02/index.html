@@ -240,7 +240,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>コンポーネント（構成要素）をベースとするゲームオブジェクトモデル</p>
 <p>Unityが採用しているモデルである</p>
 <p>1つのゲームオブジェクトクラスがあるが派生クラスを持たず、代わりに必要な機能を実装するコンポーネントオブジェクトを持つ（has-a関係）</p>
-<p>このモデルを実装する方法の1つは、コンポーネントに暮らす階層構造を使う手法</p>
+<p>このモデルを実装する方法の1つは、コンポーネントにクラス階層構造を使う手法</p>
 <p>GameObjectに含まれるのは、コンポーネントを追加（Add）・削除（Remove）する関数だけである</p>
 <p>必要とする機能だけを追加しやすいという長所がある</p>
 <p>同じゲームオブジェクトにあるコンポーネント間の依存関係が明らかではないという欠点がある</p>
@@ -327,7 +327,7 @@ stroke-linejoin="round" class="feather feather-home">
 <h5 id="animspritecomponenth">AnimSpriteComponent.h</h5>
 <p>スプライトアニメーションの実現には、各フレームに対応する画像を配列に格納する</p>
 <p><code>mAnimFPS</code>変数は、異なるフレームレートでスプライトアニメーションを再生させるために利用できる</p>
-<p><code>mCurrFrame</code>変数は、現在んおアニメーションを表示している期間を追跡管理できる</p>
+<p><code>mCurrFrame</code>変数は、現在のアニメーションを表示している期間を追跡管理できる</p>
 <h5 id="animspritecomponentcpp">AnimSpriteComponent.cpp</h5>
 <h5 id="animspritecomponentsetanimtextures">AnimSpriteComponent::SetAnimTextures()</h5>
 <p>渡された配列をメンバ変数<code>mAnimTextures</code>に設定し、<code>mCurrFrame</code>を0にリセットする</p>
