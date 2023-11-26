@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ja-jp"><head><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">CG×ML #4 Neural Radiance Fields [Devlog #018] | nishihi6</title>
+<meta property="og:title" content="CG×ML #4 Neural Radiance Fields [Devlog #018] | nishihi6" />
+<meta name="twitter:title" content="CG×ML #4 Neural Radiance Fields [Devlog #018] | nishihi6" />
+<meta itemprop="name" content="CG×ML #4 Neural Radiance Fields [Devlog #018] | nishihi6" />
+<meta name="application-name" content="CG×ML #4 Neural Radiance Fields [Devlog #018] | nishihi6" />
+<meta property="og:site_name" content="nishihi6" />
+
+<meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
+<meta itemprop="description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta property="og:description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta name="twitter:description" content="Minimal Hugo blog theme with light and dark mode support" />
+
+<meta property="og:locale" content="ja-jp" />
+<meta name="language" content="ja-jp" />
+
+
+
+  <meta itemprop="image" content="https://nishihi6.github.io/blog/" />
+  <meta property="og:image" content="https://nishihi6.github.io/blog/" />
+  <meta name="twitter:image" content="https://nishihi6.github.io/blog/" />
+  <meta name="twitter:image:src" content="https://nishihi6.github.io/blog/" />
+
+
+
+
+    
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2023-11-26T00:34:48&#43;0900 />
+    <meta property="article:published_time" content=2023-11-26T00:34:48&#43;0900 />
+
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "CG×ML #4 Neural Radiance Fields [Devlog #018]",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2023-11-26",
+        "description": "",
+        "wordCount":  148 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2023-11-26",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "nishihi6"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.117.0">
+
+    
+
+    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/devlog_cg-ml_04/">
+    <link href="/blog/style.min.840eada6dfddec7b8ccfcf867f039bf80b1f16a265ec6e01dc553a3dddc9d509.css" rel="stylesheet">
+    <link href="/blog/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/blog/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/blog/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/blog/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/blog/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/blog/favicon.ico">
+
+
+
+
+<link rel="manifest" href="https://nishihi6.github.io/blog/site.webmanifest">
+
+<meta name="msapplication-config" content="/blog/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/blog/icons/favicon.svg">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"
+    integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous" />
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"
+    integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4"
+    crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"
+    integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false}
+      ]
+    });"></script>
+
+    </head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/blog/js/theme.min.8961c317c5b88b953fe27525839672c9343f1058ab044696ca225656c8ba2ab0.js" integrity="sha256-iWHDF8W4i5U/4nUlg5ZyyTQ/EFirBEaWyiJWVsi6KrA="></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="https://nishihi6.github.io/blog/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/blog/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/blog/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/blog/pages/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">CG×ML #4 Neural Radiance Fields [Devlog #018]</h1>
+                
+                
+                <div class="post-meta">
+                    <time datetime="2023-11-26T00:34:48&#43;09:00" itemprop="datePublished"> 26 Nov 2023 </time>
+                </div>
+                
+            </header>
+            <details class="toc">
+                <summary><b>Table of Contents</b></summary>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#ボリュームベースのレンダリング">ボリュームベースのレンダリング</a>
+      <ul>
+        <li><a href="#レンダリング方式">レンダリング方式</a>
+          <ul>
+            <li><a href="#メッシュベース">メッシュベース</a></li>
+            <li><a href="#ボリュームベース">ボリュームベース</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#structure-from-motionsfmによるカメラ姿勢推定">Structure from Motion（SfM）によるカメラ姿勢推定</a>
+      <ul>
+        <li><a href="#特徴点の抽出とマッチング">特徴点の抽出とマッチング</a></li>
+        <li><a href="#カメラ姿勢の推定">カメラ姿勢の推定</a></li>
+        <li><a href="#mvsとの連携によるフォトグラメトリ参考">MVSとの連携によるフォトグラメトリ（参考）</a></li>
+      </ul>
+    </li>
+    <li><a href="#ライトフィールドとライトフィールドフォトグラフィー">ライトフィールドとライトフィールドフォトグラフィー</a></li>
+    <li><a href="#ディープラーニングとニューラルネットワーク">ディープラーニングとニューラルネットワーク</a></li>
+    <li><a href="#nerf">NeRF</a>
+      <ul>
+        <li><a href="#nerf論文">NeRF論文</a>
+          <ul>
+            <li><a href="#1概要と導入">1.概要と導入</a></li>
+            <li><a href="#2技術的貢献">2.技術的貢献</a></li>
+            <li><a href="#3関連研究">3.関連研究</a></li>
+            <li><a href="#4ニューラル放射場の表現とボリュームレンダリング">4.ニューラル放射場の表現とボリュームレンダリング</a></li>
+            <li><a href="#5nerfの最適化">5.NeRFの最適化</a></li>
+            <li><a href="#6実装の詳細と結果">6.実装の詳細と結果</a></li>
+            <li><a href="#7結論">7.結論</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+            </details><div class="page-content">
+                <h1 id="nerfneural-radiance-fields">NeRF(Neural Radiance Fields)</h1>
+<h2 id="ボリュームベースのレンダリング">ボリュームベースのレンダリング</h2>
+<hr>
+<h3 id="レンダリング方式">レンダリング方式</h3>
+<hr>
+<h4 id="メッシュベース">メッシュベース</h4>
+<hr>
+<h5 id="ラスタライゼーション">ラスタライゼーション</h5>
+<p>3Dモデルのポリゴン（通常は三角形）を個々に処理する</p>
+<p>ポリゴンはカメラ（ビューポート）に基づいて2D画面に投影される</p>
+<p>投影されたポリゴンは、スクリーン上のピクセルにマッピングされる（ポリゴンの各頂点の色、テクスチャ座標、その他の属性が考慮される）</p>
+<p>ピクセルに色を割り当てるために、シェーディングアルゴリズム（例えばフォンシェーディング）が用いられる</p>
+<h5 id="レイトレーシング">レイトレーシング</h5>
+<p>視点（カメラ）からシーン内の各ピクセルに向けて光線（レイ）を発射する</p>
+<p>これらの光線がシーン内のオブジェクト（ポリゴンメッシュ）と交差するかどうかを計算する</p>
+<p>光線がオブジェクトに当たると、反射、屈折、影など、光のさまざまな物理的挙動を計算する</p>
+<p>最終的なピクセルの色と明るさは、交差したポイントでの光の挙動と物質の特性に基づいて計算する</p>
+<p><a href="https://blogs.nvidia.co.jp/2018/03/26/whats-difference-between-ray-tracing-rasterization/">参考：レイトレーシングとラスタライズの違い - NVIDIA</a></p>
+<h4 id="ボリュームベース">ボリュームベース</h4>
+<hr>
+<h5 id="直接ボリュームレンダリングdirect-volume-rendering-dvr">直接ボリュームレンダリング（Direct Volume Rendering, DVR）</h5>
+<p>ボリュームデータセット全体が直接画像に変換される</p>
+<p>透過率や色をデータ値に基づいて割り当て、複数の値を積み重ねて最終的な画像を生成する</p>
+<p>医療画像（CTやMRIスキャンなど）の3D可視化に広く用いられる</p>
+<h5 id="レイキャスティングray-casting">レイキャスティング（Ray Casting）</h5>
+<p>ビューワーからボリュームデータを通してレイ（光線）を投射し、その経路上のデータをサンプリングして画像を生成する</p>
+<p>高品質な画像を生成することができますが、計算コストが高い</p>
+<h5 id="スプラットティングsplatting">スプラットティング（Splatting）</h5>
+<p>ボリュームデータセット内の各データポイントから画像平面上に「スプラット」と呼ばれる影響領域を投影する方法</p>
+<h5 id="テクスチャベースボリュームレンダリング">テクスチャベースボリュームレンダリング</h5>
+<p>ボリュームデータを視覚化するために3Dテクスチャマッピング技術を利用する手法</p>
+<p>3D空間内で定義された一連の平面（または他の形状）をボリュームデータを通過するように配置して、各平面はテクスチャから対応するデータスライスをサンプリングする</p>
+<h5 id="isoサーフェスレンダリング">ISOサーフェスレンダリング</h5>
+<p>ボリュームデータ内で特定の値を持つ表面（ISOサーフェス）を抽出し、その表面のみをレンダリングする</p>
+<p>抽出されたサーフェスは通常、「マーチングキューブス」アルゴリズムなどの手法を用いてポリゴンメッシュ（多くの場合は三角形のメッシュ）に変換される</p>
+<h5 id="マルチモーダルレンダリング">マルチモーダルレンダリング</h5>
+<p>異なる種類のデータソース（例えば、CTとMRIデータ）を組み合わせて、1つの統合された画像を生成する</p>
+<p>各モダリティのデータの長所を組み合わせることで、より包括的な可視化が可能</p>
+<h2 id="structure-from-motionsfmによるカメラ姿勢推定">Structure from Motion（SfM）によるカメラ姿勢推定</h2>
+<hr>
+<p>SfMは複数の2D画像から3D空間内のカメラの動き（姿勢）とシーンの構造を同時に推定する</p>
+<h3 id="特徴点の抽出とマッチング">特徴点の抽出とマッチング</h3>
+<hr>
+<p>複数の画像から特徴点（キーポイント）を抽出し、異なる画像間でこれらの点をマッチングする</p>
+<h3 id="カメラ姿勢の推定">カメラ姿勢の推定</h3>
+<hr>
+<p>画像間の特徴点の対応関係から、各画像に対応するカメラの姿勢（位置と方向）を推定する</p>
+<br>
+SfMではその他にも、3Dポイントクラウドの生成や最適化と精度向上を行う
+<h3 id="mvsとの連携によるフォトグラメトリ参考">MVSとの連携によるフォトグラメトリ（参考）</h3>
+<hr>
+<p>マルチビューステレオ（Multi-View Stereo, MVS）は、SfMで得られたカメラ姿勢情報を基に、複数の画像からより詳細な3Dシーンを再構築する技術である</p>
+<p>具体的には、複数の画像間でピクセルの一貫性を検証し、精密な3Dモデルを作成する</p>
+<p>得られた高密度ポイントクラウドから、滑らかなサーフェスモデルを作成できる</p>
+<p>これらSfMとMVSを連携して使用することがフォトグラメトリでは一般的となっている</p>
+<h2 id="ライトフィールドとライトフィールドフォトグラフィー">ライトフィールドとライトフィールドフォトグラフィー</h2>
+<hr>
+<h2 id="ディープラーニングとニューラルネットワーク">ディープラーニングとニューラルネットワーク</h2>
+<hr>
+<h2 id="nerf">NeRF</h2>
+<hr>
+<p>ボリュームベースのレイキャスティング方式のレンダリングを応用したものとして、NeRF（Neural Radiance Fields）がある</p>
+<p>ここではNeRF論文<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>を理解する
+<br><a href="https://www.matthewtancik.com/nerf">https://www.matthewtancik.com/nerf</a></p>
+<blockquote>
+<p>Ben Mildenhall and Pratul P. Srinivasan and Matthew Tancik and Jonathan T. Barron and Ravi Ramamoorthi and Ren Ng. 2020. NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis. ECCV.</p>
+</blockquote>
+<p>この論文では、複雑なシーンの新しいビューを合成するために、スパースな（実際の場所や物体の少ない）入力ビューを使用して連続的な体積シーン関数を最適化する（その場所や物体をあらゆる角度から見たかのような新しい画像を生成する）方法を提案している</p>
+<p>シーンを5Dニューラル放射場（NeRF）として表現し、この表現のために完全連結のディープネットワークを使用する</p>
+<h3 id="nerf論文">NeRF論文</h3>
+<hr>
+<h4 id="1概要と導入">1.概要と導入</h4>
+<p>新しいビュー合成のために、連続的な5Dシーン表現のパラメータを最適化する方法を提案</p>
+<p>3Dポイントのサンプリングと、それに基づく色と密度の出力を行い、これらを2D画像に統合する</p>
+<h4 id="2技術的貢献">2.技術的貢献</h4>
+<p>連続的なシーンを5Dニューラル放射場（NeRF）として表現</p>
+<p>標準RGB画像からNeRFを最適化するための可微分レンダリング手法</p>
+<p>入力5D座標を高次元空間にマッピングし、高周波数のシーンコンテンツを表現するための位置エンコーディング</p>
+<h4 id="3関連研究">3.関連研究</h4>
+<p>他のアプローチと比較し、より複雑なリアルなシーンのレンダリングに成功している</p>
+<h4 id="4ニューラル放射場の表現とボリュームレンダリング">4.ニューラル放射場の表現とボリュームレンダリング</h4>
+<p>シーンを5Dベクトル値関数として表現し、異なるビューポイントからの放射輝度を出力</p>
+<h4 id="5nerfの最適化">5.NeRFの最適化</h4>
+<p>高解像度の複雑なシーンを表現するための改善策として、位置エンコーディングと階層的ボリュームサンプリングを導入</p>
+<h4 id="6実装の詳細と結果">6.実装の詳細と結果</h4>
+<p>実験結果の提示と、他の手法との比較でNeRFの優位性を示す</p>
+<h4 id="7結論">7.結論</h4>
+<p>NeRFは従来のディープ畳み込みネットワークに基づくアプローチよりも優れたレンダリングを実現しており、さらなる最適化とレンダリング技術の研究が期待される</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Ben Mildenhall and Pratul P. Srinivasan and Matthew Tancik and Jonathan T. Barron and Ravi Ramamoorthi and Ren Ng. 2020. NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis. ECCV.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/nishihi6" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="https://www.facebook.com/profile.php?id=100034856812491" target="_blank" rel="noopener noreferrer me"
+    title="Facebook">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg>
+</a>
+<a href="https://twitter.com" target="_blank" rel="noopener noreferrer me"
+    title="X">
+    <svg viewBox="0 0 1200 1227" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"/>
+</svg>
+</a>
+<a href="https://connpass.com/user/nishihi6/" target="_blank" rel="noopener noreferrer me"
+    title="Connpass">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg>
+</a>
+<a href="http://www.igl.ise.shibaura-it.ac.jp/" target="_blank" rel="noopener noreferrer me"
+    title="Lab">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg>
+</a>
+<a href="index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2023 nishihi6.
+    </small>
+    
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+    
+    
+        
+    
+
+    
+    
+        
+    
+
+
+
+    
+    <script src="https://nishihi6.github.io/blog/js/main.min.35f435a5d8eac613c52daa28d8af544a4512337d3e95236e4a4978417b8dcb2f.js" integrity="sha256-NfQ1pdjqxhPFLaoo2K9USkUSM30&#43;lSNuSkl4QXuNyy8="></script>
+
+    
+
+</body>
+</html>

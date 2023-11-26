@@ -6,7 +6,46 @@
     <description>Recent content in Home on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Fri, 17 Nov 2023 23:52:09 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 26 Nov 2023 00:34:48 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CG×ML #4 Neural Radiance Fields [Devlog #018]</title>
+      <link>https://nishihi6.github.io/blog/posts/devlog_cg-ml_04/</link>
+      <pubDate>Sun, 26 Nov 2023 00:34:48 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/devlog_cg-ml_04/</guid>
+      <description>NeRF(Neural Radiance Fields) ボリュームベースのレンダリング レンダリング方式 メッシュベース ラスタライゼーション 3Dモデルのポリゴン（通常は三角形）を個々に処理する
+ポリゴンはカメラ（ビューポート）に基づいて2D画面に投影される
+投影されたポリゴンは、スクリーン上のピクセルにマッピングされる（ポリゴンの各頂点の色、テクスチャ座標、その他の属性が考慮される）
+ピクセルに色を割り当てるために、シェーディングアルゴリズム（例えばフォンシェーディング）が用いられる
+レイトレーシング 視点（カメラ）からシーン内の各ピクセルに向けて光線（レイ）を発射する
+これらの光線がシーン内のオブジェクト（ポリゴンメッシュ）と交差するかどうかを計算する
+光線がオブジェクトに当たると、反射、屈折、影など、光のさまざまな物理的挙動を計算する
+最終的なピクセルの色と明るさは、交差したポイントでの光の挙動と物質の特性に基づいて計算する
+参考：レイトレーシングとラスタライズの違い - NVIDIA
+ボリュームベース 直接ボリュームレンダリング（Direct Volume Rendering, DVR） ボリュームデータセット全体が直接画像に変換される
+透過率や色をデータ値に基づいて割り当て、複数の値を積み重ねて最終的な画像を生成する
+医療画像（CTやMRIスキャンなど）の3D可視化に広く用いられる
+レイキャスティング（Ray Casting） ビューワーからボリュームデータを通してレイ（光線）を投射し、その経路上のデータをサンプリングして画像を生成する
+高品質な画像を生成することができますが、計算コストが高い
+スプラットティング（Splatting） ボリュームデータセット内の各データポイントから画像平面上に「スプラット」と呼ばれる影響領域を投影する方法
+テクスチャベースボリュームレンダリング ボリュームデータを視覚化するために3Dテクスチャマッピング技術を利用する手法
+3D空間内で定義された一連の平面（または他の形状）をボリュームデータを通過するように配置して、各平面はテクスチャから対応するデータスライスをサンプリングする
+ISOサーフェスレンダリング ボリュームデータ内で特定の値を持つ表面（ISOサーフェス）を抽出し、その表面のみをレンダリングする
+抽出されたサーフェスは通常、「マーチングキューブス」アルゴリズムなどの手法を用いてポリゴンメッシュ（多くの場合は三角形のメッシュ）に変換される
+マルチモーダルレンダリング 異なる種類のデータソース（例えば、CTとMRIデータ）を組み合わせて、1つの統合された画像を生成する
+各モダリティのデータの長所を組み合わせることで、より包括的な可視化が可能
+Structure from Motion（SfM）によるカメラ姿勢推定 SfMは複数の2D画像から3D空間内のカメラの動き（姿勢）とシーンの構造を同時に推定する
+特徴点の抽出とマッチング 複数の画像から特徴点（キーポイント）を抽出し、異なる画像間でこれらの点をマッチングする
+カメラ姿勢の推定 画像間の特徴点の対応関係から、各画像に対応するカメラの姿勢（位置と方向）を推定する
+SfMではその他にも、3Dポイントクラウドの生成や最適化と精度向上を行う MVSとの連携によるフォトグラメトリ（参考） マルチビューステレオ（Multi-View Stereo, MVS）は、SfMで得られたカメラ姿勢情報を基に、複数の画像からより詳細な3Dシーンを再構築する技術である
+具体的には、複数の画像間でピクセルの一貫性を検証し、精密な3Dモデルを作成する
+得られた高密度ポイントクラウドから、滑らかなサーフェスモデルを作成できる
+これらSfMとMVSを連携して使用することがフォトグラメトリでは一般的となっている
+ライトフィールドとライトフィールドフォトグラフィー ディープラーニングとニューラルネットワーク NeRF ボリュームベースのレイキャスティング方式のレンダリングを応用したものとして、NeRF（Neural Radiance Fields）がある
+ここではNeRF論文1を理解する https://www.matthewtancik.com/nerf
+Ben Mildenhall and Pratul P.</description>
+    </item>
+    
     <item>
       <title>GameDev #4 人工知能 [Devlog #017]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_gl_04/</link>
