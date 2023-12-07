@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-11-17",
         "description": "",
-        "wordCount":  17 ,
+        "wordCount":  24 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-11-17",
         "image": {
@@ -214,6 +214,13 @@ stroke-linejoin="round" class="feather feather-home">
 <p>状態の変化を決定する状態間の<strong>遷移</strong>も重要であり、状態に入る時や出る時に発生する<strong>アクション</strong>があることがある</p>
 <p>ステルスゲームの護衛キャラを考えるとわかりやすい</p>
 <h4 id="基本的なステートマシンの実装">基本的なステートマシンの実装</h4>
+<h5 id="aicomponenth">AIComponent.h</h5>
+<p>状態の振る舞いをカプセル化する</p>
+<h5 id="aicomponentcpp">AIComponent.cpp</h5>
+<h5 id="aicomponentupdate">AIComponent::update()</h5>
+<p>それぞれの状態に1個ずつの更新関数、<code>UpdatePatrol</code>、<code>UpdateDeath</code>、<code>UpdateAttack</code>を作る</p>
+<p><code>AIState</code>クラスのメンバ関数で現在の状態を判定し、個々の状態に対する更新関数を呼び出す</p>
+<h5 id="aistateh">AIState.h</h5>
 
             </div>
         </article></main>
