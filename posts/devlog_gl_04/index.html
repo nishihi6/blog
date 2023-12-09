@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-11-17",
         "description": "",
-        "wordCount":  24 ,
+        "wordCount":  29 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-11-17",
         "image": {
@@ -195,6 +195,7 @@ stroke-linejoin="round" class="feather feather-home">
           <ul>
             <li><a href="#ステートマシンを設計する">ステートマシンを設計する</a></li>
             <li><a href="#基本的なステートマシンの実装">基本的なステートマシンの実装</a></li>
+            <li><a href="#クラスとしての状態">クラスとしての状態</a></li>
           </ul>
         </li>
       </ul>
@@ -220,7 +221,12 @@ stroke-linejoin="round" class="feather feather-home">
 <h5 id="aicomponentupdate">AIComponent::update()</h5>
 <p>それぞれの状態に1個ずつの更新関数、<code>UpdatePatrol</code>、<code>UpdateDeath</code>、<code>UpdateAttack</code>を作る</p>
 <p><code>AIState</code>クラスのメンバ関数で現在の状態を判定し、個々の状態に対する更新関数を呼び出す</p>
+<h4 id="クラスとしての状態">クラスとしての状態</h4>
 <h5 id="aistateh">AIState.h</h5>
+<p>状態を個別のクラスで表現する</p>
+<p>この基底クラスには、状態を制御する仮想関数が含まれており、状態を更新する<code>Update()</code>、遷移に入る際の処理<code>OnEnter()</code>、遷移から出る際の処理<code>OnExit()</code>を実装する</p>
+<p>メンバ変数<code>mOwner</code>を通して、<code>AIComponent</code>が<code>AIState</code>に関連つけられる</p>
+<h5 id="aicomponenth-1">AIComponent.h</h5>
 
             </div>
         </article></main>

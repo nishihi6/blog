@@ -60,7 +60,10 @@ SfMではその他にも、3Dポイントクラウドの生成や最適化と精
 基本的なステートマシンの実装 AIComponent.h 状態の振る舞いをカプセル化する
 AIComponent.cpp AIComponent::update() それぞれの状態に1個ずつの更新関数、UpdatePatrol、UpdateDeath、UpdateAttackを作る
 AIStateクラスのメンバ関数で現在の状態を判定し、個々の状態に対する更新関数を呼び出す
-AIState.h </description>
+クラスとしての状態 AIState.h 状態を個別のクラスで表現する
+この基底クラスには、状態を制御する仮想関数が含まれており、状態を更新するUpdate()、遷移に入る際の処理OnEnter()、遷移から出る際の処理OnExit()を実装する
+メンバ変数mOwnerを通して、AIComponentがAIStateに関連つけられる
+AIComponent.h </description>
     </item>
     
     <item>
