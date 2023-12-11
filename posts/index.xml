@@ -58,12 +58,18 @@ SfMではその他にも、3Dポイントクラウドの生成や最適化と精
 状態の変化を決定する状態間の遷移も重要であり、状態に入る時や出る時に発生するアクションがあることがある
 ステルスゲームの護衛キャラを考えるとわかりやすい
 基本的なステートマシンの実装 AIComponent.h 状態の振る舞いをカプセル化する
-AIComponent.cpp AIComponent::update() それぞれの状態に1個ずつの更新関数、UpdatePatrol、UpdateDeath、UpdateAttackを作る
+AIComponent.cpp AIComponent::Update() ステルスゲームの護衛キャラの場合（P96図4.1）、それぞれの状態に1個ずつの更新関数、UpdatePatrol、UpdateDeath、UpdateAttackを用意する
 AIStateクラスのメンバ関数で現在の状態を判定し、個々の状態に対する更新関数を呼び出す
 クラスとしての状態 AIState.h 状態を個別のクラスで表現する
 この基底クラスには、状態を制御する仮想関数が含まれており、状態を更新するUpdate()、遷移に入る際の処理OnEnter()、遷移から出る際の処理OnExit()を実装する
 メンバ変数mOwnerを通して、AIComponentがAIStateに関連つけられる
-AIComponent.h </description>
+AIComponent.h コンストラクタAIComponent()と、状態を判定して更新関数を呼び出すUpdate()、ステートマシンの遷移を処理するChangeState()を宣言する
+連想配列std::unorderd_map&amp;lt;std::string, class AIState*&amp;gt; mStateMapと、現時点のAIStateへのポインタmCurrentStateを持つ
+RegisterState()は新たな状態を連想配列に登録する
+AIComponent.cpp AIComponent::Update() 現在の状態があれば、そのUpdate()を呼び出す
+if (mCurrentState){ mCurrentState-&amp;gt;Update(deltatime); } AIComponent::ChangeState() 現在の状態のOnExit()を呼び出し、変更先となる状態を連想配列で探す
+新たな状態が見つかれば、mCurrentStateをその状態に変更して、新しい状態のOnEnterを呼び出す
+if (mCurrentState) { mCurrentState-&amp;gt;OnExit(); } auto iter = mStateMap.find(name); if (iter != mStateMap.end()) { mCurrentState = iter-&amp;gt;second; mCurrentState-&amp;gt;OnEnter(); } else { SDL_Log(&amp;#34;Could not find AIState %s in state map&amp;#34;, name.</description>
     </item>
     
     <item>
