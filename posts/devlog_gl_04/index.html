@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-11-17",
         "description": "",
-        "wordCount":  84 ,
+        "wordCount":  88 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-11-17",
         "image": {
@@ -254,7 +254,11 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span></code></pre></div><h5 id="aicomponentregisterstate">AIComponent::RegisterState()</h5>
 <p>AIStateのポインタを受け取って、その状態を連想配列に追加する</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">mStateMap</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">state</span><span class="o">-&gt;</span><span class="n">GetName</span><span class="p">(),</span> <span class="n">state</span><span class="p">);</span>
-</span></span></code></pre></div><h5 id="aistateh-1">AIState.h</h5>
+</span></span></code></pre></div><h5 id="aipatrolh">AIPatrol.h</h5>
+<p><code>AIState</code>の派生クラス</p>
+<p>特別な振る舞いがある場合は、<code>Update()</code>、<code>OnEnter()</code>、<code>OnExit()</code>で実装する</p>
+<h5 id="aipatrolupdate">AIPatrol::Update()</h5>
+<p>例えば、キャラクターが死ぬ時は新しい状態の名前を引数として、所有コンポーネントの<code>ChangeState()</code>を呼び出す</p>
 
             </div>
         </article></main>
