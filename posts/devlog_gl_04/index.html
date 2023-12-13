@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-11-17",
         "description": "",
-        "wordCount":  88 ,
+        "wordCount":  89 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-11-17",
         "image": {
@@ -259,6 +259,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>特別な振る舞いがある場合は、<code>Update()</code>、<code>OnEnter()</code>、<code>OnExit()</code>で実装する</p>
 <h5 id="aipatrolupdate">AIPatrol::Update()</h5>
 <p>例えば、キャラクターが死ぬ時は新しい状態の名前を引数として、所有コンポーネントの<code>ChangeState()</code>を呼び出す</p>
+<p><code>ChangeState()</code>が呼び出されると、<code>AIComponent</code>は連想配列を調べ、もし<code>Death</code>という名前の状態があったら、その状態に遷移する（<code>AIDeath</code>と<code>AIAttack</code>のクラスも同様）</p>
 
             </div>
         </article></main>
