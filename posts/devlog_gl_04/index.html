@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-11-17",
         "description": "",
-        "wordCount":  89 ,
+        "wordCount":  100 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-11-17",
         "image": {
@@ -198,6 +198,7 @@ stroke-linejoin="round" class="feather feather-home">
             <li><a href="#クラスとしての状態">クラスとしての状態</a></li>
           </ul>
         </li>
+        <li><a href="#経路探索">経路探索</a></li>
       </ul>
     </li>
   </ul>
@@ -210,6 +211,8 @@ stroke-linejoin="round" class="feather feather-home">
 <p>ゲームでの人工知能アルゴリズムは、コンピュータが制御するエンティティ（entity）の行動を決めるのに使われる</p>
 <p>ここでは、ステートマシンによる振る舞い、エンティティが移動する経路を計算する経路探索（pathfinding）、2人が交換でプレイするターン制の対戦ゲームでの思考に使うゲーム木やミニマックス法を使った&quot;タワーディフェンス&quot;型のゲームについて考える</p>
 <h3 id="ステートマシンの振る舞い">ステートマシンの振る舞い</h3>
+<p>以下は実装内容である</p>
+<p>それぞれの状態の実装を別々の派生クラスに入れることで、状態のカプセル化を単純にでき、別のAIキャラクターで状態を簡単に再利用することができる</p>
 <h4 id="ステートマシンを設計する">ステートマシンを設計する</h4>
 <p>状態そのものは、ステートマシンを部分的にしか定義しない</p>
 <p>状態の変化を決定する状態間の<strong>遷移</strong>も重要であり、状態に入る時や出る時に発生する<strong>アクション</strong>があることがある</p>
@@ -259,7 +262,13 @@ stroke-linejoin="round" class="feather feather-home">
 <p>特別な振る舞いがある場合は、<code>Update()</code>、<code>OnEnter()</code>、<code>OnExit()</code>で実装する</p>
 <h5 id="aipatrolupdate">AIPatrol::Update()</h5>
 <p>例えば、キャラクターが死ぬ時は新しい状態の名前を引数として、所有コンポーネントの<code>ChangeState()</code>を呼び出す</p>
-<p><code>ChangeState()</code>が呼び出されると、<code>AIComponent</code>は連想配列を調べ、もし<code>Death</code>という名前の状態があったら、その状態に遷移する（<code>AIDeath</code>と<code>AIAttack</code>のクラスも同様）</p>
+<p><code>ChangeState()</code>が呼び出されると、<code>AIComponent</code>は連想配列<code>std::unordered_map&lt;std::string, class AIState*&gt; mStateMap</code>を調べ、もし<code>Death</code>という名前の状態があったら、その状態に遷移する（<code>AIDeath</code>と<code>AIAttack</code>のクラスも同様）
+<br>※連想配列<code>std::unorderd_map</code>のメンバ関数<code>find()</code>を利用（<a href="https://cpprefjp.github.io/reference/unordered_map/unordered_map/find.html">ドキュメント</a>）</p>
+<h5 id="gameloaddata">Game::LoadData()</h5>
+<p>状態クラスを<code>AIComponent</code>の連想配列に登録するには、アクターとその<code>AIComponent</code>を作成してから、引数に&quot;ステートマシンに加えたい状態&quot;を指定して<code>RegisterState()</code>を呼び出す</p>
+<p><code>AIComponent</code>を<code>Patrol</code>で初期化するには<code>ChangeState()</code>を呼び出す</p>
+<h3 id="経路探索">経路探索</h3>
+<p><strong>経路探索</strong>（pathfinding）は、2点間の経路を見つけるアルゴリズムである</p>
 
             </div>
         </article></main>
