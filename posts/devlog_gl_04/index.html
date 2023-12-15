@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-11-17",
         "description": "",
-        "wordCount":  100 ,
+        "wordCount":  117 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-11-17",
         "image": {
@@ -198,7 +198,25 @@ stroke-linejoin="round" class="feather feather-home">
             <li><a href="#クラスとしての状態">クラスとしての状態</a></li>
           </ul>
         </li>
-        <li><a href="#経路探索">経路探索</a></li>
+        <li><a href="#経路探索">経路探索</a>
+          <ul>
+            <li><a href="#グラフ">グラフ</a></li>
+            <li><a href="#幅優先探索">幅優先探索</a></li>
+            <li><a href="#ヒューリスティック">ヒューリスティック</a></li>
+            <li><a href="#欲張り最良優先探索gbfs">欲張り最良優先探索（GBFS）</a></li>
+            <li><a href="#a-探索">A* 探索</a></li>
+            <li><a href="#ダイクストラのアルゴリズム">ダイクストラのアルゴリズム</a></li>
+            <li><a href="#経路をたどる">経路をたどる</a></li>
+            <li><a href="#その他のグラフ表現">その他のグラフ表現</a></li>
+          </ul>
+        </li>
+        <li><a href="#ゲーム木">ゲーム木</a>
+          <ul>
+            <li><a href="#ミニマックス法">ミニマックス法</a></li>
+            <li><a href="#不完全なゲーム木の扱い方">不完全なゲーム木の扱い方</a></li>
+            <li><a href="#アルファベータ法">アルファ・ベータ法</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -269,6 +287,22 @@ stroke-linejoin="round" class="feather feather-home">
 <p><code>AIComponent</code>を<code>Patrol</code>で初期化するには<code>ChangeState()</code>を呼び出す</p>
 <h3 id="経路探索">経路探索</h3>
 <p><strong>経路探索</strong>（pathfinding）は、2点間の経路を見つけるアルゴリズムである</p>
+<h4 id="グラフ">グラフ</h4>
+<p>ゲームワールドの各部を表現する方法として、<strong>グラフ</strong>構造がよく使われる</p>
+<p>グラフはノードを複数持ち、エッジでノード間をつなぐ</p>
+<p>無向・有向エッジの例えとして、高台から地面にジャンプできても、元の場所には戻れない場合を有効エッジで表現できる</p>
+<p>エッジの重みも、砂の上での移動とアスファルトの上での移動の表現などで利用される</p>
+<h4 id="幅優先探索">幅優先探索</h4>
+<h4 id="ヒューリスティック">ヒューリスティック</h4>
+<h4 id="欲張り最良優先探索gbfs">欲張り最良優先探索（GBFS）</h4>
+<h4 id="a-探索">A* 探索</h4>
+<h4 id="ダイクストラのアルゴリズム">ダイクストラのアルゴリズム</h4>
+<h4 id="経路をたどる">経路をたどる</h4>
+<h4 id="その他のグラフ表現">その他のグラフ表現</h4>
+<h3 id="ゲーム木">ゲーム木</h3>
+<h4 id="ミニマックス法">ミニマックス法</h4>
+<h4 id="不完全なゲーム木の扱い方">不完全なゲーム木の扱い方</h4>
+<h4 id="アルファベータ法">アルファ・ベータ法</h4>
 
             </div>
         </article></main>
