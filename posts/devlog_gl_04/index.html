@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-11-17",
         "description": "",
-        "wordCount":  122 ,
+        "wordCount":  246 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-11-17",
         "image": {
@@ -292,11 +292,67 @@ stroke-linejoin="round" class="feather feather-home">
 <p>グラフはノードを複数持ち、エッジでノード間をつなぐ</p>
 <p><strong>無向・有向エッジ</strong>の例えとして、高台から地面にジャンプできても、元の場所には戻れない場合を有効エッジで表現できる</p>
 <p>エッジの<strong>重み</strong>は、砂の上での移動とアスファルトの上での移動の表現などで利用される</p>
-<p>メモリ空間でグラフを表現するいくつかの方法の中でも、<strong>隣接リスト</strong>（adjacency list）では、各ノードが隣接するノードの集合（<code>std::vector</code>）の情報を持つ</p>
+<p>メモリ空間でグラフを表現する<strong>隣接リスト</strong>（adjacency list）は、各ノードが隣接するノードの集合（<code>std::vector</code>）の情報を持つ</p>
 <p>重み無しグラフの場合、隣接リストは各ノード<code>mNodes</code>を格納し、各ノードは隣接するノードへのポインタ<code>mAdjacent</code>で構成される</p>
-<p>重み付きグラフの場合、隣接リストはノードから出ていくエッジ<code>mEdges</code>を格納し、エッジはつながるノード<code>mFrom</code>、<code>mTo</code>とエッジの重み<code>mWeight</code>で構成される</p>
-<p>グラフでゲームワールドを表現する方法として、正方形や正六角形の格子（グリッド）で分割するのがシンプルなアプローチである</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">GraphNode</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GraphNode</span><span class="o">*&gt;</span> <span class="n">mAdjacent</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Graph</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GraphNode</span><span class="o">*&gt;</span> <span class="n">mNodes</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><p>重み付きグラフの場合、隣接リストはノードから出ていくエッジ<code>mEdges</code>を格納し、エッジはつながるノード<code>mFrom</code>、<code>mTo</code>とエッジの重み<code>mWeight</code>で構成される</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">WeightedEdge</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">struct</span> <span class="nc">WeightGraphNode</span><span class="o">*</span> <span class="n">mFrom</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">struct</span> <span class="nc">WeightGraphNode</span><span class="o">*</span> <span class="n">mTo</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">mWeight</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">WeightedGraphNode</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">WeightedEdge</span><span class="o">*&gt;</span> <span class="n">mEdges</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><p>グラフでゲームワールドを表現する方法として、正方形や正六角形の格子（グリッド）で分割するのがシンプルなアプローチである</p>
 <h4 id="幅優先探索">幅優先探索</h4>
+<p>迷路のどこかの<strong>開始ノード</strong>から、目的物がある<strong>終了ノード</strong>までの最短経路を見つけるとする</p>
+<p>最初に開始点から1手先の全ての行き先をチェックし、目標物がなければ次は開始点から2手先の行き先をチェックする</p>
+<p>つまり、近いノードを調べ尽くしてからでなければ、より遠いノードを考慮しないので、漏れがない</p>
+<p>この考え方が<strong>幅優先探索（breadth-first search:BFS）</strong>という</p>
+<p>このBFSアルゴリズムは、エッジに重みがないか、どのエッジにも同じ正の重みが付いている時に、最短経路を見つけることが保証される</p>
+<br>
+<p>実装では、<code>NodeToPointerMap</code>というハッシュ連想配列（std::unorderd_map）を定義し、キーと値の両方で<code>GraphNode</code>ポインタをもたせる</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">using</span> <span class="n">NodeToParentMap</span> <span class="o">=</span> 
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">GraphNode</span><span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">GraphNode</span><span class="o">*&gt;</span><span class="p">;</span>
+</span></span></code></pre></div><br>
+<p><strong>キュー</strong>（待ち行列）を使ってBFSを実装する</p>
+<p>最初のノードをキューに入れた状態からループ処理を始める</p>
+<p>ノードの1つを取り出し、そのノードに隣接するノード群をキューに追加する（すでに追加済みのノードでないかのチェックを行う）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="nf">BFS</span><span class="p">(</span><span class="k">const</span> <span class="n">Graph</span><span class="o">&amp;</span> <span class="n">graph</span><span class="p">,</span> <span class="k">const</span> <span class="n">GraphNode</span><span class="o">*</span> <span class="n">start</span><span class="p">,</span> <span class="k">const</span> <span class="n">GraphNode</span><span class="o">*</span> <span class="n">goal</span><span class="p">,</span> <span class="n">NodeToParentMap</span><span class="o">&amp;</span> <span class="n">outMap</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">bool</span> <span class="n">pathFound</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">std</span><span class="o">::</span><span class="n">queue</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">GraphNode</span><span class="o">*&gt;</span> <span class="n">q</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// enqueue
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">q</span><span class="p">.</span><span class="n">empty</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// dequeue
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">const</span> <span class="n">GraphNode</span><span class="o">*</span> <span class="n">current</span> <span class="o">=</span> <span class="n">q</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="n">q</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">current</span> <span class="o">==</span> <span class="n">goal</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">			<span class="n">pathFound</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="n">GraphNode</span><span class="o">*</span> <span class="nl">node</span> <span class="p">:</span> <span class="n">current</span><span class="o">-&gt;</span><span class="n">mAdjacent</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">			<span class="k">const</span> <span class="n">GraphNode</span><span class="o">*</span> <span class="n">parent</span> <span class="o">=</span> <span class="n">outMap</span><span class="p">[</span><span class="n">node</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="n">parent</span> <span class="o">==</span> <span class="k">nullptr</span> <span class="o">&amp;&amp;</span> <span class="n">node</span> <span class="o">!=</span> <span class="n">start</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">				<span class="n">outMap</span><span class="p">[</span><span class="n">Node</span><span class="p">]</span> <span class="o">=</span> <span class="n">current</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">				<span class="n">q</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">pathFound</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p><code>Graph</code>gがあるとして、それに含まれる2つの<code>GraphNode</code>間でBFSを実行するには、以下のようにする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Cpp" data-lang="Cpp"><span class="line"><span class="cl"><span class="n">NodeToParentMap</span> <span class="n">map</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">found</span> <span class="o">=</span> <span class="n">BFS</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">g</span><span class="p">.</span><span class="n">mNodes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">g</span><span class="p">.</span><span class="n">mNodes</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">map</span><span class="p">);</span>
+</span></span></code></pre></div><p>最終的に、<code>outMap</code>に入っている親ポインタを使って、親ポインタの連鎖をたどれば、いつかは開始ノードに到達して終点から始点に至る経路が得られる</p>
+<p>これを始点から終点に至る経路を得るために、始点と終点を反対にする</p>
 <h4 id="ヒューリスティック">ヒューリスティック</h4>
 <h4 id="欲張り最良優先探索gbfs">欲張り最良優先探索（GBFS）</h4>
 <h4 id="a-探索">A* 探索</h4>
