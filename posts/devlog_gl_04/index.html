@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-11-17",
         "description": "",
-        "wordCount":  249 ,
+        "wordCount":  269 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-11-17",
         "image": {
@@ -316,8 +316,9 @@ stroke-linejoin="round" class="feather feather-home">
 <p>迷路のどこかの<strong>開始ノード</strong>から、目的物がある<strong>終了ノード</strong>までの最短経路を見つけるとする</p>
 <p>最初に開始点から1手先の全ての行き先をチェックし、目標物がなければ次は開始点から2手先の行き先をチェックする</p>
 <p>つまり、近いノードを調べ尽くしてからでなければ、より遠いノードを考慮しないので、漏れがない</p>
-<p>この考え方が<strong>幅優先探索（breadth-first search:BFS）</strong>という</p>
-<p>このBFSアルゴリズムは、エッジに重みがないか、どのエッジにも同じ正の重みが付いている時に、最短経路を見つけることが保証される</p>
+<p>この考え方が<strong>幅優先探索（breadth-first search:BFS）</strong>という
+<br><a href="https://qiita.com/drken/items/996d80bcae64649a6580">BFSアルゴリズムの参考記事</a></p>
+<p>このBFSアルゴリズムは、エッジに重みが無い、もしくはどのエッジにも同じ正の重みが付いている時に、最短経路を見つけることが保証される</p>
 <br>
 <p>実装では、<code>NodeToPointerMap</code>というハッシュ連想配列（std::unorderd_map）を定義し、キーと値の両方で<code>GraphNode</code>ポインタをもたせる</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">using</span> <span class="n">NodeToParentMap</span> <span class="o">=</span> 
@@ -357,6 +358,12 @@ stroke-linejoin="round" class="feather feather-home">
 <p>多くの探索アルゴリズムは、予想される結果の近似値を求める<strong>ヒューリスティック</strong>（発見的手法）に依存する</p>
 <p>BFSの反復処理においてヒューリスティックを使うと、各ノード終点までの距離を見積もり、より少ない回数で線形探索を行うことができる</p>
 <p>ヒューリスティックを$h(x)$と表記すると、$h(x)$はノード$x$から終点ノードへのコストの見積もりと考えることができる</p>
+<p>後述するA* アルゴリズムでは、見積もりがノード$x$から終点に至る実際のコストを上回らない<strong>許容的ヒューリスティック関数</strong>が必要となる</p>
+<p>正方形のグリッドを考えた時、ヒューリスティックの計算方法は<strong>マンハッタン距離</strong>のヒューリスティックと<strong>ユークリッド距離</strong>のヒューリスティックの2種類がある</p>
+<p>マンハッタン距離 $h(x)=|start.x - end.x|+|start.y - end.y|$</p>
+<p>ユークリッド距離 $h(x)=\sqrt{(start.x - end.x)^2 + (start.y - end.y)^2}$</p>
+<p>ユークリッド距離の関数のヒューリスティックが通常では推奨されるが、マンハッタン距離の計算のほうが効率が良い</p>
+<p>ヒューリスティックは、ノード$x$が、<strong>少なくともそれだけ遠くにある</strong>ことを保証する（つまり、どのノードが終点ノードに近いかを見積もるのに役立つ）</p>
 <h4 id="欲張り最良優先探索gbfs">欲張り最良優先探索（GBFS）</h4>
 <h4 id="a-探索">A* 探索</h4>
 <h4 id="ダイクストラのアルゴリズム">ダイクストラのアルゴリズム</h4>
@@ -425,7 +432,7 @@ stroke-linejoin="round" class="feather feather-home">
 </a>
 </div>
     <small class="footer_copyright">
-        © 2023 nishihi6.
+        © 2024 nishihi6.
     </small>
     
 </footer><a href="#" title="Go to top" id="totop">
