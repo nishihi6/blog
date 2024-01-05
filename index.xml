@@ -6,9 +6,19 @@
     <description>Recent content in Home on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Thu, 04 Jan 2024 23:57:28 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 05 Jan 2024 16:18:58 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>楽しさとは #1 [Memo #005]</title>
+      <title>楽しさとは #2 ゲームを作るには [Memo #006]</title>
+      <link>https://nishihi6.github.io/blog/posts/memo_ent_02/</link>
+      <pubDate>Fri, 05 Jan 2024 16:18:58 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/memo_ent_02/</guid>
+      <description>ゲーム制作に関する知見まとめ YouTubeチャンネル「桜井政博のゲームを作るには」で紹介された知見をベースに、その要点や実例をまとめていく
+仕事の姿勢 ※ 遊びの仕事は遊びじゃない 作品を作る最終目的は&amp;quot;プレイヤーを楽しませること&amp;quot;に他ならない 開発の事情、困難はあれど、遊ぶ人が楽しめることを行動動機にするべき プレゼンはスピード お客さんに説明できるの？ 理想と技術の間で理想的なバランスを取ることが肝心 仕様を変えること 一見して同じものでも、プログラマー等が違えば中身はだいぶ違う 企画段階から面白さは見据えていたほうが良い 制作物は様々なモノの組み合わせである 敵キャラをひとつ動かすのに必要なモノ 仕様 基礎デザイン モデル モーション エフェクト プログラム スクリプト 効果音 企画書の書き方 企画は強火でザッと仕上げる 苦労は忘れる、作品は残る ディレクターは&amp;quot;個&amp;quot; ゲーム性 ※ 企画・ゲーム設計 ※ 仕様 ※ チーム運営 ※ グラフィック ※ モーション ※ エフェクト ※ サウンド ※ UI ※ プログラム・テクニカル ※ 広報 ※ 企画コンセプト ※ </description>
+    </item>
+    
+    <item>
+      <title>楽しさとは #1 エンタメ [Memo #005]</title>
       <link>https://nishihi6.github.io/blog/posts/memo_ent_01/</link>
       <pubDate>Thu, 04 Jan 2024 23:57:28 +0900</pubDate>
       
