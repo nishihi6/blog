@@ -6,7 +6,38 @@
     <description>Recent content in Posts on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Fri, 05 Jan 2024 16:55:19 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 06 Jan 2024 19:13:47 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CG×ML #5 Radiative Backpropagation [Devlog #021]</title>
+      <link>https://nishihi6.github.io/blog/posts/devlog_cg-ml_05/</link>
+      <pubDate>Sat, 06 Jan 2024 19:13:47 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/devlog_cg-ml_05/</guid>
+      <description>Radiative Backpropagation 放射逆伝搬と高速微分可能レンダリング ここでは放射逆伝搬と高速微分可能レンダリングについての論文1を理解する
+Merlin Nimier-David, Sébastien Speierer, Benoît Ruiz, and Wenzel Jakob. 2020. Radiative Backpropagation: An Adjoint Method for Lightning-Fast Differentiable Rendering. ACM Trans. Graph. (SIGGRAPH) 39, 4 (July 2020).
+微分可能レンダリングとは Forward Renderingとは Forward Renderingは、シーンの説明（オブジェクトの形状、外見、位置など）を取り、それを美しくリアルなイメージに変換するプロセスである
+物理ベースのレンダリングプロセス全体をシーンパラメータ$x$の関数$f$として示す
+Differential Renderingとは 画像を入力としてそのシーンの説明を復元したい場合、関数$f$を単に反転させるにしても複雑すぎることがわかる
+そこで、代わりに勾配を用いて、勾配ベースの方法で$x$の最適化を行う
+ここでは、レンダリング関数$f$のシーンパラメータ$x$に対する偏微分を効率的に推定する問題に焦点を当てている
+Related work 微分可能レンダリングは近年注目を集めており、その応用については発展途上である
+すでにポーズ推定、素材設計、素材と照明の共同推定、ボリュームの逆レンダリングなどに使用されてる
+微分可能レンダリングには、レンダリング自体がどのように行われるかに基づいて3つの主要なアプローチがある
+Rasterization 最も人気のあるアプローチはラスタライゼーションに基づき、これは非常に高速であるが、レンダリングできる外観の範囲は、特にグローバルイルミネーションの欠如により限られている
+Neural rendering 多くの最近の研究では、ニューラルネットワークから直接画像をレンダリングすることを可能としたが、形状や素材のエンコード方法を含め、ほぼすべてを一から解明しなければならない
+Physically based rendering 不連続性を含む完全な物理ベースのレンダリングシミュレーションを通じて微分が可能であることを示す手法が提案されている（2018年）
+また、自動微分をサポートするレンダリングに対応した微分可能レンダラーが提案手法に追加された（2019年）
+課題設定 ティーポットの写真を入力とし、ただの一定の暗い灰色のテクスチャから深い模様のテクスチャを復元したいとする
+最初のステップは、現在のレンダリングが目標からどれだけ離れているかを定量化する目的関数を定義することになる（ここでは、単に画像ごとの距離）
+パラメータ$x$を最適化することが目的となる（ここでは、ティーポットのテクスチャ）
+この最適化問題を解決するために、目的関数の導関数が必要になる
+Chain rule パラメータ$x$に対して、Chain ruleを適用する
+目的関数はレンダリング方法から計算されるため、最初の項は計算しやすい
+最初の項は、本質的に、目的関数に対する各ピクセルの感度を表す画像になる（目的関数を最小限に抑えるために書くピクセルをどのように変更するべきかを教えてくれる）
+複雑な光輸送シミュレーションであるがゆえに2番目の項は難しい
+シーンパラメータに対するレンダリングのピクセルの導関数を取得するにはどうすればよいか？</description>
+    </item>
+    
     <item>
       <title>Unity-GameDev #1 企画・設計 [Devlog #020]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_unity-gamedev_01/</link>
@@ -30,7 +61,7 @@
     </item>
     
     <item>
-      <title>楽しさとは #1 エンタメ [Memo #005]</title>
+      <title>楽しさとは #1 エンタメとは [Memo #005]</title>
       <link>https://nishihi6.github.io/blog/posts/memo_ent_01/</link>
       <pubDate>Thu, 04 Jan 2024 23:57:28 +0900</pubDate>
       
