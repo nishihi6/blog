@@ -52,7 +52,7 @@
         },
         "datePublished": "2024-01-06",
         "description": "",
-        "wordCount":  126 ,
+        "wordCount":  267 ,
         "mainEntityOfPage": "True",
         "dateModified": "2024-01-06",
         "image": {
@@ -193,23 +193,49 @@ stroke-linejoin="round" class="feather feather-home">
       <ul>
         <li><a href="#微分可能レンダリングとは">微分可能レンダリングとは</a>
           <ul>
-            <li><a href="#forward-renderingとは">Forward Renderingとは</a></li>
-            <li><a href="#differential-renderingとは">Differential Renderingとは</a></li>
-            <li><a href="#related-work">Related work</a></li>
+            <li><a href="#フォーワードレンダリングforward-renderingとは">フォーワードレンダリング（Forward Rendering）とは</a></li>
+            <li><a href="#微分可能レンダリングdifferential-renderingとは">微分可能レンダリング（Differential Rendering）とは</a></li>
+            <li><a href="#既存研究related-work">既存研究（Related work）</a></li>
           </ul>
         </li>
         <li><a href="#課題設定">課題設定</a></li>
-        <li><a href="#chain-rule">Chain rule</a></li>
-        <li><a href="#automatic-differentiation">Automatic differentiation</a>
+        <li><a href="#連鎖則chain-rule">連鎖則（Chain rule）</a></li>
+        <li><a href="#自動微分automatic-differentiation">自動微分（Automatic differentiation）</a>
           <ul>
-            <li><a href="#forward-mode-autodiff">Forward-mode autodiff</a></li>
-            <li><a href="#reverse-mode-autodiff">Reverse-mode autodiff</a></li>
+            <li><a href="#フォーワードモード自動微分forward-mode-autodiff">フォーワードモード自動微分（Forward-mode autodiff）</a></li>
+            <li><a href="#逆モード自動微分reverse-mode-autodiff">逆モード自動微分（Reverse-mode autodiff）</a></li>
           </ul>
         </li>
-        <li><a href="#autodiff-based-differentiable-rendering">Autodiff-based differentiable rendering</a></li>
-        <li><a href="#radiative-backpropagation-1">Radiative Backpropagation</a>
+        <li><a href="#自動微分ベースの微分可能レンダリングautodiff-based-differentiable-rendering">自動微分ベースの微分可能レンダリング（Autodiff-based differentiable rendering）</a></li>
+        <li><a href="#放射線逆伝搬radiative-backpropagation">放射線逆伝搬（Radiative Backpropagation）</a>
           <ul>
-            <li><a href="#measurement-equation">Measurement equation</a></li>
+            <li><a href="#測定方程式measurement-equation">測定方程式（Measurement equation）</a></li>
+            <li><a href="#微分測定方程式differential-measurement-equation">微分測定方程式（Differential measurement equation）</a></li>
+            <li><a href="#ティーポットのテクスチャでの例">ティーポットのテクスチャでの例</a></li>
+            <li><a href="#対称性を利用するexploiting-the-symmetry">対称性を利用する（Exploiting the symmetry）</a></li>
+            <li><a href="#放射線逆伝搬の理論">放射線逆伝搬の理論</a></li>
+          </ul>
+        </li>
+        <li><a href="#アルゴリズム">アルゴリズム</a>
+          <ul>
+            <li><a href="#微分放射differential-radianceのためのパストレーシング">微分放射（Differential radiance）のためのパストレーシング</a></li>
+            <li><a href="#偏ったバリアントbiased-variants">偏ったバリアント（Biased variants）</a></li>
+          </ul>
+        </li>
+        <li><a href="#実装implementation">実装（Implementation）</a>
+          <ul>
+            <li><a href="#高速微分可能レンダリングlightning-fast-differentiable-rendering">高速微分可能レンダリング（Lightning-fast differentiable rendering）</a></li>
+          </ul>
+        </li>
+        <li><a href="#結果results">結果（Results）</a>
+          <ul>
+            <li><a href="#表面テクスチャの最適化surface-texture-optimization">表面テクスチャの最適化（Surface texture optimization）</a></li>
+          </ul>
+        </li>
+        <li><a href="#まとめ">まとめ</a>
+          <ul>
+            <li><a href="#結論">結論</a></li>
+            <li><a href="#展望">展望</a></li>
           </ul>
         </li>
       </ul>
@@ -217,7 +243,7 @@ stroke-linejoin="round" class="feather feather-home">
   </ul>
 </nav>
             </details><div class="page-content">
-                <h1 id="radiative-backpropagation">Radiative Backpropagation</h1>
+                <h1 id="放射逆伝搬radiative-backpropagation">放射逆伝搬（Radiative Backpropagation）</h1>
 <h2 id="放射逆伝搬と高速微分可能レンダリング">放射逆伝搬と高速微分可能レンダリング</h2>
 <hr>
 <p>ここでは放射逆伝搬と高速微分可能レンダリングについての論文<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>を理解する</p>
@@ -226,31 +252,31 @@ stroke-linejoin="round" class="feather feather-home">
 </blockquote>
 <h3 id="微分可能レンダリングとは">微分可能レンダリングとは</h3>
 <hr>
-<h4 id="forward-renderingとは">Forward Renderingとは</h4>
-<p>Forward Renderingは、シーンの説明（オブジェクトの形状、外見、位置など）を取り、それを美しくリアルなイメージに変換するプロセスである</p>
+<h4 id="フォーワードレンダリングforward-renderingとは">フォーワードレンダリング（Forward Rendering）とは</h4>
+<p>フォーワードレンダリングは、シーンの説明（オブジェクトの形状、外見、位置など）を取り、それを美しくリアルなイメージに変換するプロセスである</p>
 <p>物理ベースのレンダリングプロセス全体をシーンパラメータ$x$の関数$f$として示す</p>
 <details><summary></summary>
 <p><img src="https://i.gyazo.com/513952c13bb9a67384c78c50ba4fc009.png" alt="Image"></p>
 </details><br>
-<h4 id="differential-renderingとは">Differential Renderingとは</h4>
+<h4 id="微分可能レンダリングdifferential-renderingとは">微分可能レンダリング（Differential Rendering）とは</h4>
 <p>画像を入力としてそのシーンの説明を復元したい場合、関数$f$を単に反転させるにしても複雑すぎることがわかる</p>
 <p>そこで、代わりに勾配を用いて、勾配ベースの方法で$x$の最適化を行う</p>
 <p>ここでは、レンダリング関数$f$のシーンパラメータ$x$に対する偏微分を効率的に推定する問題に焦点を当てている</p>
 <details><summary></summary>
 <p><img src="https://i.gyazo.com/36ba0bb8391bcd12ae8d8b77dc4c876e.png" alt="Image"></p>
 </details><br>
-<h4 id="related-work">Related work</h4>
+<h4 id="既存研究related-work">既存研究（Related work）</h4>
 <p>微分可能レンダリングは近年注目を集めており、その応用については発展途上である</p>
 <p>すでにポーズ推定、素材設計、素材と照明の共同推定、ボリュームの逆レンダリングなどに使用されてる</p>
 <details><summary></summary>
 <p><img src="https://i.gyazo.com/f2a3bf0cb4dcb5f74e60d2d09401ec71.png" alt="Image"></p>
 </details><br>
 <p>微分可能レンダリングには、レンダリング自体がどのように行われるかに基づいて3つの主要なアプローチがある</p>
-<h5 id="rasterization">Rasterization</h5>
+<h5 id="ラスタライゼーションrasterization">ラスタライゼーション（Rasterization）</h5>
 <p>最も人気のあるアプローチはラスタライゼーションに基づき、これは非常に高速であるが、レンダリングできる外観の範囲は、特にグローバルイルミネーションの欠如により限られている</p>
-<h5 id="neural-rendering">Neural rendering</h5>
+<h5 id="ニューラルレンダリングneural-rendering">ニューラルレンダリング（Neural rendering）</h5>
 <p>多くの最近の研究では、ニューラルネットワークから直接画像をレンダリングすることを可能としたが、形状や素材のエンコード方法を含め、ほぼすべてを一から解明しなければならない</p>
-<h5 id="physically-based-rendering">Physically based rendering</h5>
+<h5 id="物理ベースレンダリングphysically-based-rendering">物理ベースレンダリング（Physically based rendering）</h5>
 <p>不連続性を含む完全な物理ベースのレンダリングシミュレーションを通じて微分が可能であることを示す手法が提案されている（2018年）</p>
 <p>また、自動微分をサポートするレンダリングに対応した微分可能レンダラーが提案手法に追加された（2019年）</p>
 <details><summary></summary>
@@ -268,9 +294,9 @@ stroke-linejoin="round" class="feather feather-home">
 <details><summary></summary>
 <p><img src="https://i.gyazo.com/7a6ed600afec666e4142a7952a1c982a.png" alt="Image"></p>
 </details><br>
-<h3 id="chain-rule">Chain rule</h3>
+<h3 id="連鎖則chain-rule">連鎖則（Chain rule）</h3>
 <hr>
-<p>パラメータ$x$に対して、Chain ruleを適用する</p>
+<p>パラメータ$x$に対して、連鎖則を適用する</p>
 <details><summary></summary>
 <p><img src="https://i.gyazo.com/ce327f17693bdc08ec56d1330c1f3fe7.png" alt="Image"></p>
 </details><br>
@@ -282,22 +308,22 @@ stroke-linejoin="round" class="feather feather-home">
 <details><summary></summary>
 <p><img src="https://i.gyazo.com/c8aae28b4744f4ede75f7e01560d4c52.png" alt="Image"></p>
 </details><br>
-<h3 id="automatic-differentiation">Automatic differentiation</h3>
+<h3 id="自動微分automatic-differentiation">自動微分（Automatic differentiation）</h3>
 <hr>
-<h4 id="forward-mode-autodiff">Forward-mode autodiff</h4>
+<h4 id="フォーワードモード自動微分forward-mode-autodiff">フォーワードモード自動微分（Forward-mode autodiff）</h4>
 <p>変数（パラメータ）から始め、最初の関係を出力まで伝搬させる</p>
 <p>すべての単一変数に対して行う必要がある</p>
 <p>図では変数の数は3つだが、実際には数十万もの入力$x$があると想定される</p>
-<h4 id="reverse-mode-autodiff">Reverse-mode autodiff</h4>
+<h4 id="逆モード自動微分reverse-mode-autodiff">逆モード自動微分（Reverse-mode autodiff）</h4>
 <p>一度計算を通して、変数間の依存関係をグラフデータ構造に記録する（ノードが変数を表し、エッジが変数間の計算上の依存関係を示す）</p>
 <p>計算が終了した後、出力の摂動（小さな変化）を入力変数まで逆伝搬させることができる（これによって、出力変数の変化が入力変数にどのように影響を及ぼすかを計算することができる）</p>
-<p>このReverse-mode autodiffは、一度の逆伝搬で全ての入力変数に関する勾配を同時に計算できるため、出力変数が少なく入力変数が多い場合に効率的である（ニューラルネットワークのバックプロパゲーションは、この逆モード自動微分の一例）</p>
+<p>この逆モード自動微分は、一度の逆伝搬で全ての入力変数に関する勾配を同時に計算できるため、出力変数が少なく入力変数が多い場合に効率的である（ニューラルネットワークのバックプロパゲーションは、この逆モード自動微分の一例）</p>
 <details><summary></summary>
 <p><img src="https://i.gyazo.com/bd1f92ee023b356023b7c8b47a0094fb.png" alt="Image"></p>
 </details><br>
-<h3 id="autodiff-based-differentiable-rendering">Autodiff-based differentiable rendering</h3>
+<h3 id="自動微分ベースの微分可能レンダリングautodiff-based-differentiable-rendering">自動微分ベースの微分可能レンダリング（Autodiff-based differentiable rendering）</h3>
 <hr>
-<p>パラメータ$x$、レンダリングアルゴリズムがわかっているので、逆モード自動微分（Reverse-mode autodiff）を行うことができます</p>
+<p>パラメータ$x$、レンダリングアルゴリズムがわかっているので、逆モード自動微分を行うことができる</p>
 <p>しかし、シミュレーションのサイズが少し大きくなるとグラフに使うメモリ使用量が爆発的に増加してしまう</p>
 <details><summary></summary>
 <p><img src="https://i.gyazo.com/34aea6024fdd2734f7ac028e8864bb60.png" alt="Image"></p>
@@ -308,14 +334,181 @@ stroke-linejoin="round" class="feather feather-home">
 <details><summary></summary>
 <p><img src="https://i.gyazo.com/b05b1c348248b9135e44478c309e77d6.png" alt="Image"></p>
 </details><br>
-<h3 id="radiative-backpropagation-1">Radiative Backpropagation</h3>
+<h3 id="放射線逆伝搬radiative-backpropagation">放射線逆伝搬（Radiative Backpropagation）</h3>
 <hr>
-<p>代わりに、<strong>放射線逆伝搬（Radiative Backpropagation）</strong>を使用して、レンダリングアルゴリズムのブラックボックスを開き、その構造を活用する</p>
+<p>代わりに、<strong>放射線逆伝搬</strong>を使用して、レンダリングアルゴリズムのブラックボックスを開き、その構造を活用する</p>
 <p>特別なタイプの光輸送シミュレーションとして再構成して、これらの勾配を推定する</p>
 <details><summary></summary>
 <p><img src="https://i.gyazo.com/d4d3cc3fe57ae9671cac9e1de4a5d858.png" alt="Image"></p>
 </details><br>
-<h4 id="measurement-equation">Measurement equation</h4>
+<h4 id="測定方程式measurement-equation">測定方程式（Measurement equation）</h4>
+<p>フォーワードレンダリングプロセスは、測定方程式によって説明できる</p>
+<p>ピクセル $k$ の値 $I_k$ は、その<strong>重要度関数（Sensitivity of sensor(importance)）</strong> $W_k$ と<strong>入射放射関数（Incident radiance）</strong> $L_i$ の内積をとり、それを$A×S^{2}$のレイスペースで積分することで求められる</p>
+<p>レンダリングプロセスにおける重要度（センサーの感度）は、カメラや視点に対して表面がどの位置にあるかによって異なり、光がセンサーに到達する方向によっても異なる</p>
+<p>これにより、視覚的に重要な部分にリソースを集中させ、より現実的な処理コストでレンダリングすることを可能にする</p>
+<p>$W_k$：カメラがシーンの特定部分の入射光にどれだけ影響を受けるかを示す重要度関数<br>
+$L_i$：どの方向からどれだけの光が来ているかを示す入射放射関数<br>
+$A$：レイトレーシングにおいて光線がカバーするオブジェクトの平面領域<br>
+$dp$：平面$A$における点$p$の積分<br>
+$S^2$：レイトレーシングにおいて光線の方向の分布を示す立体角<br>
+$dω^⊥$：点$p$における投影立体角に対応する積分</p>
+<details><summary></summary>
+<p><img src="https://i.gyazo.com/19b76a9fc597e5192e4550a36bec8e1e.png" alt="Image"></p>
+</details><br>
+<h4 id="微分測定方程式differential-measurement-equation">微分測定方程式（Differential measurement equation）</h4>
+<p>シーンパラメータ$x$に対する画像ピクセルの勾配を計算したいので、両辺を微分する</p>
+<p>静的センサの場合 $\partial_x W_k=0$ であり、特に可視性に関して積分に不連続性がない</p>
+<p>左辺の微分はピクセル $k$ での微分測定（Differential measurement at pixel k）、右辺の微分は微分入射（Differential incident radiance）と呼ぶ</p>
+<details><summary></summary>
+<p><img src="https://i.gyazo.com/0497bafde724a5fc1326807ead4ec645.png" alt="Image"></p>
+</details><br>
+<p>微分入射 $\partial_x L_i(p,ω)$ はどう振る舞い、どう散乱するのか？</p>
+<p>レンダリング方程式 $L_o$ において、 $L_e$ はその点で発せられた光を表し、 $L_i$ はその点に他から届いた光、 $f_s$ は反射率を表す</p>
+<details><summary></summary>
+<img src="https://i.gyazo.com/8d87d59b788b3f6a0da94e25c2116aec.png" width="70%">
+<img src="https://i.gyazo.com/7775cf0e89de1b892275169a82e7f075.png" width="70%">
+</details><br><br>
+<p>$\partial_x$ ：シーンパラメータ $x$ に対する微分</p>
+<p>右辺第一項の微分は、時間パラメータが変化する時に<strong>炎</strong>がどのように変化するかによるもの</p>
+<p>右辺第二項の微分は、BSDFのパラメータが変化する時に<strong>放射される光</strong>がどのように変化するかによるもの</p>
+<p>右辺第三項の微分は、シーンのどこか他の場所で<strong>微分放射されて伝搬される光</strong>によるもの</p>
+<details><summary></summary>
+<img src="https://i.gyazo.com/4b6d87315b2fd52b21e47f99899e9650.png" width="70%">
+<img src="https://i.gyazo.com/3ac0033432620ed24b18104419886e41.png" width="70%">
+<img src="https://i.gyazo.com/8360d213dc3424929f9871d56bb6517f.png" width="70%">
+</details><br>
+<h4 id="ティーポットのテクスチャでの例">ティーポットのテクスチャでの例</h4>
+<p>ティーポットのテクスチャをターゲット画像にあわせるために最適化する例を考える</p>
+<p>ティーポットのテクスチャの一部に小さな変更を加えると、赤い部分で微分放射が起こる</p>
+<p>ここで、ランプの強度が変わっていたら、そこでも微分読み取りが起こる</p>
+<details><summary></summary>
+<p><img src="https://i.gyazo.com/be614bea5fe147e5e73bcc0e768704b8.png" alt="Image"></p>
+<p><img src="https://i.gyazo.com/663bddc2e44fba288d72dc6d74cf592f.png" alt="Image"></p>
+</details><br>
+<p>ティーポットから放出される微分放射はシーン内で散乱する</p>
+<p>ここで、この微分領域の量は重み付けされる</p>
+<p>例えば、ティーポットが明るく照らされている場合、（色の変化は大きいため）重要になり、暗い角に置かれている場合、変化は通常のフォワードレンダリングではあまり重要にならない</p>
+<details><summary></summary>
+<p><img src="https://i.gyazo.com/08f6f08647238d254c64873b43f28a2e.png" alt="Image"></p>
+<p><img src="https://i.gyazo.com/78c3b6e8c2de815084bcaaf6663d4195.png" alt="Image"></p>
+</details><br>
+<h4 id="対称性を利用するexploiting-the-symmetry">対称性を利用する（Exploiting the symmetry）</h4>
+<p>光輸送（Light transport）において、<strong>光源から放射される光</strong>と<strong>重要度</strong>との間には対称性があり、これにより、パストレーシング、レイトレーシング、双方向パストレーシング、または任意の組み合わせを実行することができる</p>
+<p>提案手法（放射線逆伝搬）で主張するのは、<strong>微分放射（Differential radiance）</strong>と<strong>随伴放射（Adjoint radiance）</strong>との間に同じ対称性があるということ</p>
+<p>微分放射はシーン内のパラメータが変化する時に放射され、随伴放射は目的関数を局所的に改善するために放射関数をどのように変化させるべきかを表す</p>
+<p>この対称性を利用することで、すべての単一変数で微分放射を伝搬する必要がなくなる</p>
+<details><summary></summary>
+<p><img src="https://i.gyazo.com/6671060f35202832c05868f954078def.png" alt="Image"></p>
+</details><br>
+<h4 id="放射線逆伝搬の理論">放射線逆伝搬の理論</h4>
+<p>カメラから勾配画像（随伴放射）をシーンに投影する</p>
+<details><summary></summary>
+<p><img src="https://i.gyazo.com/5fd1a1aa5091521cd5ca2800c61147d5.png" alt="Image"></p>
+<p><img src="https://i.gyazo.com/fa6cf7ea0b7e274a09f30067f85df09e.png" alt="Image"></p>
+</details><br>
+<p>赤で表す<strong>微分放射</strong>と青で表す<strong>随伴放射</strong>の間の積が、目的関数に直接影響を与える</p>
+<details><summary></summary>
+<p><img src="https://i.gyazo.com/fbb3e1d2c0597de212543a4987810aaa.png" alt="Image"></p>
+<p>※動画を参照すべし</p>
+</details><br>
+<p>画像ピクセルの勾配をシーンパラメータに関連付けるのが難しかった連鎖則において、提案手法では、複雑さを取り除き、（対称性から導いた）トランスポートシミュレーションに置き換えた</p>
+<p>例で挙げたテクスチャ最適化の場合、BSDFの勾配はパラメータに対して簡単に計算できる（自己完結した微分シェーダーとして考えることができる）</p>
+<details><summary></summary>
+<p><img src="https://i.gyazo.com/2ba366154d846ccc5c0a4c43e578cf28.png" alt="Image"></p>
+</details><br>
+<h3 id="アルゴリズム">アルゴリズム</h3>
+<hr>
+<h4 id="微分放射differential-radianceのためのパストレーシング">微分放射（Differential radiance）のためのパストレーシング</h4>
+<p>アルゴリズムは非常にシンプルである</p>
+<p>シーンパラメータの初期値から始め、現在の状態の通常のレンダリングを行い、プライマルレンダリングと参照画像から目的関数 $g(y)$ を計算する</p>
+<p>レンダリング $y$ の各ピクセルに対する目的関数の感度を表す $\delta_y$ を計算する</p>
+<p>随伴微分放射（Adjoint differential radiance）を各ピクセルを通して追跡し、微分放射（Differential radiance）を集めることでシーンに伝搬させる</p>
+<p>最後に、勾配 $\delta_x$ を得て、シーンパラメータを更新し、次のイテレーション（繰り返し処理）を行う</p>
+<details><summary></summary>
+<p><img src="https://i.gyazo.com/7834af71bc647c0f3ffbd77fc01b58d5.png" alt="Image"></p>
+</details><br>
+<p>後半部分を詳細に見る</p>
+<p>随伴放射は最初のレイによってカメラからシーンに輸送され、微分可能なオブジェクト（ここではテーブル）に遭遇すると、次の方向からBRDFをサンプリングし、入射勾配を推定する</p>
+<p>BSDFへの変更は、それが受ける光の量に基づいて重要かどうかが異なるため、オレンジ色の再帰的なレイを使って入射勾配を推定する</p>
+<p>黒色二重レイで表される随伴放射を入射勾配と掛け合わせ、BSDFパラメータに伝播させる</p>
+<p>このアプリケーションでは、事前にコンパイルされた自動微分シェーダーを使用する</p>
+<details><summary></summary>
+<p><img src="https://i.gyazo.com/4193c99496f68faa315e1695879ef11e.png" alt="Image"></p>
+</details><br>
+<p>最終的に、微分可能なパラメータを持つオブジェクトに遭遇するたびにこの伝播を繰り返す</p>
+<p>このバックドロップアルゴリズムは、うまく機能し偏りがないが、実際のところ場合によっては二次の複雑さをもたらす再帰的な束縛がある</p>
+<details><summary></summary>
+<p><img src="https://i.gyazo.com/08361c8e1727850a55e4764003293fd6.png" alt="Image"></p>
+</details><br>
+<h4 id="偏ったバリアントbiased-variants">偏ったバリアント（Biased variants）</h4>
+<p>（省略）</p>
+<!--
+もし、このアルゴリズムの偏ったバリアントを考えるという狂気のようなことをしたらどうか？
+2つの非常に単純なアイデアがある
+実際には、入射率の事故を計算する代わりに、それを1に設定しても済む
+もちろん、1は再帰的なパス全体を計算するよりはるかに高速である
+この近似値を使うと、勾配の大きさは正しくないが、デザインは保持され、パイプラインを少し変更することで2回目のスピードアップが得られる
+
+通常、反復ごとに2つのシミュレーションが必要
+一つは左側でプライマルレンダリングを得るため、もう一つは真ん中で大きな微分領域を輸送するため
+代わりに、プライマルレンダリングを取り除き、通常および微分量を同じシミュレーションで伝達することができる
+原則として、これはそれらを別々に輸送するのと比べて2倍速い可能性がある
+
+相対的なバックドロップを行った後、勾配デルタXとプライマルイメージの両方を得て、次の反復に使用する
+そのイメージは、前の反復からのパラメーター値を使用しているため、1つの意味ではオフだが、実際にはシーンが反復ごとにゆっくりと変化するため、非常にうまく機能する
+-->
+<h3 id="実装implementation">実装（Implementation）</h3>
+<hr>
+<h4 id="高速微分可能レンダリングlightning-fast-differentiable-rendering">高速微分可能レンダリング（Lightning-fast differentiable rendering）</h4>
+<p>ベースラインのMitsuba2は、ループ内の自動微分を使用してGPU上で微分可能レンダリングを実装しており、計算グラフの維持コストを分散させ、一度に大きなレートで伝播させる</p>
+<p>実行時間はGPUメモリトラフィックに依存する</p>
+<p>放射線逆伝播（Radiative Backpropagation）を用いれば、オートメーションの必要がないため、光源とBSDFのための微分シェーダーを事前にコンパイルし、OptiXなどで動作するMegakernelにすべてを組み立てることができる</p>
+<p>Mitsubaを持ちれば、手書きのコードをほとんど使わずに自動変換することができる</p>
+<details><summary></summary>
+<p><img src="https://i.gyazo.com/1d2a99b3463a114e98373c33065dd346.png" alt="Image"></p>
+</details><br>
+<h3 id="結果results">結果（Results）</h3>
+<hr>
+<p>等時間実験を行う</p>
+<h4 id="表面テクスチャの最適化surface-texture-optimization">表面テクスチャの最適化（Surface texture optimization）</h4>
+<p>ガラスに閉じ込められた地球儀のテクスチャを最適化する</p>
+<p>すべての光は複数のガラス層や鏡を通ってオブジェクトまで届くため、非常に複雑である</p>
+<details><summary></summary>
+<p><img src="https://i.gyazo.com/063b6b2658e05f6f551621e01e6f3eb2.png" alt="Image"></p>
+</details><br>
+<p>実行すると、ガラスや鏡を通して見えるすべての部分はすぐに新しい解に変化する</p>
+<p>どのようにしても見えない部分は、初期状態のままになる</p>
+<details><summary></summary>
+<p><img src="https://i.gyazo.com/f14c8362c83ea7e7c10794a03daae11a.png" alt="Image"></p>
+<p><img src="https://i.gyazo.com/70dcbbd3a01bed0a0bd58bc806c694ee.png" alt="Image"></p>
+<p><img src="https://i.gyazo.com/5694370e6c00add2135cb01d6b966e7d.png" alt="Image"></p>
+<p>※動画を見るべし</p>
+</details><br>
+<p>提案手法と既存手法（Autodiff-based）の比較</p>
+<p>最適化（目的関数の最小化）を反復回数で比較した結果と実行時間で比較した結果</p>
+<p>提案手法が比較的短時間で収束していることがわかる</p>
+<details><summary></summary>
+<p><img src="https://i.gyazo.com/19d6e3e7400ed762a1490088e6388ab2.png" alt="Image"></p>
+</details><br>
+<p>3Dプリントアプリケーションの実験では、プラスチック板（拡散の影響がある）の表面で望ましい見た目のテクスチャを再現するように最適化する</p>
+<p>提案手法が比較的短時間で収束していることがわかる</p>
+<details><summary></summary>
+<p><img src="https://i.gyazo.com/c3b07c62f05c05c0c24b2bf1953bb779.png" alt="Image"></p>
+<p><img src="https://i.gyazo.com/31802d506dda69556475b23e02b0cec4.png" alt="Image"></p>
+</details><br>
+<h3 id="まとめ">まとめ</h3>
+<hr>
+<h4 id="結論">結論</h4>
+<ul>
+<li>提案手法によって、微分可能レンダリングが光輸送シミュレーションとして再構成されたことを示した</li>
+<li>既存手法に比べて、メモリ制限を完全に解消し、大幅なスピードアップを実現した</li>
+</ul>
+<h4 id="展望">展望</h4>
+<ul>
+<li>既存のレンダリング技術（path guiding, bidirectional path tracingなど）を適応させることによって、新しい解釈を構築することが興味深い</li>
+<li>視認性に関連した勾配のサポートを追加したい</li>
+</ul>
+<p><br><br>以上<br></p>
 <div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
