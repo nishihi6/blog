@@ -253,21 +253,21 @@ stroke-linejoin="round" class="feather feather-home">
 <h3 id="微分可能レンダリングとは">微分可能レンダリングとは</h3>
 <hr>
 <h4 id="フォーワードレンダリングforward-renderingとは">フォーワードレンダリング（Forward Rendering）とは</h4>
-<p>フォーワードレンダリングは、シーンの説明（オブジェクトの形状、外見、位置など）を取り、それを美しくリアルなイメージに変換するプロセスである</p>
+<p>フォーワードレンダリングは、シーンの説明（オブジェクトの形状、外見、位置など）を取り、それを美しくリアルなイメージに変換する</p>
 <p>物理ベースのレンダリングプロセス全体をシーンパラメータ$x$の関数$f$として示す</p>
 <details><summary></summary>
 <p><img src="https://i.gyazo.com/513952c13bb9a67384c78c50ba4fc009.png" alt="Image"></p>
 </details><br>
 <h4 id="微分可能レンダリングdifferential-renderingとは">微分可能レンダリング（Differential Rendering）とは</h4>
-<p>画像を入力としてそのシーンの説明を復元したい場合、関数$f$を単に反転させるにしても複雑すぎることがわかる</p>
+<p>画像を入力してそのシーンを復元したい場合、関数$f$を単に反転させるにしても複雑すぎる</p>
 <p>そこで、代わりに勾配を用いて、勾配ベースの方法で$x$の最適化を行う</p>
 <p>ここでは、レンダリング関数$f$のシーンパラメータ$x$に対する偏微分を効率的に推定する問題に焦点を当てている</p>
 <details><summary></summary>
 <p><img src="https://i.gyazo.com/36ba0bb8391bcd12ae8d8b77dc4c876e.png" alt="Image"></p>
 </details><br>
 <h4 id="既存研究related-work">既存研究（Related work）</h4>
-<p>微分可能レンダリングは近年注目を集めており、その応用については発展途上である</p>
-<p>すでにポーズ推定、素材設計、素材と照明の共同推定、ボリュームの逆レンダリングなどに使用されてる</p>
+<p>微分可能レンダリングは近年注目を集めており、その応用については発展途上中である</p>
+<p>すでにポーズ推定、マテリアルデザイン、マテリアルと照明の同時推定、ボリュームの逆レンダリングなどに使用されてる</p>
 <details><summary></summary>
 <p><img src="https://i.gyazo.com/f2a3bf0cb4dcb5f74e60d2d09401ec71.png" alt="Image"></p>
 </details><br>
@@ -300,9 +300,9 @@ stroke-linejoin="round" class="feather feather-home">
 <details><summary></summary>
 <p><img src="https://i.gyazo.com/ce327f17693bdc08ec56d1330c1f3fe7.png" alt="Image"></p>
 </details><br>
-<p>目的関数はレンダリング方法から計算されるため、最初の項は計算しやすい</p>
-<p>最初の項は、本質的に、目的関数に対する各ピクセルの感度を表す画像になる（目的関数を最小限に抑えるために書くピクセルをどのように変更するべきかを教えてくれる）</p>
-<p>複雑な光輸送シミュレーションであるがゆえに2番目の項は難しい</p>
+<p>目的関数はレンダリング方法から計算される</p>
+<p>最初の項は、目的関数に対する各ピクセルの感度を表す画像になる（目的関数を最小限に抑えるためにピクセルをどのように変更するべきかを教えてくれる）</p>
+<p>複雑な光輸送シミュレーションであるため、2番目の項は難しい</p>
 <p>シーンパラメータに対するレンダリングのピクセルの導関数を取得するにはどうすればよいか？</p>
 <p>そこで自動微分を利用する</p>
 <details><summary></summary>
@@ -312,7 +312,7 @@ stroke-linejoin="round" class="feather feather-home">
 <hr>
 <h4 id="フォーワードモード自動微分forward-mode-autodiff">フォーワードモード自動微分（Forward-mode autodiff）</h4>
 <p>変数（パラメータ）から始め、最初の関係を出力まで伝搬させる</p>
-<p>すべての単一変数に対して行う必要がある</p>
+<p>これはすべての単一変数に対して行う必要がある</p>
 <p>図では変数の数は3つだが、実際には数十万もの入力$x$があると想定される</p>
 <h4 id="逆モード自動微分reverse-mode-autodiff">逆モード自動微分（Reverse-mode autodiff）</h4>
 <p>一度計算を通して、変数間の依存関係をグラフデータ構造に記録する（ノードが変数を表し、エッジが変数間の計算上の依存関係を示す）</p>
