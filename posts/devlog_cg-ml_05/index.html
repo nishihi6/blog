@@ -315,8 +315,8 @@ stroke-linejoin="round" class="feather feather-home">
 <p>これはすべての単一変数に対して行う必要がある</p>
 <p>図では変数の数は3つだが、実際には数十万もの入力$x$があると想定される</p>
 <h4 id="逆モード自動微分reverse-mode-autodiff">逆モード自動微分（Reverse-mode autodiff）</h4>
-<p>一度計算を通して、変数間の依存関係をグラフデータ構造に記録する（ノードが変数を表し、エッジが変数間の計算上の依存関係を示す）</p>
-<p>計算が終了した後、出力の摂動（小さな変化）を入力変数まで逆伝搬させることができる（これによって、出力変数の変化が入力変数にどのように影響を及ぼすかを計算することができる）</p>
+<p>一度計算を行い、変数間の依存関係をグラフデータ構造に記録する（ノードが変数を表し、エッジが変数間の計算上の依存関係を示す）</p>
+<p>計算が終了した後、出力の摂動（小さな変化）を入力変数まで逆伝搬させる（これによって、出力変数の変化が入力変数にどのように影響を及ぼすかを計算することができる）</p>
 <p>この逆モード自動微分は、一度の逆伝搬で全ての入力変数に関する勾配を同時に計算できるため、出力変数が少なく入力変数が多い場合に効率的である（ニューラルネットワークのバックプロパゲーションは、この逆モード自動微分の一例）</p>
 <details><summary></summary>
 <p><img src="https://i.gyazo.com/bd1f92ee023b356023b7c8b47a0094fb.png" alt="Image"></p>
@@ -329,8 +329,8 @@ stroke-linejoin="round" class="feather feather-home">
 <p><img src="https://i.gyazo.com/34aea6024fdd2734f7ac028e8864bb60.png" alt="Image"></p>
 <p><img src="https://i.gyazo.com/44aa0c2797c9d731491ff52b95b606a1.png" alt="Image"></p>
 </details><br>
-<p>ここでの各エッジは、何百万ものエントリを持つGPUバッファを保持している（図はパラメータ波形で示されている）</p>
-<p>光輸送シミュレーションの非構造化された性質により、シーンのどの部分でも他の部分に影響を与える</p>
+<p>ここでの各エッジは、何百万ものエントリを持つGPUバッファを保持している</p>
+<p>光輸送シミュレーションの性質により、シーンのどの部分でも他の部分に影響を与える</p>
 <details><summary></summary>
 <p><img src="https://i.gyazo.com/b05b1c348248b9135e44478c309e77d6.png" alt="Image"></p>
 </details><br>
@@ -357,7 +357,8 @@ $dω^⊥$：点$p$における投影立体角に対応する積分</p>
 </details><br>
 <h4 id="微分測定方程式differential-measurement-equation">微分測定方程式（Differential measurement equation）</h4>
 <p>シーンパラメータ$x$に対する画像ピクセルの勾配を計算したいので、両辺を微分する</p>
-<p>静的センサの場合 $\partial_x W_k=0$ であり、特に可視性に関して積分に不連続性がない</p>
+<p>静的センサの場合 $\partial_x W_k=0$</p>
+<p>特に可視性に関して積分に不連続性がない</p>
 <p>左辺の微分はピクセル $k$ での微分測定（Differential measurement at pixel k）、右辺の微分は微分入射（Differential incident radiance）と呼ぶ</p>
 <details><summary></summary>
 <p><img src="https://i.gyazo.com/0497bafde724a5fc1326807ead4ec645.png" alt="Image"></p>
