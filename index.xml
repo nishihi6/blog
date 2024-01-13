@@ -50,7 +50,8 @@ Merlin Nimier-David, Sébastien Speierer, Benoît Ruiz, and Wenzel Jakob. 2020. 
 鬼ごっこの変種のひとつ、だるまさんがころんだを応用したゲーム
 お手軽なモーションキャプチャハードウェア（Mocopi）を使い、プレイヤー身体の動作から「走る」と「止まる」を判定する
 コントローラーを持たない体験コンテンツ 開発環境 Windows10 Unity2022.3.16f1(LTS) Mocopi ※UDPによる送受信を行う 環境設定 プロジェクトの設定 プラグイン&amp;quot;mocopi Receiver Plugin for Unity&amp;quot;のインポート
-https://www.sony.net/Products/mocopi-dev/jp/documents/ReceiverPlugin/Unity/AboutPlugin.html</description>
+https://www.sony.net/Products/mocopi-dev/jp/documents/ReceiverPlugin/Unity/AboutPlugin.html
+姿勢判定 判定する姿勢・状態：静止、走る</description>
     </item>
     
     <item>
