@@ -560,6 +560,18 @@ dev-dx12-202308（プロジェクト名） └─ Source ├─ Application │ 
     </item>
     
     <item>
+      <title>コーディングの基礎 [Memo #000]</title>
+      <link>https://nishihi6.github.io/blog/posts/memo_pg_01/</link>
+      <pubDate>Fri, 25 Aug 2023 17:35:20 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/memo_pg_01/</guid>
+      <description>コーディングに関するメモ コーディングに必要な知識をまとめていく
+前提知識 コーディングテストを解くための知識 データ構造 連結リスト 木、トライ木、グラフ スタックとキュー ヒープ ベクタ/配列リスト ハッシュテーブル アルゴリズム 幅優先探索 深さ優先探索 二分木 マージソート クイックソート 概念 ビット操作 メモリ 再帰 動的計画法 ビック・オー記法、スペース 解答フローチャート 問題理解 問題文で与えられた条件、インプット、アウトプット等を正確に把握する ブルートフォース 効率が悪くても良いので、最も単純なアルゴリズムで解を得る 最適化 計算量を抑えた解法を探索する リファクタ 可読性の高いコードになるようにリファクタする テスト・提出 テストを実行し、特別なケース・エッジケースに対応していることを確認する C++コーティングメモ 参考サイト：https://fanblogs.jp/cplusplus/archive/391/0
+画面への出力 std::cout
+コード // 画面への出力を行うプログラム #include &amp;lt;iostream&amp;gt; //↑画面やキーボードに対する入出力を行うためのライブラリ（input-output stream）に関する情報が格納されている&amp;lt;iostream&amp;gt;の内容を取り込む． using namespace std; //↑using指令 //↑詳細は9章を参照 int main() { cout &amp;lt;&amp;lt; &amp;#34;初めてのC++プログラム1\n&amp;#34;; cout &amp;lt;&amp;lt; &amp;#34;画面に出力しています\n&amp;#34;; cout &amp;lt;&amp;lt; &amp;#34;初めてのC++プログラム2\n画面に出力しています\n&amp;#34;; cout &amp;lt;&amp;lt; &amp;#34;はじめまして．\n&amp;#34; &amp;lt;&amp;lt; &amp;#34;こんにちは．\n&amp;#34;; //↑ストリームへの連続した出力 cout &amp;lt;&amp;lt; &amp;#34;初めてのC++プログラム4\n&amp;#34;; cout &amp;lt;&amp;lt; &amp;#34;画面に出力しています\n&amp;#34;; //↑自由形式記述の例 cout &amp;lt;&amp;lt; &amp;#34;初めてのC++プログラム5\n&amp;#34; &amp;#34;画面に出力しています\n&amp;#34;; //↑空白類（white space）を挟んで，分割して表記できる． } 変数 コード // #include &amp;lt;iostream&amp;gt; using namespace std; int main() { cout &amp;lt;&amp;lt; &amp;#34;18と63の和は&amp;#34; &amp;lt;&amp;lt; 18 + 63 &amp;lt;&amp;lt; &amp;#34;です．\n&amp;#34;; //↑「18 + 63」のように，整数を表す定数のことを整数リテラル（integer liberal）と呼ぶ． int x; int y; x = 63; y = 18; //↑変数の宣言時には，初期化子を与えて確実に初期化する． while (0) { int x = 63; } while (0) { int x(63); } while (0) { int x{ 63 }; } while (0) { int x = { 63 }; } //↑他の形式の初期化 cout &amp;lt;&amp;lt; &amp;#34;xの値は&amp;#34; &amp;lt;&amp;lt; x &amp;lt;&amp;lt; &amp;#34;です．\n&amp;#34;; cout &amp;lt;&amp;lt; &amp;#34;yの値は&amp;#34; &amp;lt;&amp;lt; y &amp;lt;&amp;lt; &amp;#34;です．\n&amp;#34;; cout &amp;lt;&amp;lt; &amp;#34;合計は&amp;#34; &amp;lt;&amp;lt; x + y &amp;lt;&amp;lt; &amp;#34;です．\n&amp;#34;; cout &amp;lt;&amp;lt; &amp;#34;平均は&amp;#34; &amp;lt;&amp;lt; (x + y) / 2 &amp;lt;&amp;lt; &amp;#34;です．\n&amp;#34;; } キーボードからの入力 std::cin</description>
+    </item>
+    
+    <item>
       <title>CG理論 #1 レンダリングパイプライン [Devlog #002]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_cg_01/</link>
       <pubDate>Thu, 24 Aug 2023 15:22:11 +0900</pubDate>
