@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="ja-jp"><head><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">コーディングの基礎 [Memo #000] | nishihi6</title>
+<meta property="og:title" content="コーディングの基礎 [Memo #000] | nishihi6" />
+<meta name="twitter:title" content="コーディングの基礎 [Memo #000] | nishihi6" />
+<meta itemprop="name" content="コーディングの基礎 [Memo #000] | nishihi6" />
+<meta name="application-name" content="コーディングの基礎 [Memo #000] | nishihi6" />
+<meta property="og:site_name" content="nishihi6" />
+
+<meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
+<meta itemprop="description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta property="og:description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta name="twitter:description" content="Minimal Hugo blog theme with light and dark mode support" />
+
+<meta property="og:locale" content="ja-jp" />
+<meta name="language" content="ja-jp" />
+
+
+
+  <meta itemprop="image" content="https://nishihi6.github.io/blog/" />
+  <meta property="og:image" content="https://nishihi6.github.io/blog/" />
+  <meta name="twitter:image" content="https://nishihi6.github.io/blog/" />
+  <meta name="twitter:image:src" content="https://nishihi6.github.io/blog/" />
+
+
+
+
+    
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2023-08-25T17:35:20&#43;0900 />
+    <meta property="article:published_time" content=2023-08-25T17:35:20&#43;0900 />
+
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "コーディングの基礎 [Memo #000]",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2023-08-25",
+        "description": "",
+        "wordCount":  2199 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2023-08-25",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "nishihi6"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.117.0">
+
+    
+
+    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/memo_pg_01/">
+    <link href="/blog/style.min.840eada6dfddec7b8ccfcf867f039bf80b1f16a265ec6e01dc553a3dddc9d509.css" rel="stylesheet">
+    <link href="/blog/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/blog/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/blog/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/blog/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/blog/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/blog/favicon.ico">
+
+
+
+
+<link rel="manifest" href="https://nishihi6.github.io/blog/site.webmanifest">
+
+<meta name="msapplication-config" content="/blog/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/blog/icons/favicon.svg">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"
+    integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous" />
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"
+    integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4"
+    crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"
+    integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false}
+      ]
+    });"></script>
+
+    </head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/blog/js/theme.min.8961c317c5b88b953fe27525839672c9343f1058ab044696ca225656c8ba2ab0.js" integrity="sha256-iWHDF8W4i5U/4nUlg5ZyyTQ/EFirBEaWyiJWVsi6KrA="></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="https://nishihi6.github.io/blog/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/blog/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/blog/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/blog/pages/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">コーディングの基礎 [Memo #000]</h1>
+                
+                
+                <div class="post-meta">
+                    <time datetime="2023-08-25T17:35:20&#43;09:00" itemprop="datePublished"> 25 Aug 2023 </time>
+                </div>
+                
+            </header>
+            <details class="toc">
+                <summary><b>Table of Contents</b></summary>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前提知識">前提知識</a>
+      <ul>
+        <li><a href="#コーディングテストを解くための知識">コーディングテストを解くための知識</a></li>
+        <li><a href="#解答フローチャート">解答フローチャート</a></li>
+      </ul>
+    </li>
+    <li><a href="#cコーティングメモ">C++コーティングメモ</a>
+      <ul>
+        <li><a href="#画面への出力">画面への出力</a></li>
+        <li><a href="#変数">変数</a></li>
+        <li><a href="#キーボードからの入力">キーボードからの入力</a></li>
+        <li><a href="#if文">if文</a></li>
+        <li><a href="#switch文">switch文</a></li>
+        <li><a href="#字句要素">字句要素</a></li>
+        <li><a href="#do文">do文</a></li>
+        <li><a href="#while文">while文</a></li>
+        <li><a href="#for文">for文</a></li>
+        <li><a href="#多重ループ">多重ループ</a></li>
+        <li><a href="#break文continue文goto文">break文、continue文、goto文</a></li>
+        <li><a href="#拡張表記と操作子">拡張表記と操作子</a></li>
+        <li><a href="#算術型">算術型</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+            </details><div class="page-content">
+                <h1 id="コーディングに関するメモ">コーディングに関するメモ</h1>
+<hr>
+<p>コーディングに必要な知識をまとめていく</p>
+<h2 id="前提知識">前提知識</h2>
+<hr>
+<h3 id="コーディングテストを解くための知識">コーディングテストを解くための知識</h3>
+<ul>
+<li>データ構造
+<ul>
+<li>連結リスト</li>
+<li>木、トライ木、グラフ</li>
+<li>スタックとキュー</li>
+<li>ヒープ</li>
+<li>ベクタ/配列リスト</li>
+<li>ハッシュテーブル</li>
+</ul>
+</li>
+<li>アルゴリズム
+<ul>
+<li>幅優先探索</li>
+<li>深さ優先探索</li>
+<li>二分木</li>
+<li>マージソート</li>
+<li>クイックソート</li>
+</ul>
+</li>
+<li>概念
+<ul>
+<li>ビット操作</li>
+<li>メモリ</li>
+<li>再帰</li>
+<li>動的計画法</li>
+<li>ビック・オー記法、スペース</li>
+</ul>
+</li>
+</ul>
+<h3 id="解答フローチャート">解答フローチャート</h3>
+<ol>
+<li>問題理解
+<ul>
+<li>問題文で与えられた条件、インプット、アウトプット等を正確に把握する</li>
+</ul>
+</li>
+<li>ブルートフォース
+<ul>
+<li>効率が悪くても良いので、最も単純なアルゴリズムで解を得る</li>
+</ul>
+</li>
+<li>最適化
+<ul>
+<li>計算量を抑えた解法を探索する</li>
+</ul>
+</li>
+<li>リファクタ
+<ul>
+<li>可読性の高いコードになるようにリファクタする</li>
+</ul>
+</li>
+<li>テスト・提出
+<ul>
+<li>テストを実行し、特別なケース・エッジケースに対応していることを確認する</li>
+</ul>
+</li>
+</ol>
+<h2 id="cコーティングメモ">C++コーティングメモ</h2>
+<hr>
+<p>参考サイト：<a href="https://fanblogs.jp/cplusplus/archive/391/0">https://fanblogs.jp/cplusplus/archive/391/0</a></p>
+<h3 id="画面への出力">画面への出力</h3>
+<p><code>std::cout</code></p>
+<details><summary>コード</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// 画面への出力を行うプログラム
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="c1">//↑画面やキーボードに対する入出力を行うためのライブラリ（input-output stream）に関する情報が格納されている&lt;iostream&gt;の内容を取り込む．
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//↑using指令
+</span></span></span><span class="line"><span class="cl"><span class="c1">//↑詳細は9章を参照
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;初めてのC++プログラム1</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;画面に出力しています</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;初めてのC++プログラム2</span><span class="se">\n</span><span class="s">画面に出力しています</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;はじめまして．</span><span class="se">\n</span><span class="s">&#34;</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;こんにちは．</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//↑ストリームへの連続した出力
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;初めてのC++プログラム4</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span> <span class="n">cout</span> 
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;&lt;</span> <span class="s">&#34;画面に出力しています</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//↑自由形式記述の例
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;初めてのC++プログラム5</span><span class="se">\n</span><span class="s">&#34;</span>
+</span></span><span class="line"><span class="cl">			<span class="s">&#34;画面に出力しています</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//↑空白類（white space）を挟んで，分割して表記できる．
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div></details><br>
+<h3 id="変数">変数</h3>
+<details><summary>コード</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;18と63の和は&#34;</span> <span class="o">&lt;&lt;</span> <span class="mi">18</span> <span class="o">+</span> <span class="mi">63</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です．</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//↑「18 + 63」のように，整数を表す定数のことを整数リテラル（integer liberal）と呼ぶ．
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">x</span> <span class="o">=</span> <span class="mi">63</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">y</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//↑変数の宣言時には，初期化子を与えて確実に初期化する．
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="k">while</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">63</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">while</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">x</span><span class="p">(</span><span class="mi">63</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">while</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">x</span><span class="p">{</span> <span class="mi">63</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">while</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">63</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//↑他の形式の初期化
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;xの値は&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です．</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;yの値は&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です．</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;合計は&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です．</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;平均は&#34;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です．</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div></details><br>
+<h3 id="キーボードからの入力">キーボードからの入力</h3>
+<p><code>std::cin</code></p>
+<details><summary>コード</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;ctime&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;cstdlib&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;xとyを加減乗除します．</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;xの値：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;yの値：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">%</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">//↑演算の対象となる式のことをオペランド（operand）と呼ぶ．
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">//↑「+」などは演算子（operator）であり，一般に算術演算子（arithmetic operator）と呼ばれるもの．
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="n">y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">//↑値の連続した読み込み
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">%</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">z</span> <span class="o">=</span> <span class="o">-</span><span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">//↑単項の算術演算子
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="kt">double</span> <span class="n">d_x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">double</span> <span class="n">d_y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">d_x</span> <span class="o">&gt;&gt;</span> <span class="n">d_y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">d_x</span> <span class="o">+</span> <span class="n">d_y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">d_x</span> <span class="o">-</span> <span class="n">d_y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">d_x</span> <span class="o">*</span> <span class="n">d_y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">d_x</span> <span class="o">/</span> <span class="n">d_y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1">// cout &lt;&lt; d_x % d_y &lt;&lt; endl;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">//↑実数型（double型）のオペランドには%演算子は適用できない．
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">const</span> <span class="kt">double</span> <span class="n">PI</span> <span class="o">=</span> <span class="mf">3.1416</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">//↑定値オブジェクト（const object）は以後書き換えることができない．
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">//↑プログラム中に埋め込まれた数値は，何を表すのかが理解しにくい（magic numberになりやすい）ので使う．
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">//↑const修飾子とvolatile修飾子の2種類を合わせてcv修飾子（qualifier）と呼ぶ．
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">		cv修飾子について-&gt; http://exlight.net/devel/cpp/cv-qualifier.html
+</span></span></span><span class="line"><span class="cl"><span class="cm">		volatile修飾子について-&gt; https://world-trigger.net/2018/03/14/volatile-c/
+</span></span></span><span class="line"><span class="cl"><span class="cm">		*/</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="kt">double</span> <span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;半径：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">r</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;円周の長さは&#34;</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">PI</span> <span class="o">*</span> <span class="n">r</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です．</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;面積は&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">PI</span> <span class="o">*</span> <span class="n">r</span> <span class="o">*</span> <span class="n">r</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です．</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">srand</span><span class="p">(</span><span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">//↑乱数の種の値を変更するsrand関数．
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">//↑ここで生成される乱数は疑似乱数であることに注意．
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">lucky</span> <span class="o">=</span> <span class="n">rand</span><span class="p">()</span> <span class="o">%</span> <span class="mi">10</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;今日のラッキーナンバーは&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">lucky</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です．</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;文字を入力してください：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">c</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;打ち込んだ文字は&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です．</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;お名前は：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="c1">//cin &gt;&gt; name;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">getline</span><span class="p">(</span><span class="n">cin</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">//↑スペースも読み込む文字の読み込み
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">//↑リターンキーより前に打ち込んだすべての文字が，文字型の変数に格納される．
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;こんにちは&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">name</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;さん．</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div></details><br>
+<h3 id="if文">if文</h3>
+<details><summary>コード</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;整数値：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1">//関係演算子（relational operator）を使って大小関係を判定する
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;その値は正です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;その値は0か負です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;整数a：&#34;</span><span class="p">;</span>	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">a</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;整数b：&#34;</span><span class="p">;</span>	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">b</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1">//等価演算子（equality operator）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">!=</span> <span class="n">b</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;二つの値は等しくありません。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;二つの値は等しいです。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;整数値：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1">//論理否定演算子（logical negative operator）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;その値はゼロです。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;その値はゼロではありません。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;整数値：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1">//論理積演算子（logical AND operator）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;その値はゼロです。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mi">9</span> <span class="o">&amp;&amp;</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;その値は１桁です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;その値は２桁以上です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">//↑論理積演算子&amp;&amp;と論理和演算子||の評価では、短絡評価が行われる。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;整数a：&#34;</span><span class="p">;</span>	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">a</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;整数b：&#34;</span><span class="p">;</span>	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">b</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1">//条件演算子（conditional operator）、条件式（conditional expression）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="o">?</span> <span class="nl">a</span> <span class="p">:</span> <span class="n">b</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;小さいほうの値は&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">min</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;整数値：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="kt">int</span> <span class="n">mod</span> <span class="o">=</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">10</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;その値は10で割り切れません。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;最下位桁は&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">mod</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;その値は10で割り切れます。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="kt">double</span> <span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;実数値：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1">//fmod関数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">if</span> <span class="p">(</span><span class="kt">double</span> <span class="n">m</span> <span class="o">=</span> <span class="n">fmod</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;その値は10で割り切れません。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;剰余は&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;その値は10で割り切れます。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div></details><br>
+<h3 id="switch文">switch文</h3>
+<details><summary>コード</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//switch分（switch statement）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">hand</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;手を選んでください（0：グー / 1：チョキ / 2：パー）：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">hand</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">switch</span> <span class="p">(</span><span class="n">hand</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="mi">0</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;グー</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>	<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;チョキ</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>	<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;パー</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>	<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;整数を入力せよ：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">switch</span> <span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="mi">0</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;A&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;B&#34;</span><span class="p">;</span>	<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;C&#34;</span><span class="p">;</span>	<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="mi">5</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;D&#34;</span><span class="p">;</span>	<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="mi">6</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="mi">7</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;E&#34;</span><span class="p">;</span>	<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">default</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;F&#34;</span><span class="p">;</span>	<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div></details><br>
+<h3 id="字句要素">字句要素</h3>
+<details><summary>コード</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//C++で用意されたキーワード（keyword）はプログラム作成者が変数などの名前として利用することができない。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//キーワードに準ずる代替表現（alternative representation）がある。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;年を入力せよ：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;その年は閏年&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">y</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">==</span> <span class="mi">0</span> <span class="n">and</span> <span class="n">y</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">!=</span> <span class="mi">0</span> <span class="n">or</span> <span class="n">y</span> <span class="o">%</span> <span class="mi">400</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;ではありません。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//識別子（identifier）とは、変数・関数・クラスなどに与えられる名前です。
+</span></span></span><span class="line"><span class="cl"><span class="c1">//先頭の文字は非数字で、２文字目以降は非数字または数字です。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//演算子（operator）には優先度（precedence）がある。
+</span></span></span><span class="line"><span class="cl"><span class="c1">//同じ優先度の演算子が連続するときには結合規則（associativity）が適用される。
+</span></span></span></code></pre></div></details><br>
+<h3 id="do文">do文</h3>
+<details><summary>コード</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//do文
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">string</span> <span class="n">retry</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">do</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">month</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;季節を求めます。</span><span class="se">\n</span><span class="s">何月ですか：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">month</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">month</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="o">&amp;&amp;</span> <span class="n">month</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;それは春です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">month</span> <span class="o">&gt;=</span> <span class="mi">6</span> <span class="o">&amp;&amp;</span> <span class="n">month</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;それは夏です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">month</span> <span class="o">&gt;=</span> <span class="mi">9</span> <span class="o">&amp;&amp;</span> <span class="n">month</span> <span class="o">&lt;=</span> <span class="mi">11</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;それは秋です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">month</span> <span class="o">==</span> <span class="mi">12</span> <span class="o">||</span> <span class="n">month</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">||</span> <span class="n">month</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;それは冬です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;そんな月はありませんよ。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;もう一度？ Y…Yes/N…No：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">retry</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">retry</span> <span class="o">==</span> <span class="s">&#34;Y&#34;</span> <span class="o">||</span> <span class="n">retry</span> <span class="o">==</span> <span class="s">&#34;y&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//do文を用いることで、一定範囲の値の読み込みを設定することができる。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//特定の値が出るまで繰り返す「数当てゲーム」等で使える。
+</span></span></span></code></pre></div></details><br>
+<h3 id="while文">while文</h3>
+<details><summary>コード</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//while文
+</span></span></span><span class="line"><span class="cl"><span class="c1">//増分演算子と減分演算子
+</span></span></span><span class="line"><span class="cl"><span class="c1">//x++ -&gt; xの値をインクリメントする。生成するのは増加&#34;前&#34;の値。（後置増分演算子）（※左辺値にはなれない）
+</span></span></span><span class="line"><span class="cl"><span class="c1">//x-- -&gt; xの値をデクリメントする。　生成するのは減少&#34;前&#34;の値。（後置減分演算子）（※左辺値にはなれない）
+</span></span></span><span class="line"><span class="cl"><span class="c1">//++x -&gt; xの値をインクリメントする。生成するのは増加&#34;後&#34;の値。（前置増分演算子）
+</span></span></span><span class="line"><span class="cl"><span class="c1">//--x -&gt; xの値をデクリメントする。　生成するのは増加&#34;後&#34;の値。（前置減分演算子）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//do文とwhile文
+</span></span></span><span class="line"><span class="cl"><span class="c1">//do文    -&gt; 後判定繰り返し
+</span></span></span><span class="line"><span class="cl"><span class="c1">//while文 -&gt; 前判定繰り返し
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//左辺値（lvalue）式と右辺値（rvalue）式
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//複合代入演算子
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;正の整数値を逆から表示します。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">do</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;正の整数値：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;逆から読むと&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">while</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">10</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">x</span> <span class="o">/=</span> <span class="mi">10</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//整数の和を求める
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//条件におけるコンマ演算子の活用
+</span></span></span></code></pre></div></details><br>
+<h3 id="for文">for文</h3>
+<h3 id="多重ループ">多重ループ</h3>
+<details><summary>コード</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//九九の表
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//setw操作子（桁幅を指定）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp">#include</span> <span class="cpf">&lt;iomanip&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">*</span> <span class="n">j</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//直角三角形の表示
+</span></span></span></code></pre></div></details><br>
+<h3 id="break文continue文goto文">break文、continue文、goto文</h3>
+<details><summary>コード</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//break文
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;整数を加算します。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;何個加算しますか：</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="kt">int</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;整数：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="n">sum</span> <span class="o">+</span> <span class="n">t</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;合計が1000を超えました。</span><span class="se">\n</span><span class="s">最後の数値は無視します。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">				<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="n">sum</span> <span class="o">+=</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;合計は&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">sum</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//continue文
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;整数を加算します。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;何個加算しますか：</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="kt">int</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;整数：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="n">t</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;負の数は加算しません。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">				<span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="n">sum</span> <span class="o">+=</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;合計は&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">sum</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//continue文
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;整数を加算します。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;何個加算しますか：</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;9999で強制終了します。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="kt">int</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;整数：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="n">t</span> <span class="o">==</span> <span class="mi">9999</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="k">goto</span> <span class="n">Exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="n">sum</span> <span class="o">+=</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;合計は&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">sum</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="nl">Exit</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="p">;</span>	<span class="c1">// ラベル付き文（labeled statement）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//面積がnで縦横が整数の長方形の辺の長さを列挙
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;面積は：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;×&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">/</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div></details><br>
+<h3 id="拡張表記と操作子">拡張表記と操作子</h3>
+<details><summary>コード</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iomanip&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//拡張表記（escape sequence）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;ABCDEFGHIJKLMNOPQRSTUVWXYZ&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\r</span><span class="s">12345</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>	<span class="c1">// \f -&gt; 復帰：現表示位置がその行の先頭に移動する。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\\</span><span class="s"> \? </span><span class="se">\&#39;</span><span class="s"> </span><span class="se">\&#34;</span><span class="s"> </span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;二重引用符</span><span class="se">\&#34;</span><span class="s">で囲まれた</span><span class="se">\&#34;</span><span class="s">ABC</span><span class="se">\&#34;</span><span class="s">は文字列リテラルです。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;単一引用符</span><span class="se">\&#39;</span><span class="s">で囲まれた</span><span class="se">\&#39;</span><span class="s">A</span><span class="se">\&#39;</span><span class="s">は文字リテラルです。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//三つ組と二つ組
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//操作子（manipulator）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">oct</span> <span class="o">&lt;&lt;</span> <span class="mi">1234</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>	<span class="c1">// 8進数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">dec</span> <span class="o">&lt;&lt;</span> <span class="mi">1234</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>	<span class="c1">// 10進数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="mi">1234</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>	<span class="c1">// 16進数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">showbase</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">oct</span> <span class="o">&lt;&lt;</span> <span class="mi">1234</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">dec</span> <span class="o">&lt;&lt;</span> <span class="mi">1234</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="mi">1234</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">internal</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;abc</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">left</span>     <span class="o">&lt;&lt;</span> <span class="s">&#34;abc</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">right</span>    <span class="o">&lt;&lt;</span> <span class="s">&#34;abc</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setbase</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>	<span class="c1">// 整数の入出力をn進数で行う。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">internal</span> <span class="o">&lt;&lt;</span> <span class="o">-</span><span class="mi">123</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>	<span class="c1">// 詰め物文字を中間位置に入れて出力する。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">left</span>     <span class="o">&lt;&lt;</span> <span class="o">-</span><span class="mi">123</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">right</span>    <span class="o">&lt;&lt;</span> <span class="o">-</span><span class="mi">123</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setfill</span><span class="p">(</span><span class="sc">&#39;*&#39;</span><span class="p">);</span>	<span class="c1">// 詰め物文字を*に設定する。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">internal</span> <span class="o">&lt;&lt;</span> <span class="o">-</span><span class="mi">123</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">left</span>     <span class="o">&lt;&lt;</span> <span class="o">-</span><span class="mi">123</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">right</span>    <span class="o">&lt;&lt;</span> <span class="o">-</span><span class="mi">123</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">fixed</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">setprecision</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mf">123.5</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// fixed -&gt; 浮動小数点数を固定小数点記法で出力する。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// setprecision -&gt; 精度をn桁に指定する。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// endl -&gt; 改行文字を出力してバッファをフラッシュする。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">scientific</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">setprecision</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mf">123.5</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// scientific -&gt; 浮動小数点数を指数付き記法で出力する。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//std::internalは、符号を内部に配置する際によく使用される。
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">12345FGHIJKLMNOPQRSTUVWXYZ
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">\ ? &#39; &#34;
+</span></span><span class="line"><span class="cl">二重引用符&#34;で囲まれた&#34;ABC&#34;は文字列リテラルです。
+</span></span><span class="line"><span class="cl">単一引用符&#39;で囲まれた&#39;A&#39;は文字リテラルです。
+</span></span><span class="line"><span class="cl">2322
+</span></span><span class="line"><span class="cl">1234
+</span></span><span class="line"><span class="cl">4d2
+</span></span><span class="line"><span class="cl">02322
+</span></span><span class="line"><span class="cl">1234
+</span></span><span class="line"><span class="cl">0x4d2
+</span></span><span class="line"><span class="cl">      abc
+</span></span><span class="line"><span class="cl">abc
+</span></span><span class="line"><span class="cl">            abc
+</span></span><span class="line"><span class="cl">-      123
+</span></span><span class="line"><span class="cl">-123
+</span></span><span class="line"><span class="cl">      -123
+</span></span><span class="line"><span class="cl">-******123
+</span></span><span class="line"><span class="cl">-123******
+</span></span><span class="line"><span class="cl">******-123
+</span></span><span class="line"><span class="cl">****123.50
+</span></span><span class="line"><span class="cl">**1.24e+02
+</span></span></code></pre></div></details><br>
+<h3 id="算術型">算術型</h3>
+<details><summary>コード</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//算術型
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp">#include</span> <span class="cpf">&lt;climits&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iomanip&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//整数型
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//符号なし整数型（unsigned integer type） -&gt; 0と正の整数値を表現
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//符号付き整数型（signed integer type） -&gt; 負と0の正の整数値を表現
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//型指定子（type specifier）による型指定 以下は汎整数型（integral type）あるいは整数型（integer type）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">char</span> <span class="n">c1</span> <span class="o">=</span> <span class="mi">65</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">signed</span> <span class="kt">char</span> <span class="n">sc1</span> <span class="o">=</span> <span class="mi">65</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">uc1</span> <span class="o">=</span> <span class="mi">65</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">short</span> <span class="kt">int</span> <span class="n">si1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">32768</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">i1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">32768</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">long</span> <span class="kt">int</span> <span class="n">li1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2147483648</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">unsigned</span> <span class="kt">short</span> <span class="kt">int</span> <span class="n">usi1</span> <span class="o">=</span> <span class="mi">65535</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">ui1</span> <span class="o">=</span> <span class="mi">65535</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">int</span> <span class="n">uli1</span> <span class="o">=</span> <span class="mi">4294967295</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">c1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">char</span><span class="p">)(</span><span class="n">c1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sc1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">char</span><span class="p">)(</span><span class="n">sc1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">uc1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">char</span><span class="p">)(</span><span class="n">uc1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">si1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">short</span> <span class="kt">int</span><span class="p">)(</span><span class="n">si1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">i1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">i1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>	<span class="c1">// intはlong intの範囲を持つ
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">li1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">long</span> <span class="kt">int</span><span class="p">)(</span><span class="n">li1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">usi1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">short</span> <span class="kt">int</span><span class="p">)(</span><span class="n">usi1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ui1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)(</span><span class="n">ui1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">uli1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">int</span><span class="p">)(</span><span class="n">uli1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="kt">long</span> <span class="kt">long</span> <span class="kt">int</span> <span class="n">ulli1</span> <span class="o">=</span> <span class="mi">9223372036854775807</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="kt">int</span><span class="p">)</span><span class="n">ulli1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="kt">int</span><span class="p">)(</span><span class="n">ulli1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//オブジェクト形式マクロ
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//#define指令（オブジェクト形式マクロ（object-like macro））
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;long intの最大値は&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">LONG_MAX</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>	<span class="c1">// &lt;climits&gt;で定義される	// マクロ名（macro name）：LONG_MAX
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\n\n</span><span class="s">この処理系の整数型で表現できる値</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;char         ：&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">CHAR_MIN</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;~&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">CHAR_MAX</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;signed char  ：&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">SCHAR_MIN</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;~&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">SCHAR_MAX</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;unsigned char：&#34;</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;~&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">UCHAR_MAX</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;short int：&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">SHRT_MIN</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;~&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">SHRT_MAX</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;int      ：&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">INT_MIN</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;~&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">INT_MAX</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;long int ：&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">LONG_MIN</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;~&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">LONG_MAX</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;unsigned short int：&#34;</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;~&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">USHRT_MAX</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;unsigned int      ：&#34;</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;~&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">UINT_MAX</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;unsigned long int ：&#34;</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;~&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">ULONG_MAX</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//C++では、処理系特性を表すnumeric_limitsクラステンプレートが&lt;limits&gt;ヘッダで提供される。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;short int：&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">short</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;~&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">short</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;int      ：&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;~&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;long int ：&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">long</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;~&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">long</span><span class="o">&gt;::</span><span class="n">max</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//文字型
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="kt">wchar_t</span> <span class="n">wmoji1</span> <span class="o">=</span> <span class="sa">L</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">wchar_t</span> <span class="n">wmoji2</span> <span class="o">=</span> <span class="sa">L</span><span class="sc">&#39;あ&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">wchar_t</span> <span class="n">wstr</span><span class="p">[]</span> <span class="o">=</span> <span class="sa">L</span><span class="s">&#34;ABCあいう&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">wmoji1</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;:&#34;</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">wmoji1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>	<span class="c1">// 2バイト
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">wmoji2</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;:&#34;</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">wmoji2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> <span class="c1">// 2バイト
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">wchar_t</span><span class="p">)</span><span class="n">wstr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">wchar_t</span><span class="p">)</span><span class="n">wstr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">wchar_t</span><span class="p">)</span><span class="n">wstr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">wchar_t</span><span class="p">)</span><span class="n">wstr</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">wchar_t</span><span class="p">)</span><span class="n">wstr</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">wchar_t</span><span class="p">)</span><span class="n">wstr</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;&lt;</span> <span class="s">&#34;:&#34;</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">wstr</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>	<span class="c1">// 7文字 * 2バイト = 14バイト
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	
+</span></span><span class="line"><span class="cl">	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;%ls</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">wstr</span><span class="p">);</span>	<span class="c1">// wchar_tの出力
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">printf</span><span class="p">(</span><span class="s">&#34;%s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">wstr</span><span class="p">);</span>	<span class="c1">// charの出力
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//&lt;cctype&gt;ヘッダによる関数呼び出し式（表示可能かを判定するisprint関数など）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//符号付き整数型と符号無し整数型
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	
+</span></span><span class="line"><span class="cl">	<span class="c1">//基数変換
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//整数リテラル
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//整数接尾語（integer suffix）と整数リテラルの型
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//組込み型（built-in type）（charやint、longなどのC++が言語体系中にもつ型）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//オブジェクトとsizeof演算子
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//size_t型とtypedef宣言
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//typedef宣言（typedef declaration）は、型の同義語、すなわち型に対して別の名前を与える宣言。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//size_t型は、符号なし整数型の同義語となるようtypedef宣言された型である。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//typeid演算子（typeid operator）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//型に関する情報を生成する。型情報に関する文字列は typeid(型 or 式).name() によって取得できる。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//整数の内部
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//オブジェクト（object）は、値を表現するための記憶域であり、ビット（bit）の集まりとして記憶域上に格納される。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//整数型の内部のビット表現として採用されているのは、純2進数記法（pure binary numeration system）。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//符号無し整数の内部表現
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//値の2進表現をそのままビットに対応させたもの。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//オブジェクト内のバイトを並べる順序が処理系に依存しているのが注意点。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//符号付き整数の内部表現
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//2の補数表現：多くの処理系で用いられている
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//1の補数表現：2の補数表現よりも1つだけ少なくなる
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//符号付き絶対値表現：表現できる数値の範囲は1の補数表現と同じ
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//bool型
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//浮動小数点型（floating point type）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">float</span> <span class="n">a</span> <span class="o">=</span> <span class="mf">123456789.0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">double</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">12345678901234567890.0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">long</span> <span class="kt">double</span> <span class="n">c</span> <span class="o">=</span> <span class="mf">123456789012345678901234567890.0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;a = &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">setprecision</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;b = &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">setprecision</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">b</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;c = &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">setprecision</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//指数部と仮数部のビット数は、型と処理系に依存する。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//浮動小数点リテラル（floating-point literal）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//浮動小数点接尾語（floating suffix）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="mf">.5</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span> <span class="o">&lt;&lt;</span> <span class="mf">12.</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span> <span class="o">&lt;&lt;</span> <span class="mf">.5F</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span> <span class="o">&lt;&lt;</span> <span class="mf">1.F</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span> <span class="o">&lt;&lt;</span> <span class="mf">1.23E4</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span> <span class="o">&lt;&lt;</span> <span class="mf">89.3E-5</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//算術型（arithmetic type）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//最大の丸め誤差
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">unsigned short int：0~65535
+</span></span><span class="line"><span class="cl">unsigned int      ：0~4294967295
+</span></span><span class="line"><span class="cl">unsigned long int ：0~4294967295
+</span></span><span class="line"><span class="cl">short int：-32768~32767
+</span></span><span class="line"><span class="cl">int      ：-2147483648~2147483647
+</span></span><span class="line"><span class="cl">long int ：-2147483648~2147483647
+</span></span><span class="line"><span class="cl">A:2
+</span></span><span class="line"><span class="cl">B:2
+</span></span><span class="line"><span class="cl">65
+</span></span><span class="line"><span class="cl">66
+</span></span><span class="line"><span class="cl">67
+</span></span><span class="line"><span class="cl">12354
+</span></span><span class="line"><span class="cl">12356
+</span></span><span class="line"><span class="cl">12358
+</span></span><span class="line"><span class="cl">:14
+</span></span><span class="line"><span class="cl">ABCA
+</span></span><span class="line"><span class="cl">a = 123456792
+</span></span><span class="line"><span class="cl">b = 12345678901234567168
+</span></span><span class="line"><span class="cl">c = 123456789012345677877719597056
+</span></span><span class="line"><span class="cl">0.5
+</span></span><span class="line"><span class="cl">12
+</span></span><span class="line"><span class="cl">0.5
+</span></span><span class="line"><span class="cl">1
+</span></span><span class="line"><span class="cl">12300
+</span></span><span class="line"><span class="cl">0.000893000000000000022058743720521
+</span></span></code></pre></div></details><br>
+<details><summary>コード</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"></code></pre></div></details><br>
+
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/nishihi6" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="https://www.facebook.com/profile.php?id=100034856812491" target="_blank" rel="noopener noreferrer me"
+    title="Facebook">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg>
+</a>
+<a href="https://twitter.com" target="_blank" rel="noopener noreferrer me"
+    title="X">
+    <svg viewBox="0 0 1200 1227" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"/>
+</svg>
+</a>
+<a href="https://connpass.com/user/nishihi6/" target="_blank" rel="noopener noreferrer me"
+    title="Connpass">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg>
+</a>
+<a href="http://www.igl.ise.shibaura-it.ac.jp/" target="_blank" rel="noopener noreferrer me"
+    title="Lab">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg>
+</a>
+<a href="index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2024 nishihi6.
+    </small>
+    
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+    
+    
+        
+    
+
+    
+    
+        
+    
+
+
+
+    
+    <script src="https://nishihi6.github.io/blog/js/main.min.35f435a5d8eac613c52daa28d8af544a4512337d3e95236e4a4978417b8dcb2f.js" integrity="sha256-NfQ1pdjqxhPFLaoo2K9USkUSM30&#43;lSNuSkl4QXuNyy8="></script>
+
+    
+
+</body>
+</html>
