@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-08-25",
         "description": "",
-        "wordCount":  5033 ,
+        "wordCount":  6415 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-08-25",
         "image": {
@@ -2143,13 +2143,560 @@ stroke-linejoin="round" class="feather feather-home">
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"></code></pre></div></details><br>
 <h3 id="標準ストリーム">標準ストリーム</h3>
 <details><summary>コード</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"></code></pre></div></details><br>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 標準ストリーム
+</span></span></span><span class="line"><span class="cl"><span class="c1">//coutは標準出力ストリーム（standard output stream）と呼ばれ、cinは標準入力ストリーム（standard input stream）と呼ばれる。
+</span></span></span><span class="line"><span class="cl"><span class="c1">//他にも、標準エラーストリーム（standard error stream）と呼ばれる２つの出力ストリームcerrとclogがある。
+</span></span></span><span class="line"><span class="cl"><span class="c1">//C言語で定義された標準ストリームstdin、stdout、stderrと結び付けられている。
+</span></span></span><span class="line"><span class="cl"><span class="c1">//cinのみが入力ストリームを表すistream型のオブジェクトであり、それ以外の標準ストリームは出力ストリームを表すostream型のオブジェクトである。
+</span></span></span><span class="line"><span class="cl"><span class="c1">//wchar_t型の文字を扱うためのワイド文字用の標準ストリームも4種類提供されている。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//char用にbasic_istream&lt;&gt;とbasic_ostream&lt;&gt;を特殊化したストリームはナローストリーム（narrow stream）と呼ばれ、
+</span></span></span><span class="line"><span class="cl"><span class="c1">//wchar_t用にbasic_istream&lt;&gt;とbasic_ostream&lt;&gt;を特殊化したストリームはワイドストリーム（wide stream）と呼ばれる。
+</span></span></span><span class="line"><span class="cl"><span class="c1">//整数値のビットシフト演算子&gt;&gt;、&lt;&lt;がbasic_istream、basic_ostreamで多重定義されており、返却値型はbasic_istream&amp;型、basic_ostream&amp;型である。
+</span></span></span><span class="line"><span class="cl"><span class="c1">//putとwriteのメンバ関数は、挿入子ではないものの出力を行う。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// C言語の標準入出力ストリームとの同期
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// リダイレクト
+</span></span></span><span class="line"><span class="cl"><span class="c1">//UNIXやMS_WindowsなどのOSでは、リダイレクト（redirect）によって、標準入力ストリームと標準出力ストリームの接続先が変更可能。
+</span></span></span><span class="line"><span class="cl"><span class="c1">//標準入力ストリームの変更：記号&lt;に続いて入力元を与える。
+</span></span></span><span class="line"><span class="cl"><span class="c1">//標準出力ストリームの変更：記号&gt;に続いて出力先を与える。
+</span></span></span><span class="line"><span class="cl"><span class="c1">//↓inputファイル、outputファイルに関する例
+</span></span></span><span class="line"><span class="cl"><span class="c1">//例：コマンドライン&gt; list0111
+</span></span></span><span class="line"><span class="cl"><span class="c1">//例：コマンドライン&gt; list0111 &lt; input
+</span></span></span><span class="line"><span class="cl"><span class="c1">//例：コマンドライン&gt; list0111 &lt; input &gt; output
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">x</span><span class="p">;</span>		<span class="c1">// 加減乗除する値
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">int</span> <span class="n">y</span><span class="p">;</span>		<span class="c1">// 加減乗除する値
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;xとyを加減乗除します。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;xとyの値：&#34;</span><span class="p">;</span>	<span class="c1">// xとyの値の入力を促す
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="n">y</span><span class="p">;</span>			<span class="c1">// xとyに整数値を読み込む
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;x + yは&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>	<span class="c1">// x + yの値を表示
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;x - yは&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>	<span class="c1">// x - yの値を表示
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;x * yは&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>	<span class="c1">// x * yの値を表示
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;x / yは&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>	<span class="c1">// x / yの値を表示（商）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;x % yは&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">%</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>	<span class="c1">// x % yの値を表示（剰余）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div></details><br>
 <h3 id="ファイルストリーム">ファイルストリーム</h3>
 <details><summary>コード</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"></code></pre></div></details><br>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ファイルストリーム
+</span></span></span><span class="line"><span class="cl"><span class="c1">//リダイレクトを使うことなくファイルを読み書きするときに利用する
+</span></span></span><span class="line"><span class="cl"><span class="c1">//fstream：入力と出力を両方行えるファイルストリーム用のクラス
+</span></span></span><span class="line"><span class="cl"><span class="c1">//ifstream：入力のみ
+</span></span></span><span class="line"><span class="cl"><span class="c1">//ofstream：出力のみ
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// ファイルのオープン
+</span></span></span><span class="line"><span class="cl"><span class="c1">//ファイルを開く操作がオープン（open）
+</span></span></span><span class="line"><span class="cl"><span class="c1">//コンストラクタによるオープン：ofstream fs(&#34;abc&#34;);	// ファイル&#34;abc&#34;をオープンしてfsと結びつける（引数&#34;abc&#34;の型はconst char*なので文字列リテラルをそのまま渡せる。）
+</span></span></span><span class="line"><span class="cl"><span class="c1">//メンバ関数openによるオープン：ofstream fs; fs.open(&#34;abc&#34;);
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// ファイルを正しくオープンできたかどうかの判定
+</span></span></span><span class="line"><span class="cl"><span class="c1">//if(fs.is_open())、if(!fs.fail)、if(fs)、if(!fs)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// ファイルのクローズ
+</span></span></span><span class="line"><span class="cl"><span class="c1">//ファイルとストリームとの結びつきを切り離すクローズ（close）。自動的にデストラクタが呼び出される。
+</span></span></span><span class="line"><span class="cl"><span class="c1">//fs.close()
+</span></span></span><span class="line"><span class="cl"><span class="c1">//下の例では、fisの生存期間が付きて、自動的にデストラクタが呼び出されてクローズされる。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// ファイルの存在の確認
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//--- 名前がfilenameであるファイルが存在するかどうかを判定 ---//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">bool</span> <span class="nf">file_exist</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">filename</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ifstream</span> <span class="n">fis</span><span class="p">(</span><span class="n">filename</span><span class="p">);</span>		<span class="c1">// 入力ストリームとしてオープン
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">return</span> <span class="n">fis</span><span class="p">.</span><span class="n">is_open</span><span class="p">();</span>		<span class="c1">// オープンに成功したか？
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">string</span> <span class="n">file_name</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;存在を確認したいファイルの名前：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">file_name</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;そのファイルは存在&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">file_exist</span><span class="p">(</span><span class="n">file_name</span><span class="p">.</span><span class="n">c_str</span><span class="p">())</span> <span class="o">?</span> <span class="s">&#34;します。</span><span class="se">\n</span><span class="s">&#34;</span> <span class="o">:</span> <span class="s">&#34;しません。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><br>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ファイルストリームに対する読み書き
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ofstream</span> <span class="n">fos</span><span class="p">(</span><span class="s">&#34;HELLO&#34;</span><span class="p">);</span>		<span class="c1">// &#34;HELLO&#34;を出力ストリームとしてオープン
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fos</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\a</span><span class="s">ファイル</span><span class="se">\&#34;</span><span class="s">HELLO</span><span class="se">\&#34;</span><span class="s">をオープンできません。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">fos</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Hello!</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">fos</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;How are you?</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><br>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ファイルストリームに対する読み書き
+</span></span></span><span class="line"><span class="cl"><span class="c1">//●ストリーム関連のライブラリでは、基本型とC文字列に対する挿入子と抽出子は定義されているが、string型に対する挿入子や抽出子は定義されていないので、
+</span></span></span><span class="line"><span class="cl"><span class="c1">//&lt;string&gt;ヘッダをインクルードする必要がある
+</span></span></span><span class="line"><span class="cl"><span class="c1">//●string型に適用した抽出子が空白を呼び飛ばすことに注意
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ifstream</span> <span class="n">fis</span><span class="p">(</span><span class="s">&#34;HELLO&#34;</span><span class="p">);</span>		<span class="c1">// &#34;HELLO&#34;を入力ストリームとしてオープン
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fis</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\a</span><span class="s">ファイル</span><span class="se">\&#34;</span><span class="s">HELLO</span><span class="se">\&#34;</span><span class="s">をオープンできません。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">string</span> <span class="n">text</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">fis</span> <span class="o">&gt;&gt;</span> <span class="n">text</span><span class="p">;</span>			<span class="c1">// ストリームから文字列を読み込んで
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fis</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">text</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>	<span class="c1">// その文字列を画面に表示
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">Hello!
+</span></span><span class="line"><span class="cl">How
+</span></span><span class="line"><span class="cl">are
+</span></span><span class="line"><span class="cl">you?
+</span></span></code></pre></div><br>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ファイルストリームに対する読み書き
+</span></span></span><span class="line"><span class="cl"><span class="c1">//各行を丸ごと文字列に読み込むようにする
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ifstream</span> <span class="n">fis</span><span class="p">(</span><span class="s">&#34;HELLO&#34;</span><span class="p">);</span>		<span class="c1">// &#34;HELLO&#34;を入力ストリームとしてオープン
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fis</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\a</span><span class="s">ファイル</span><span class="se">\&#34;</span><span class="s">HELLO</span><span class="se">\&#34;</span><span class="s">をオープンできません。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">string</span> <span class="n">text</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">getline</span><span class="p">(</span><span class="n">fis</span><span class="p">,</span> <span class="n">text</span><span class="p">);</span>		<span class="c1">// ストリームから１行を読み込んで
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fis</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">text</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>	<span class="c1">// その文字列を画面に表示
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//getline()は行末の改行文字は切り捨ててしまい、文字列に格納されないので、本プログラムではcoutによる出力時に改行文字を付加している。
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">Hello!
+</span></span><span class="line"><span class="cl">How are you?
+</span></span></code></pre></div><br>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 出力ストリームのオープンモード
+</span></span></span><span class="line"><span class="cl"><span class="c1">//出力ストリームのオープンの際に、コンストラクタあるいはopen関数の第２引数にios_base::appを指定すると、追加モードと呼ばれる
+</span></span></span><span class="line"><span class="cl"><span class="c1">//オープンモード（open mode）でファイルがオープンされる。このモードはファイルの既存の内容は消さずに、ファイルの終端位置からの書込みを行う。
+</span></span></span><span class="line"><span class="cl"><span class="c1">//第２引数を省略した場合は、ios_base::truncが規定値として渡される。これは切捨てモード。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ofstream</span> <span class="n">fos</span><span class="p">(</span><span class="s">&#34;HELLO&#34;</span><span class="p">,</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">app</span><span class="p">);</span>	<span class="c1">// &#34;HELLO&#34;を追加モードでオープン
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fos</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\a</span><span class="s">ファイル</span><span class="se">\&#34;</span><span class="s">HELLO</span><span class="se">\&#34;</span><span class="s">をオープンできません。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">fos</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Fine, thanks.</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">fos</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;And you?</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><br>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;ctime&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 前回実行時の情報を取得
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">char</span> <span class="n">fname</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&#34;lasttime.txt&#34;</span><span class="p">;</span>				<span class="c1">// ファイル名
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//--- 前回の日付・時刻を取得・表示 ---//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">get_data</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ifstream</span> <span class="n">fis</span><span class="p">(</span><span class="n">fname</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">fis</span><span class="p">.</span><span class="n">fail</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;本プログラムを実行するのは初めてですね。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">int</span> <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">s</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">fis</span> <span class="o">&gt;&gt;</span> <span class="n">year</span> <span class="o">&gt;&gt;</span> <span class="n">month</span> <span class="o">&gt;&gt;</span> <span class="n">day</span> <span class="o">&gt;&gt;</span> <span class="n">h</span> <span class="o">&gt;&gt;</span> <span class="n">m</span> <span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;前回は&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">year</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;年&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">month</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;月&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">day</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;日&#34;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;&lt;</span> <span class="n">h</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;時&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;分&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;秒でした。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//--- 今回の日付・時刻を書き込む ---//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">put_data</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ofstream</span> <span class="n">fos</span><span class="p">(</span><span class="n">fname</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">fos</span><span class="p">.</span><span class="n">fail</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\a</span><span class="s">ファイルをオープンできません。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">time_t</span> <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">struct</span> <span class="nc">tm</span> <span class="n">local</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">errno_t</span> <span class="n">error</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">error</span> <span class="o">=</span> <span class="n">localtime_s</span><span class="p">(</span><span class="o">&amp;</span><span class="n">local</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">t</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">fos</span> <span class="o">&lt;&lt;</span> <span class="n">local</span><span class="p">.</span><span class="n">tm_year</span> <span class="o">+</span> <span class="mi">1900</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39; &#39;</span> <span class="o">&lt;&lt;</span> <span class="n">local</span><span class="p">.</span><span class="n">tm_mon</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39; &#39;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;&lt;</span> <span class="n">local</span><span class="p">.</span><span class="n">tm_mday</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39; &#39;</span> <span class="o">&lt;&lt;</span> <span class="n">local</span><span class="p">.</span><span class="n">tm_hour</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39; &#39;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;&lt;</span> <span class="n">local</span><span class="p">.</span><span class="n">tm_min</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39; &#39;</span> <span class="o">&lt;&lt;</span> <span class="n">local</span><span class="p">.</span><span class="n">tm_sec</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">		time_t t = time(NULL);
+</span></span></span><span class="line"><span class="cl"><span class="cm">		struct tm* local = localtime(&amp;t);
+</span></span></span><span class="line"><span class="cl"><span class="cm">		fos &lt;&lt; local-&gt;tm_year + 1900 &lt;&lt; &#39; &#39; &lt;&lt; local-&gt;tm_mon + 1 &lt;&lt; &#39; &#39;
+</span></span></span><span class="line"><span class="cl"><span class="cm">			&lt;&lt; local-&gt;tm_mday &lt;&lt; &#39; &#39; &lt;&lt; local-&gt;tm_hour &lt;&lt; &#39; &#39;
+</span></span></span><span class="line"><span class="cl"><span class="cm">			&lt;&lt; local-&gt;tm_min &lt;&lt; &#39; &#39; &lt;&lt; local-&gt;tm_sec &lt;&lt; &#39;\n&#39;;
+</span></span></span><span class="line"><span class="cl"><span class="cm">		*/</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">get_data</span><span class="p">();</span>		<span class="c1">// 前回の日付・時刻を取得・表示
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">put_data</span><span class="p">();</span>		<span class="c1">// 今回の日付・時刻を書き込む
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div></details><br>
 <h3 id="ストリームライブラリ">ストリームライブラリ</h3>
 <details><summary>コード</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"></code></pre></div></details><br>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ストリームライブラリの構成
+</span></span></span><span class="line"><span class="cl"><span class="c1">//入出力先として、ファイル以外に文字列もサポートされている。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// ios_baseクラス：ストリーム制御に必須となる基本的な型・定数・メンバ関数が定義されている
+</span></span></span><span class="line"><span class="cl"><span class="c1">// fmtflags型：整数の入出力を何進数で行うのか、浮動小数点数の入出力をどういった形式で行うのかを表す型
+</span></span></span><span class="line"><span class="cl"><span class="c1">// iostate型：入出力の状態を表す型
+</span></span></span><span class="line"><span class="cl"><span class="c1">// openmode：出力ストリームのオープン時に、追加モードを指定できる
+</span></span></span><span class="line"><span class="cl"><span class="c1">// seekdir：シークの方向を表す被列挙型
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 書式の設定
+</span></span></span><span class="line"><span class="cl"><span class="c1">//下の例では、読込み文字数をcin.width(10)によって10文字に制限している。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">char</span> <span class="n">str</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;文字列を10文字未満で入力せよ：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span><span class="p">.</span><span class="n">width</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">str</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;str = &#34;</span><span class="p">;</span>  <span class="n">cout</span><span class="p">.</span><span class="n">width</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">str</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;str = &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">str</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">文字列を10文字未満で入力せよ：klsajdfklfjakkfas
+</span></span><span class="line"><span class="cl">str =    klsajdfkl
+</span></span><span class="line"><span class="cl">str = klsajdfkl
+</span></span></code></pre></div><br>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//基数の設定
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="n">flag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;整数値：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;基数（0…非表示／1…表示）：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">flag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">flag</span><span class="p">)</span> <span class="n">cout</span><span class="p">.</span><span class="n">setf</span><span class="p">(</span><span class="n">ios_base</span><span class="o">::</span><span class="n">showbase</span><span class="p">);</span>	<span class="c1">// 基数表示を付加
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span><span class="p">.</span><span class="n">setf</span><span class="p">(</span><span class="n">ios_base</span><span class="o">::</span><span class="n">oct</span><span class="p">,</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">basefield</span><span class="p">);</span>  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>	<span class="c1">// 8進数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span><span class="p">.</span><span class="n">setf</span><span class="p">(</span><span class="n">ios_base</span><span class="o">::</span><span class="n">dec</span><span class="p">,</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">basefield</span><span class="p">);</span>  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>	<span class="c1">// 10進数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span><span class="p">.</span><span class="n">setf</span><span class="p">(</span><span class="n">ios_base</span><span class="o">::</span><span class="n">hex</span><span class="p">,</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">basefield</span><span class="p">);</span>  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>	<span class="c1">// 16進数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">整数値：12
+</span></span><span class="line"><span class="cl">基数（0…非表示／1…表示）：1
+</span></span><span class="line"><span class="cl">014
+</span></span><span class="line"><span class="cl">12
+</span></span><span class="line"><span class="cl">0xc
+</span></span></code></pre></div><br>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//浮動小数点数の書式
+</span></span></span><span class="line"><span class="cl"><span class="c1">//出力の形式はsetfで指定し、精度はprecisionで指定する。精度の既定値は6。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">precision</span><span class="p">;</span>		<span class="c1">// 精度
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">double</span> <span class="n">x</span><span class="p">;</span>			<span class="c1">// 表示する値
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;実数値：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;精度：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">precision</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span><span class="p">.</span><span class="n">precision</span><span class="p">(</span><span class="n">precision</span><span class="p">);</span>	<span class="c1">// 精度は最後まで有効
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span><span class="p">.</span><span class="n">setf</span><span class="p">(</span><span class="n">ios_base</span><span class="o">::</span><span class="n">scientific</span><span class="p">,</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">floatfield</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;科学形式：&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span><span class="p">.</span><span class="n">setf</span><span class="p">(</span><span class="n">ios_base</span><span class="o">::</span><span class="n">fixed</span><span class="p">,</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">floatfield</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;固定形式：&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span><span class="p">.</span><span class="n">setf</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">floatfield</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;通常表示：&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">実数値：3.141592
+</span></span><span class="line"><span class="cl">精度：4
+</span></span><span class="line"><span class="cl">科学形式：3.1416e+00
+</span></span><span class="line"><span class="cl">固定形式：3.1416
+</span></span><span class="line"><span class="cl">通常表示：3.142
+</span></span></code></pre></div><br>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//flags関数とwidth関数とprecision関数が返却する&#34;現在設定されている書式の情報&#34;を利用すると、いったん書式を変更して出力したあとに、
+</span></span></span><span class="line"><span class="cl"><span class="c1">//もとの書式を復元するといったことができる。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//--- double型配列の全要素を#######.##形式で各行に１要素ずつ表示 ---//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">put_ary</span><span class="p">(</span><span class="kt">double</span> <span class="n">ary</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// 設定する書式（右揃え＋10進数＋固定小数点記法）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">ios_base</span><span class="o">::</span><span class="n">fmtflags</span> <span class="n">flags</span> <span class="o">=</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">right</span> <span class="o">|</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">dec</span> <span class="o">|</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">fixed</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// 現在の書式と最小幅を保存
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">ios_base</span><span class="o">::</span><span class="n">fmtflags</span> <span class="n">old_flags</span> <span class="o">=</span> <span class="n">cout</span><span class="p">.</span><span class="n">flags</span><span class="p">();</span>	<span class="c1">// 現在の書式
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">streamsize</span> <span class="n">old_size</span> <span class="o">=</span> <span class="n">cout</span><span class="p">.</span><span class="n">width</span><span class="p">();</span>				<span class="c1">// 現在の最小幅
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// 精度を設定するとともに現在の精度を保存
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">streamsize</span> <span class="n">old_prec</span> <span class="o">=</span> <span class="n">cout</span><span class="p">.</span><span class="n">precision</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>		<span class="c1">// 精度は2桁
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span><span class="p">.</span><span class="n">width</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>				<span class="c1">// 最小幅を10に設定
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">cout</span><span class="p">.</span><span class="n">flags</span><span class="p">(</span><span class="n">flags</span><span class="p">);</span>			<span class="c1">// 書式をflagsに設定
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ary</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span><span class="p">.</span><span class="n">flags</span><span class="p">(</span><span class="n">old_flags</span><span class="p">);</span>		<span class="c1">// フラグを戻す
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span><span class="p">.</span><span class="n">width</span><span class="p">(</span><span class="n">old_size</span><span class="p">);</span>		<span class="c1">// 最小幅を戻す
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span><span class="p">.</span><span class="n">precision</span><span class="p">(</span><span class="n">old_prec</span><span class="p">);</span>	<span class="c1">// 精度を戻す
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">double</span> <span class="n">a</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mf">1234.235</span><span class="p">,</span> <span class="mf">5568.6205</span><span class="p">,</span> <span class="mf">78999.312</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="mf">0.00001234567890</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\n\n</span><span class="s">&#34;</span><span class="p">;</span>		<span class="c1">// 通常表示
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">put_ary</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]));</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="mf">0.00001234567890</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>		<span class="c1">// 通常表示
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">1.23457e-05
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   1234.23
+</span></span><span class="line"><span class="cl">   5568.62
+</span></span><span class="line"><span class="cl">  78999.31
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">1.23457e-05
+</span></span></code></pre></div><br>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iomanip&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 操作子
+</span></span></span><span class="line"><span class="cl"><span class="c1">//書式の設定を操作子（manipulator）で行える
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">oct</span> <span class="o">&lt;&lt;</span> <span class="mi">1234</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>	<span class="c1">// 8進数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">dec</span> <span class="o">&lt;&lt;</span> <span class="mi">1234</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>	<span class="c1">// 10進数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="mi">1234</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>	<span class="c1">// 16進数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">showbase</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">oct</span> <span class="o">&lt;&lt;</span> <span class="mi">1234</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>	<span class="c1">// 8進数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">dec</span> <span class="o">&lt;&lt;</span> <span class="mi">1234</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>	<span class="c1">// 10進数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="mi">1234</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>	<span class="c1">// 16進数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">internal</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;abc</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">left</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;abc</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">right</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;abc</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setbase</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">internal</span> <span class="o">&lt;&lt;</span> <span class="o">-</span><span class="mi">123</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">left</span> <span class="o">&lt;&lt;</span> <span class="o">-</span><span class="mi">123</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">right</span> <span class="o">&lt;&lt;</span> <span class="o">-</span><span class="mi">123</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setfill</span><span class="p">(</span><span class="sc">&#39;*&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">internal</span> <span class="o">&lt;&lt;</span> <span class="o">-</span><span class="mi">123</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">left</span> <span class="o">&lt;&lt;</span> <span class="o">-</span><span class="mi">123</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">right</span> <span class="o">&lt;&lt;</span> <span class="o">-</span><span class="mi">123</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">setfill</span><span class="p">(</span><span class="sc">&#39; &#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">fixed</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">setprecision</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mf">123.5</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">scientific</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">setprecision</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mf">123.5</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//出力すべき文字はバッファに蓄えられており、バッファが満杯になったときなどに実際の出力が行われる。
+</span></span></span><span class="line"><span class="cl"><span class="c1">//バッファ内にたまっている未出力の文字を強制的に出力（フラッシュ）するのがendlとfluch。
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">2322
+</span></span><span class="line"><span class="cl">1234
+</span></span><span class="line"><span class="cl">4d2
+</span></span><span class="line"><span class="cl">02322
+</span></span><span class="line"><span class="cl">1234
+</span></span><span class="line"><span class="cl">0x4d2
+</span></span><span class="line"><span class="cl">      abc
+</span></span><span class="line"><span class="cl">abc
+</span></span><span class="line"><span class="cl">            abc
+</span></span><span class="line"><span class="cl">-      123
+</span></span><span class="line"><span class="cl">-123
+</span></span><span class="line"><span class="cl">      -123
+</span></span><span class="line"><span class="cl">-******123
+</span></span><span class="line"><span class="cl">-123******
+</span></span><span class="line"><span class="cl">******-123
+</span></span><span class="line"><span class="cl">    123.50
+</span></span><span class="line"><span class="cl">  1.24e+02
+</span></span></code></pre></div><br>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iomanip&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// テキストモードでの実数値の読み書き
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">double</span> <span class="n">pi</span> <span class="o">=</span> <span class="mf">3.14159265358979323846264338327950288</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">ofstream</span> <span class="n">fos</span><span class="p">(</span><span class="s">&#34;pi.txt&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fos</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\a</span><span class="s">ファイルをオープンできません。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">fos</span> <span class="o">&lt;&lt;</span> <span class="n">pi</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">fos</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">ifstream</span> <span class="n">fis</span><span class="p">(</span><span class="s">&#34;pi.txt&#34;</span><span class="p">,</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fis</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\a</span><span class="s">ファイルをオープンできません。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">fis</span> <span class="o">&gt;&gt;</span> <span class="n">pi</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;piの値は&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">fixed</span> <span class="o">&lt;&lt;</span> <span class="n">setprecision</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">pi</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">fis</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//挿入子&lt;&lt;が浮動小数点数を6桁の精度で出力するため、それ以降の桁のデータは失われる。
+</span></span></span><span class="line"><span class="cl"><span class="c1">//これを解決するには、ファイルの入出力をバイナリモードに変更することによって可能。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">//テキストモード（text mode）：データを文字の並びで表現する。整数値357は３つの文字の並びで3バイトになる。バイト数は数値の桁数に依存する。
+</span></span></span><span class="line"><span class="cl"><span class="c1">//バイナリモード（binary mode）：データをビットの並びで表現する。int型の整数値の大きさは、必ずsizeof(int)になる。バイト数は数値の桁数に依存しない。
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">piの値は3.14158999999999988262です。
+</span></span></code></pre></div><br>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iomanip&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// バイナリモードでの実数値の読み書き
+</span></span></span><span class="line"><span class="cl"><span class="c1">//ストリームのオープン時に、ios_base::binaryを指定することによって、ファイル&#34;pi.bin&#34;をバイナリモードでオープンする。
+</span></span></span><span class="line"><span class="cl"><span class="c1">//ファイルへの書込みで利用しているwriteは、basic_ostream&lt;&gt;クラステンプレートで定義されたメンバ関数で、
+</span></span></span><span class="line"><span class="cl"><span class="c1">//第１引数には書き出すデータの先頭番地へのポインタを受け取り、第２引数にはデータの大きさをバイト数で受け取る。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">double</span> <span class="n">pi</span> <span class="o">=</span> <span class="mf">3.14159265358979323846</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">ofstream</span> <span class="n">fos</span><span class="p">(</span><span class="s">&#34;pi.bin&#34;</span><span class="p">,</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fos</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\a</span><span class="s">ファイルをオープンできません。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">fos</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pi</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">		<span class="n">fos</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">ifstream</span> <span class="n">fis</span><span class="p">(</span><span class="s">&#34;pi.bin&#34;</span><span class="p">,</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fis</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\a</span><span class="s">ファイルをオープンできません。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">fis</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pi</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;piの値は&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">fixed</span> <span class="o">&lt;&lt;</span> <span class="n">setprecision</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">pi</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;です。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">fis</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// streamsize型
+</span></span></span><span class="line"><span class="cl"><span class="c1">//streamsize型は、入出力操作によって転送された文字数や、入出力バッファの大きさを表すのに用いられる型。
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">piの値は3.14159265358979311600です。
+</span></span></code></pre></div><br>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;cctype&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iomanip&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ファイルのダンプ
+</span></span></span><span class="line"><span class="cl"><span class="c1">//バイナリモードで書き出したファイルの中身を文字コードで表示するプログラムを作る。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">string</span> <span class="n">fname</span><span class="p">;</span>	<span class="c1">// ファイル名
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;ファイル名：&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">fname</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">ifstream</span> <span class="n">fs</span><span class="p">(</span><span class="n">fname</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\a</span><span class="s">ファイルをオープンできません。</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">16</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">			<span class="n">fs</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span> <span class="mi">16</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">((</span><span class="n">n</span> <span class="o">=</span> <span class="n">fs</span><span class="p">.</span><span class="n">gcount</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">setfill</span><span class="p">(</span><span class="sc">&#39;0&#39;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">count</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39; &#39;</span><span class="p">;</span>	<span class="c1">// アドレス
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">			<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>								<span class="c1">// 16進数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>				<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">setfill</span><span class="p">(</span><span class="sc">&#39;0&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;&lt;</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39; &#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="mi">16</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">				<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">16</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;   &#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">			<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>								<span class="c1">// 文字
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>				<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">isprint</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">?</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">:</span> <span class="sc">&#39;.&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">			<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">count</span> <span class="o">+=</span> <span class="mi">16</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><br>
+</details><br>
 <details><summary>コード</summary>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"></code></pre></div></details><br>
 
