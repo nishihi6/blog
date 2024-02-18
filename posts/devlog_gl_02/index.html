@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-10-30",
         "description": "",
-        "wordCount":  149 ,
+        "wordCount":  150 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-10-30",
         "image": {
@@ -253,7 +253,8 @@ stroke-linejoin="round" class="feather feather-home">
 <p>列挙型の<code>State</code>でクラス<code>Actor</code>の状態管理を行う（<code>Update()</code>は<code>EActive</code>状態のクラスだけを更新し、<code>EDead</code>状態のクラスは削除する）</p>
 <p><code>UpdateComponents()</code>関数は、すべてのコンポーネントをループして順番に更新する</p>
 <p><code>UpdateActor()</code>関数は、派生クラスで独自の振る舞いを実装する</p>
-<p>基底クラス<code>Actor</code>では、アクターを追加で作成する際に<code>Game</code>クラスへのアクセスが必要になり、<strong>シングルトン</strong>で実装するアプローチ（そのクラスの複数のインスタンスに対応できない）もあるのだが、<strong>依存性の注入（dependency injection）</strong>で実装する（アクターがコンストラクタで<code>Game</code>クラスへのポインタを受け取り、別のアクターを追加作成する）</p>
+<p>基底クラス<code>Actor</code>は、<strong>シングルトン</strong>で実装するアプローチ（そのクラスの複数のインスタンスに対応できない）ではなく、<strong>依存性の注入（dependency injection）</strong>で実装する（アクターがコンストラクタで<code>Game</code>クラスへのポインタを受け取り、別のアクターを追加作成する）</p>
+<p>基底クラス<code>Actor</code>では、アクターを追加で作成する際に<code>Game</code>クラスへのアクセスが必要になる</p>
 <h5 id="componenth">Component.h</h5>
 <h5 id="componentcpp">Component.cpp</h5>
 <p>メンバ変数<code>mUpdateOrder</code>はコンポーネントの更新順を前後させる（例えば、カメラコンポーネントは移動コンポーネントがプレイヤーを動かした後に更新する）</p>
@@ -285,7 +286,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p><code>mPendingActors</code>に追加したアクターを<code>mActors</code>に移動する</p>
 <p>死んだアクターを<code>deadActors</code>に移動して削除する</p>
 <h5 id="gameunloaddata">Game::UnloadData()</h5>
-<p><code>Actor</code>オブジェクトはコンストラクタとデストラクタで自動的に追加・削除されるため、<code>mActosr</code>をループ処理してアクターを削除するには別のスタイルのループを行う</p>
+<p><code>Actor</code>オブジェクトはコンストラクタとデストラクタで自動的に追加・削除されるため、<code>mActors</code>をループ処理してアクターを削除するには別のスタイルのループを行う</p>
 <h3 id="スプライト">スプライト</h3>
 <p>2Dゲームの視覚的オブジェクトの<strong>スプライト</strong>は、キャラクター、背景、その他の動的なオブジェクトを表現するのに使われる</p>
 <p>それぞれのスプライトには、1つ以上の画像ファイルが割り当てられる</p>
@@ -320,7 +321,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p><code>mTexture</code>メンバ変数を設定し、<code>SDL_QueryTexture()</code>関数を呼び出してテクスチャの幅と高さを得る</p>
 <h5 id="spritecomponentdraw">SpriteComponent::Draw()</h5>
 <p>テクスチャを描画する関数として、シンプルな<code>SDL_RenderCopy()</code>関数、高度な挙動に対応した<code>SDL_RenderCopyEx()</code>関数がある</p>
-<p><code>SDL_Rect</code>構造体のx/y座標は、描画先の左上隅の座標に対応する</p>
+<p><code>SDL_Rect</code>構造体のx,y座標は、描画先の左上隅の座標に対応する</p>
 <p>SDLは角度を<strong>度数</strong>で受け取るが、<code>Actor</code>クラスは<strong>ラジアン</strong>を使うため、<code>Math::ToDegrees</code>を用いる</p>
 <p>SDLでは正の角度が<strong>時計回り</strong>だが、数学で通常使われる単位円では<strong>反時計回り</strong>なので、正負逆転による調整を行う</p>
 <h4 id="スプライトアニメーション">スプライトアニメーション</h4>
