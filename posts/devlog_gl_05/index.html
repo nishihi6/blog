@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-12-12",
         "description": "",
-        "wordCount":  51 ,
+        "wordCount":  366 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-12-12",
         "image": {
@@ -194,7 +194,8 @@ stroke-linejoin="round" class="feather feather-home">
         <li><a href="#openglを初期化する">OpenGLを初期化する</a>
           <ul>
             <li><a href="#openglウィンドウの設定">OpenGLウィンドウの設定</a></li>
-            <li><a href="#opengl-コンテクストとglewの初期化">OpenGL コンテクストと、GLEWの初期化</a></li>
+            <li><a href="#openglコンテクストの初期化">OpenGLコンテクストの初期化</a></li>
+            <li><a href="#glewの初期化">GLEWの初期化</a></li>
             <li><a href="#フレームのレンダリング">フレームのレンダリング</a></li>
           </ul>
         </li>
@@ -250,25 +251,219 @@ stroke-linejoin="round" class="feather feather-home">
 <h1 id="ゲームプログラミング-in-c">ゲームプログラミング in C++</h1>
 <hr>
 <h2 id="opengl">OpenGL</h2>
-<p>ここでは、<a href="https://nishihi6.github.io/blog/posts/devlog_gl_03/">GameDev #3 ベクトルと物理法則 [Devlog #016]</a>で作成したゲームプロジェクトの描画をOpenGLで書き換える（SDLのレンダラーは2Dグラフィックスのみをサポート）</p>
+<p>ここでは、<a href="https://nishihi6.github.io/blog/posts/devlog_gl_03/">GameDev #3 ベクトルと物理法則 [Devlog #016]</a>で作成した<strong>ゲームプロジェクトの描画をOpenGLで書き換える</strong>（SDLのレンダラーは2Dグラフィックスのみをサポート）</p>
 <h3 id="openglを初期化する">OpenGLを初期化する</h3>
 <p>30年以上も使われている<strong>OpenGL</strong>は、2D/3Dグラフィックスのためのクロスプラットフォームな業界標準ライブラリである</p>
 <p>ここではOpenGL 3.3までに定義された関数を使う</p>
 <p>以下では、OpenGLとGLEW（ヘルパーライブラリ）の設定と初期化のステップを説明する</p>
 <h4 id="openglウィンドウの設定">OpenGLウィンドウの設定</h4>
-<h4 id="opengl-コンテクストとglewの初期化">OpenGL コンテクストと、GLEWの初期化</h4>
+<h5 id="gamecpp">Game.cpp</h5>
+<h5 id="gameinitialize">Game::Initialize()</h5>
+<p>OpenGL用のウィンドウを作る前に、OpenGLのバージョンや色深度などの属性を設定する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">SDL_GL_SetAttribute</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="n">SDL_GLattr</span> <span class="n">attr</span><span class="p">,</span>	<span class="c1">// 設定する属性 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">int</span> <span class="n">value</span>	<span class="c1">// 属性の値
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">);</span>
+</span></span></code></pre></div><p><code>enum SDL_GLattr</code>にはさまざまな属性が列挙されている</p>
+<p>OpenGLがサポートするメインプロファイルは、コア（core）、互換（compativility）、ESの三種類がある</p>
+<p>OpenGLのレンダリングがグラフィクスハードウェア（GPU）を活用する<strong>ハードウェアアクセラレーション</strong>付きの実行も指定できる</p>
+<p>SDLでは、ウィンドウ作成時の<code>SDL_CreateWindow</code>呼び出しの最後の引数に、<code>SDL_WINDOW_OPENGL</code>フラグを渡すことで、作成されたウィンドウでOpenGLが使えるようになる</p>
+<h4 id="openglコンテクストの初期化">OpenGLコンテクストの初期化</h4>
+<h5 id="gameh">Game.h</h5>
+<p><code>SDL_GLContext mContext</code>はOpenGLコンテクストのメンバ変数であり、OpenGLが関知するすべての要素を含む</p>
+<h5 id="gamecpp-1">Game.cpp</h5>
+<h5 id="gameinitialize-1">Game::Initialize()</h5>
+<p><code>SDL_GL_CreateContext()</code>でOpenGLコンテクストを作成する</p>
+<h5 id="gameshutdown">Game::Shutdown()</h5>
+<p><code>SDL_GL_DeleteContext()</code>でOpenGLコンテクストもデストラクタで削除する</p>
+<h4 id="glewの初期化">GLEWの初期化</h4>
+<p>後方互換性をサポートする<strong>拡張システム</strong>を自動的に初期化する<strong>GLEW（OpenGL Extension Wrangler Library）</strong>というオープンソースライブラリを利用する</p>
+<p>今回は、OpenGL 3.3とそれ以前のバージョンが対応する全拡張機能を初期化する</p>
+<h5 id="gamecpp-2">Game.cpp</h5>
+<h5 id="gameinitialize-2">Game::Initialize()</h5>
+<p><code>glewExperimental = GL_TRUE</code>によって、一部のプラットフォームでコアコンテクストを使う時に発生する初期化エラーを予防する</p>
+<p><code>glewInit()</code>でGLEWを初期化する</p>
+<p>一部のプラットフォームでは、初期化時に無害のエラーコードがでるので、<code>glGetError()</code>を呼び出してクリアする</p>
 <h4 id="フレームのレンダリング">フレームのレンダリング</h4>
+<h5 id="gamecpp-3">Game.cpp</h5>
+<h5 id="gamegenerateoutput">Game::GenerateOutput()</h5>
+<p>バッファをクリアし、シーンを描画してからバッファを交換するというプロセスを、OpenGL関数で処理する</p>
+<p>引数に<code>GL_COLOR_BUFFER_BIT</code>を設定して<code>glClear()</code>を呼び出すと、指定した色でカラーバッファがクリアされる</p>
+<p><code>SDL_GL_SwapWindow()</code>の呼び出しで、フロントバッファとバックバッファを交換する</p>
 <h3 id="三角形の基礎">三角形の基礎</h3>
+<p>ファミリーコンピューターのような<strong>スプライトベース</strong>のゲーム機では、<strong>ブリッティング</strong>（スプライトの画像をカラーバッファ上の好きな場所にコピーするだけで表示できる手法）が効率的だったが、現在のグラフィクスハードウェアでは、ブリッティングは非効率である（結局はグラフィクス処理にポリゴンを利用している）</p>
 <h4 id="なぜポリゴンなのか">なぜポリゴンなのか</h4>
+<p>ポリゴンはスケーラブルであり、さまざまなスペックのハードウェアでも問題なく計算を行うことができる</p>
+<p>三角形ポリゴンの利点として以下が挙げられる</p>
+<ul>
+<li>頂点が3つでシンプル</li>
+<li>三角形の3つの点は、必ず同一平面上にある（coplanar）</li>
+<li>三角形は細分割（tessellate）が容易である</li>
+</ul>
 <h4 id="正規化デバイス座標系ndc">正規化デバイス座標系（NDC）</h4>
+<p>一般に、<strong>座標空間</strong>（coordinate space）は、原点がどこにあり、どの向きに座標値が増えるかを指定する</p>
+<p>座標空間の<strong>基底ベクトル</strong>（basis vector）は、それらの座標値が増加する向きを示す</p>
+<p>OpenGLのデフォルト座標系は正規化デバイス座標系（normalized device coordinate）である</p>
+<p>OpenGLウィンドウにおいては中央が原点になり、左下隅は(-1,-1)、右上隅は(+1,+1)になる</p>
+<p>正規化デバイス座標系のz成分は[-1,+1]の範囲で、正の方向が画面の奥に向かう方向である</p>
 <h4 id="頂点バッファとインデックスバッファ">頂点バッファとインデックスバッファ</h4>
+<p>3次元座標で頂点を格納する際に発生する<strong>座標の重複の問題</strong>を解決する</p>
+<ol>
+<li>その立体図形が使うユニークな（重複しない）座標だけを集めた<strong>頂点バッファ</strong>（vertex buffer）を作る</li>
+<li>三角形のそれぞれの頂点を指定するのに頂点バッファへのインデックスを使う（<strong>インデックスバッファ</strong>（index buffer）に1つの三角形につき3個のインデックスを格納する）</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">float</span> <span class="n">vertexBuffer</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="o">-</span><span class="mf">0.5f</span><span class="p">,</span>  <span class="mf">0.5f</span><span class="p">,</span>  <span class="mf">0.0f</span><span class="p">,</span>	<span class="c1">// 頂点 0
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	 <span class="mf">0.5f</span><span class="p">,</span>  <span class="mf">0.5f</span><span class="p">,</span>  <span class="mf">0.0f</span><span class="p">,</span>	<span class="c1">// 頂点 1 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	 <span class="mf">0.5f</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5f</span><span class="p">,</span>  <span class="mf">0.0f</span><span class="p">,</span>	<span class="c1">// 頂点 2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="o">-</span><span class="mf">0.5f</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5f</span><span class="p">,</span>  <span class="mf">0.0f</span><span class="p">,</span>	<span class="c1">// 頂点 3
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="kt">unsigned</span> <span class="kt">short</span> <span class="n">indexBuffer</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><p>頂点バッファとインデックスバッファは、その存在をOpenGLに知らせなければ使えない</p>
+<p>OpenGLは、<strong>頂点配列オブジェクト</strong>（vertex array object）を使って1個の<strong>頂点バッファ</strong>と1個の<strong>インデックスバッファ</strong>と<strong>頂点レイアウト</strong>をカプセル化する</p>
+<p>頂点レイアウト（vertex layout）は、モデルの各頂点のデータ形式を指定する（今回は3次元の位置座標）</p>
+<h5 id="vertexarrayh">VertexArray.h</h5>
+<p>どのモデルも頂点配列オブジェクトを使うので、モデルを<code>VertexArray</code>クラスでカプセル化する</p>
+<p>コンストラクタは、頂点バッファおよびインデックスバッファの配列ポインタを受け取り、データをOpenGLに渡す</p>
+<p>OpenGLは作成したオブジェクトへのポインタを返さないため、整数のID番号を受け取る</p>
+<h5 id="vertexarraycpp">VertexArray.cpp</h5>
+<h5 id="vertexarrayvertexarray">VertexArray::VertexArray()</h5>
+<p>コンストラクタでは、まず<code>glGenVertexArrays()</code>で頂点配列オブジェクトを作成し、<code>glBindVertexArray()</code>で結合し、そのIDをメンバ変数<code>mVertexArray</code>に保存する</p>
+<p><code>glGenBuffers()</code>で頂点バッファを作成し、<code>glBindBuffer()</code>で結合する</p>
+<p><code>GL_ARRAY_BUFFER</code>は<strong>頂点バッファに使う</strong>という意味</p>
+<p>頂点バッファができたら、<code>glBufferData()</code>でコンストラクタに渡された頂点データ<code>verts</code>をこの頂点バッファにコピーする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">glBufferData</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span>	<span class="c1">// バッファの種類
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">numVerts</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">),</span>	<span class="c1">// コピーするバイト数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">verts</span><span class="p">,</span>	<span class="c1">// コピー元（ポインタ）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">GL_STATIC_DRAW</span>	<span class="c1">// このデータの利用方法
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">);</span>
+</span></span></code></pre></div><p><code>GL_STATIC_DRAW</code>は、GPUでデータのロードを１回だけ行い、その後、描画で頻繁にデータを読み込む際に使う</p>
+<p>次に<code>glGenBuffers()</code>でインデックスバッファを作成し、<code>glBindBuffer()</code>で結合する</p>
+<p><code>GL_ELEMENT_ARRAY_BUFFER</code>は<strong>インデックスバッファに使う</strong>という意味</p>
+<p><code>glBufferData()</code>でインデックスデータ<code>indices</code>をインデックスバッファにコピーする</p>
+<p>最後に、<code>glEnableVertexAttribArray()</code>で頂点レイアウト（<strong>頂点属性</strong>（vertex attributes））を指定する</p>
+<p><code>glVertexAttribPointer()</code>で属性のサイズ、種類、フォーマットを指定する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">glVertexAttribPointer</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="mi">0</span><span class="p">,</span>	<span class="c1">// 属性インデックス
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="mi">3</span><span class="p">,</span>	<span class="c1">// 要素数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">GL_FLOAT</span><span class="p">,</span>	<span class="c1">// 要素の型
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">GL_FALSE</span><span class="p">,</span>	<span class="c1">// （整数型のみ使用する）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span>	<span class="c1">// ストライド（通常は各頂点のサイズ）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="mi">0</span> 	<span class="c1">// 頂点データの開始位置からこの属性までのオフセット
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">);</span>
+</span></span></code></pre></div><p>ストライド（歩幅）は、連続する頂点属性間のバイトオフセットであり、頂点バッファに頂点データ間のパディング（隙間）がない時は単に頂点のサイズになる</p>
+<h5 id="vertexarrayvertexarray-1">VertexArray::~VertexArray()</h5>
+<p>デストラクタでは、頂点バッファとインデックスバッファと頂点配列オブジェクトを破棄する</p>
+<h5 id="vertexarraysetactive">VertexArray::SetActive()</h5>
+<p>利用する頂点配列を指定する<code>glBindVertexArray()</code>を呼び出す</p>
+<h5 id="gamecreatespriteverts">Game::CreateSpriteVerts()</h5>
+<p><code>VertexArray</code>のインスタンスを作り、<code>Game</code>のメンバ変数<code>mSpriteVerts</code>に保存する（スプライト描画で使う）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">mSpriteVerts</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VertexArray</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="mi">6</span><span class="p">);</span>
+</span></span></code></pre></div><p>頂点バッファに4つの頂点があり、インデックスバッファに6個のインデックスがある（四角形を作る2つの三角形）</p>
 <h3 id="シェーダー">シェーダー</h3>
+<p>現代のグラフィクスパイプラインでは、頂点とインデックスのバッファを与えた上で、どのように描画するのかを指定する（固定色 or テクスチャの色？、ピクセルすべてにライティングの計算を行う？ など）</p>
+<p>OpenGLを含むグラフィクスAPIでは、グラフィクスハードウェアで実行される<strong>シェーダープログラム</strong>（shader program）をサポートしている</p>
+<p>シェーダーは別プログラムであり、独自のmain関数を持つ</p>
 <h4 id="頂点シェーダー">頂点シェーダー</h4>
+<p><strong>頂点シェーダー</strong>（vertex shader）は、描画されるすべての頂点について１回ずつ実行される</p>
+<p>頂点属性データを入力として受け取り、それらの頂点属性を必要に応じて変更する</p>
+<p>頂点バッファとインデックスバッファを使うと、三角形が頂点を共有しているため、頂点シェダーの呼び出し回数は減少する</p>
 <h4 id="フラグメントシェーダー">フラグメントシェーダー</h4>
+<p>三角形に対応するカラーバッファの画素を決定するのが<strong>ラスタライズ</strong>である</p>
+<p><strong>フラグメントシェーダー</strong>または<strong>ピクセルシェーダー</strong>は、それぞれの画素につき少なくとも1回は実行される</p>
+<p>色には、モデル表面の属性（テクスチャ、色、材質など）が反映され、必要によって照明計算が行われる</p>
 <h4 id="基礎的なシェーダーを書く">基礎的なシェーダーを書く</h4>
-<h4 id="シェーダーを読み込む">シェーダーを読み込む</h4>
+<h5 id="basicvert頂点シェーダー">Basic.vert（頂点シェーダー）</h5>
+<p>GLSLは、C/C++と違い、main関数が引数を取らない</p>
+<p>シェーダーの入力はグローバル変数のような形をとり、特別なinキーワードが付く</p>
+<p>GLSLは、シェーダー出力にもグローバル変数を使う（今回はシェーダーの頂点位置が出力であり、組み込み変数<code>gl_Position</code>に格納する）</p>
+<p><code>inPosition</code>変数の型は<code>vec3</code>で、3個の浮動小数点数のベクトルに対応する（この中に、頂点の位置に対応するx、y、zが入る）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-vert" data-lang="vert"><span class="line"><span class="cl"><span class="cp">#version 330	// GLSLプログラミング言語のバージョンの指定</span>
+</span></span><span class="line"><span class="cl"><span class="k">in</span> <span class="k">vec3</span> <span class="n">inPosition</span><span class="p">;</span>	<span class="c1">// それぞれの頂点の頂点属性を指定</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">gl_Position</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">inPosition</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="basicfragフラグメントシェーダー">Basic.frag（フラグメントシェーダー）</h5>
+<p>青い色をすべてのピクセルにハードコーディングで出力する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-vert" data-lang="vert"><span class="line"><span class="cl"><span class="cp">#version 330</span>
+</span></span><span class="line"><span class="cl"><span class="k">out</span> <span class="k">vec4</span> <span class="n">outColor</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">void</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">outColor</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="シェーダーを読み込む">シェーダーを読み込む</h4>
+<p>OpenGLにシェーダーの中身を知らせるために、各ファイルをC++側で読み込む必要がある</p>
+<ol>
+<li>頂点シェーダーをロードしてコンパイル</li>
+<li>フラグメントシェーダーをロードしてコンパイル</li>
+<li>2つのシェーダーをリンクして<strong>シェーダープログラム</strong>にする</li>
+</ol>
+<h5 id="shaderh">Shader.h</h5>
+<p>複数のステップでシェーダーを読み込む</p>
+<p>メンバ変数がシェーダーオブジェクトIDに対応している（<code>mVertexShader</code>、<code>mFragShader</code>、<code>mShaderProgram</code>）（<code>GLuint</code>はunsigned intのOpenGL版）</p>
+<p><code>CompileShader()</code>、<code>IsCompiled()</code>、<code>IsValidProgram()</code>は、<code>Load()</code>から使えるヘルパー関数である（privateセクションでの宣言）</p>
+<h5 id="shadercpp">Shader.cpp</h5>
+<h5 id="shadercompileshader">Shader::CompileShader()</h5>
+<p>コンパイルするシェーダーファイルの名前、シェーダーの種類、シェーダーのIDを格納する参照変数の3つの引数を受け取る</p>
+<p>bool型の戻り値によって成功したかを示す</p>
+<p>ファイルをロードするために<code>ifstream</code>を作成し、文字列ストリーム<code>stringstream</code>を使って、ファイル全体の内容を文字列<code>contents</code>にロードし、<code>c_str</code>関数でC言語スタイルの文字列ポインタを作る</p>
+<p><code>glCreateShader()</code>でOpenGLシェーダーオブジェクトを作成し、IDを<code>outShader</code>に保存する</p>
+<p><code>glShaderSource()</code>でシェーダーソースコードの文字列を指定する</p>
+<p><code>glCompileShader()</code>でコンパイルし、ヘルパー関数の<code>IsCompiled()</code>で正常動作かどうかを確認する</p>
+<h5 id="shaderiscompiled">Shader::IsCompiled()</h5>
+<p>シェーダーオブジェクトがコンパイルされたことを確認し、失敗ならばコンパイルエラーメッセージを出力する</p>
+<p><code>glGetShaderiv()</code>は、コンパイルの状態を整数の状態コードで返す</p>
+<p><code>glGetShaderInfoLog()</code>は、コンパイルエラーメッセージを出力する</p>
+<h5 id="shaderload">Shader::Load()</h5>
+<p>頂点シェーダーとフラグメントシェーダーのファイル名を受け取って、2つのシェーダーのコンパイルとリンクを行う</p>
+<p><code>CompileShader()</code>でコンパイルし、それぞれのオブジェクトIDを<code>mVertexShader</code>と<code>mFragShader</code>に保存する</p>
+<p>コンパイルした2つをリンクして、<strong>シェーダープログラム</strong>というオブジェクトにまとめる（OpenGLは、アクティブなシェーダープログラムを使って三角形をレンダリングする）</p>
+<p><code>glCreateProgram()</code>でシェーダープログラムを作成し、<code>glAttachShader()</code>で頂点シェーダーとフラグメントシェーダーをシェーダープログラムに追加する</p>
+<p><code>glLinkProgram()</code>でアタッチしたシェーダーのすべてをリンクし、ヘルパー関数の<code>IsValidProgram()</code>で正常動作かどうかを確認する</p>
+<h5 id="shaderisvalidprogram">Shader::IsValidProgram()</h5>
+<p>リンクが成功したかどうかを確認し、失敗ならばエラーメッセージを出力する</p>
+<p><code>glGetProgramiv()</code>は、シェーダープログラムの状態を整数の状態コードで返す</p>
+<p><code>glGetProgramInfoLog()</code>は、エラーメッセージを出力する</p>
+<h5 id="shadersetactive">Shader::SetActive()</h5>
+<p><code>glUseProgram()</code>でシェーダープログラムをアクティブにする</p>
+<h5 id="shaderunload">Shader::Unload()</h5>
+<p><code>glDeleteProgram()</code>でシェーダープログラム、<code>glDeleteShader()</code>で頂点シェーダー、フラグメントシェーダーを削除する</p>
+<h5 id="gameh-1">Game.h</h5>
+<p><code>Shader</code>のポインタを<code>Game</code>のメンバ変数に追加する</p>
+<p>最終的にスプライトの描画に使う</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Shader</span><span class="o">*</span> <span class="n">mSpriteShader</span><span class="p">;</span>
+</span></span></code></pre></div><h5 id="gamecpp-4">Game.cpp</h5>
+<h5 id="gameloadshaders">Game::LoadShaders()</h5>
+<p>2つのシェーダーファイルをロードして、シェーダープログラムをアクティブにする</p>
+<h5 id="gameinitialize-3">Game::Initialize()</h5>
+<p><code>LoadShaders()</code>の呼び出しは、OpenGLとGLEWの初期化を終えた直後に行う（頂点配列オブジェクト<code>mSpriteVerts</code>を作成する前）</p>
 <h4 id="三角形を描画する">三角形を描画する</h4>
-<h3 id="座標変換の基礎">座標変換の基礎</h3>
+<p>スプライトを描画する</p>
+<h5 id="spritecomponenth">SpriteComponent.h</h5>
+<p><code>SDL_Renderer*</code>の代わりに<code>Shader*</code>を引数で受け取るように変更</p>
+<h5 id="spritecomponentdraw">SpriteComponent::Draw()</h5>
+<p><code>glDrawElements()</code>で四角形を描画する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">glDrawElements</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="n">GL_TRIANGLES</span><span class="p">,</span>	<span class="c1">// 描画するポリゴン/プリミティブの種類
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="mi">6</span><span class="p">,</span> 	<span class="c1">// インデックスバッファにあるインデックス数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">GL_UNSIGNED_INT</span><span class="p">,</span>	<span class="c1">// インデックスの型
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">nullptr</span>	<span class="c1">// 通常はnullptr
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">);</span>
+</span></span></code></pre></div><h5 id="gamegenerateoutput-1">Game::GenerateOutput()</h5>
+<p>この<code>glDrawElements()</code>の呼び出しには、アクティブな頂点配列オブジェクトとアクティブなシェーダーが必要である</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="o">~</span>
+</span></span><span class="line"><span class="cl"><span class="n">mSpriteShader</span><span class="o">-&gt;</span><span class="n">SetActive</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="n">mSpriteVerts</span><span class="o">-&gt;</span><span class="n">SetActive</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">sprite</span> <span class="p">:</span> <span class="n">mSprites</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">sprite</span><span class="o">-&gt;</span><span class="n">Draw</span><span class="p">(</span><span class="n">mSpriteShader</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">~</span>
+</span></span></code></pre></div><h3 id="座標変換の基礎">座標変換の基礎</h3>
 <h4 id="オブジェクト空間">オブジェクト空間</h4>
 <h4 id="ワールド空間">ワールド空間</h4>
 <h4 id="ワールド空間への座標変換">ワールド空間への座標変換</h4>
