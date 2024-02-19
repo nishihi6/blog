@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-12-12",
         "description": "",
-        "wordCount":  366 ,
+        "wordCount":  909 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-12-12",
         "image": {
@@ -464,21 +464,306 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="o">~</span>
 </span></span></code></pre></div><h3 id="座標変換の基礎">座標変換の基礎</h3>
+<p>画面上の小惑星を別々の位置に出したいとしたとき、10個の小惑星のために10個の頂点バッファを作成して計算を行うのは効率が悪い</p>
+<p>そこでスプライトを抽象化し、短形用に1つの頂点バッファを作り、それを再利用して描画する</p>
+<p>NDCの単位正方形があれば、<strong>変換</strong>によって任意の位置、スケール、向きを持つ任意の短形を描画できる</p>
 <h4 id="オブジェクト空間">オブジェクト空間</h4>
+<p>オブジェクト自身に相対的な座標系が、<strong>オブジェクト空間</strong>（object space）あるいは<strong>モデル空間</strong>（model space）である</p>
+<p>ゲーム実行時には、個々のモデルを専用の頂点配列オブジェクト（VAO:vertex array object）にロードする</p>
 <h4 id="ワールド空間">ワールド空間</h4>
+<p>ゲームワールドそのもののための座標空間は、<strong>ワールド空間</strong>（world space）である</p>
+<p>ゲーム内のオブジェクトは、ワールド空間の原点からの相対的な位置、スケール、向きを持つ</p>
 <h4 id="ワールド空間への座標変換">ワールド空間への座標変換</h4>
+<p>目標は、&ldquo;オブジェクト空間で自分の原点を中心にしている単位正方形&quot;を、ワールド空間の原点に対する相対的な任意の位置に、任意のスケールや回転角を持つ短形として表現すること</p>
+<p>例えば、短形のインスタンスの1つを、サイズを2倍、ワールド空間の原点から50単位右の位置に表示させるとしたとき、短形の頂点のそれぞれに対して演算を行う</p>
+<h5 id="平行移動">平行移動</h5>
+<p>（省略）</p>
+<h5 id="スケーリング">スケーリング</h5>
+<p>（省略）</p>
+<h5 id="回転">回転</h5>
+<p>（省略）</p>
+<h5 id="変換を組み合わせる">変換を組み合わせる</h5>
+<p>3つの変換を正しい順序で組み合わせる</p>
+<p>座標変換の順序は結果に影響を与えるため、一貫した順序を保つことが重要である</p>
+<p>オブジェクト空間からワールド空間への変換では、常に<strong>スケーリング・回転・平行移動</strong>の順序で適用する</p>
+<h5 id="連立方程式による方法の問題点">連立方程式による方法の問題点</h5>
+<p>さまざまな変換を行列で記述し、行列の乗算を用いることで容易に変換を組み合わせることができる（2つの座標空間で基底ベクトルが異なる場合にも対応できる）</p>
 <h3 id="行列と変換">行列と変換</h3>
+<p>当プロジェクト独自のヘッダーファイル<code>Math.h</code>では、<code>Matrix3</code>と<code>Matrix4</code>クラスを定義するほか、必要な機能をすべて実装するための演算子、メンバ関数、静的関数を定義している</p>
 <h4 id="行列の乗算">行列の乗算</h4>
+<p>（省略）</p>
 <h4 id="行列で座標を変換する">行列で座標を変換する</h4>
+<p>座標が&rdquo;<strong>行</strong>&ldquo;なのか、&quot;<strong>列</strong>&ldquo;なのかによって、座標が乗算の&quot;左側&quot;になるのか、&ldquo;右側&quot;になるのかが決まる</p>
+<p>線形代数の教科書では、たいがい列ベクトルが使われるが、CG分野ではリソースとグラフィクスAPIによって行ベクトルと列ベクトルを使い分ける</p>
+<p>当プロジェクトでは<strong>行ベクトル</strong>を使う（座標の変換が&quot;左から右&quot;の順序で適用される）</p>
+<p>行ベクトルの座標$q$を行列$T$で変換し、続いて行列$R$で変換する</p>
+<p>$$
+q^{\prime} = qTR
+$$</p>
+<p>$q$を列ベクトルに切り替えると、以下の計算になる</p>
+<p>$$
+q^{\prime} = R^{T}T^{T}q
+$$</p>
 <h4 id="ワールド空間への座標変換再び">ワールド空間への座標変換（再び）</h4>
+<h5 id="スケール行列">スケール行列</h5>
+<p>（省略）</p>
+<h5 id="回転行列">回転行列</h5>
+<p>（省略）</p>
+<h5 id="平行移動行列">平行移動行列</h5>
+<p>平行移動行列（taranslation matrix）を包括的に表現するため、<strong>同次座標系</strong>（homogenous coordinates）を利用し、n次元の空間をn+1個の成分によって表現する</p>
+<p>同次座標の特殊な成分は<strong>w成分</strong>（w conponent）となり、2次元の座標では$(x, y, w)$、3次元の座標では$(x, y, z, w)$と表現する</p>
+<h5 id="変換を組み合わせる-1">変換を組み合わせる</h5>
+<p>オブジェクト空間からワールド空間への座標変換を行う行列が、<strong>ワールド行列</strong>（world transform matrix）である</p>
+<p>2次元空間の場合：
+$$
+ワールド行列 = S(s_x, s_y)R(θ)T(a,b)
+$$
+$$
+=\begin{bmatrix}
+s_x &amp; 0 &amp; 0 \\\
+0 &amp; s_y &amp; 0 \\\
+0 &amp; 0 &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+cos(θ) &amp; sin(θ) &amp; 0 \\\
+-sin(θ) &amp; cos(θ) &amp; 0 \\\
+0 &amp; 0 &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+1 &amp; 0 &amp; 0 \\\
+0 &amp; 1 &amp; 0 \\\
+a &amp; b &amp; 1
+\end{bmatrix}
+$$</p>
+<p>このワールド行列は頂点シェーダーに渡すことができる</p>
 <h4 id="actorにワールド変換を加える">Actorにワールド変換を加える</h4>
+<p>位置の<code>Vector2</code>、スケールの<code>float</code>、回転角の<code>float</code>を組み合わせてワールド行列を作る</p>
+<h5 id="actorh">Actor.h</h5>
+<p><code>Matrix4</code>型のメンバ変数<code>mWorldTransform</code>は、ワールド行列を格納する</p>
+<p><code>bool</code>型のメンバ変数<code>mRecomputeWorldTransform</code>は、ワールド行列の再計算の必要性を管理する（ワールド変換を計算するのはアクターの位置orスケールor回転角が変化したときだけ）</p>
+<h5 id="actorcpp">Actor.cpp</h5>
+<h5 id="actorcomputeworldtransform">Actor::ComputeWorldTransform()</h5>
+<p><code>Matrix4</code>の静的関数を使って、個々の変換行列を作る</p>
+<p><code>Matrix4::CreateScale()</code>は一様スケールの行列を作る</p>
+<p><code>Matrix4::CreateRotationZ()</code>はz軸周りの回転行列を作る</p>
+<p><code>Matrix4::CreateTranslation()</code>は平行移動行列を作る</p>
+<h5 id="actorupdate">Actor::Update()</h5>
+<p><code>ComputeWorldTransform()</code>は、<code>UpdateComponents()</code>の前と<code>UpdateActor()</code>の後に呼び出す（その間で変化した場合に備えて）</p>
+<h5 id="gameupdategame">Game::UpdateGame()</h5>
+<p>ペンディング状態のアクターでも、作成されたフレームでワールド変換が計算されるようにする</p>
+<h5 id="componenth">Component.h</h5>
+<p>所有アクターのワールド変換が更新されたら通知されるようにする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnUpdateWorldTransform</span><span class="p">()</span>
+</span></span></code></pre></div><h5 id="actorcpp-1">Actor.cpp</h5>
+<h5 id="actorcomputeworldtransform-1">Actor::ComputeWorldTransform()</h5>
+<p>各コンポーネントの<code>OnUpdateWorldTransform()</code>を呼び出す</p>
 <h4 id="ワールド空間からクリップ空間への変換">ワールド空間からクリップ空間への変換</h4>
+<p><strong>ビュー射影行列</strong>（view-projection matrix）を用いて、頂点をワールド空間から<strong>クリップ空間</strong>（clip space）に変換する</p>
+<p>正規化デバイス座標とは違い、クリップ空間にはw成分がある</p>
+<p><strong>ビュー行列</strong>は、ゲーム内のカメラがゲームワールドをどのように見るかを指定する</p>
+<p><strong>射影行列</strong>は、カメラのビューをクリップ空間に変換する方法を指定する</p>
+<p>2Dグラフィクスの場合、単純なビュー射影行列を使う</p>
+<p>任意の頂点$v$は、以下のようにオブジェクト空間からクリップ空間へと変換できる
+$$
+v^{\prime} = v(ワールド行列)(単純なビュー射影行列)
+$$</p>
+<p>解像度が1024×768で、ワールド空間の座標が$(256, 192)$だった場合：
+$$
+\begin{bmatrix}
+256 &amp; 192 &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+2/1024 &amp; 0 &amp; 0 \\\
+0 &amp; 2/768 &amp; 0 \\\
+0 &amp; 0 &amp; 1
+\end{bmatrix}
+=\begin{bmatrix}
+512/1024 &amp; 384/768 &amp; 1
+\end{bmatrix}
+=\begin{bmatrix}
+0.5 &amp; 0.5 &amp; 1
+\end{bmatrix}
+$$</p>
 <h4 id="変換行列を使うようにシェーダーを更新する">変換行列を使うようにシェーダーを更新する</h4>
+<h5 id="transformvert">Transform.vert</h5>
+<p><code>uniform</code>型指定子を使い、新しいグローバル変数を宣言する（この値はシェーダープログラムが何度実行されても値が変わらない）</p>
+<p>ここでは、ワールド変換とビュー射影変換を行う行列のために宣言する（<code>uWorldTransform</code>、<code>uViewProj</code>）</p>
+<p>main関数では、まず3次元の<code>inPosition</code>を同時座標系へと変換する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-vert" data-lang="vert"><span class="line"><span class="cl"><span class="k">vec4</span> <span class="n">pos</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">inPosition</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span></code></pre></div><p>そのオブジェクト空間の位置にワールド行列を掛け、さらにビュー射影行列を掛けることでクリップ空間の位置に変換する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-vert" data-lang="vert"><span class="line"><span class="cl"><span class="n">gl_Position</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">*</span> <span class="n">uWorldTransform</span> <span class="o">*</span> <span class="n">uViewProj</span><span class="p">;</span>
+</span></span></code></pre></div><h5 id="gamecpp-5">Game.cpp</h5>
+<h5 id="gameloadshaders-1">Game::LoadShaders()</h5>
+<p>頂点シェーダーに使うシェーダーをロードする</p>
+<h5 id="shadercpp-1">Shader.cpp</h5>
+<h5 id="shadersetmatrixuniform">Shader::SetMatrixUniform()</h5>
+<p><code>uniform</code>変数をC++のコードから設定する</p>
+<p>行列の他に、シェーダーファイル内の変数（文字列リテラルの名前）を引数とする</p>
+<p><code>glGetUniformLocation()</code>で、<code>uniform</code>のロケーションIDを取得する</p>
+<p><code>glUniformMatrix4fv()</code>で、行列を<code>uniform</code>に代入する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">glUniformMatrix4fv</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="n">loc</span><span class="p">,</span>	<span class="c1">// Uniform ID
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="mi">1</span><span class="p">,</span>	<span class="c1">// 行列の数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">GL_TRUE</span><span class="p">,</span>	<span class="c1">// 行ベクトルを使う場合はTRUE
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">matrix</span><span class="p">.</span><span class="n">GetAsFloatPtr</span>	<span class="c1">// 行列データへのポインタ
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">)</span>
+</span></span></code></pre></div><p><strong>uniformバッファオブジェクト</strong>（UBO）は、シェーダー内の複数のuniformをグループ化して1つにまとめ、すべての変数を同時に送る（効率が良い）（フレームごとに更新するuniformやオブジェクトごとに更新するuniformなどに分けることができる）</p>
+<p>このプロジェクトにおいて、
+<br>単純なビュー射影行列は、実行中に変化しないので設定は１回だけ、<br>ワールド行列は、描画すべき個々のスプライトコンポーネントごとに設定する</p>
+<h5 id="gamecpp-6">Game.cpp</h5>
+<h5 id="gameloadshaders-2">Game::LoadShaders()</h5>
+<p>画面が1024×768という前提で、単純なビュー射影行列を作成して設定する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Matrix4</span> <span class="n">viewProj</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="o">::</span><span class="n">CreateSimpleViewProj</span><span class="p">(</span><span class="mf">1024.f</span><span class="p">,</span> <span class="mf">768.f</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">mSpriteShader</span><span class="o">-&gt;</span><span class="n">SetMatrixUniform</span><span class="p">(</span><span class="s">&#34;uViewProj&#34;</span><span class="p">,</span> <span class="n">viewProj</span><span class="p">);</span>
+</span></span></code></pre></div><h5 id="spritecomponentcpp">SpriteComponent.cpp</h5>
+<h5 id="spritecomponentdraw-1">SpriteComponent::Draw()</h5>
+<p>以下の流れでSpriteComponentのためのワールド行列を求める</p>
+<p>テクスチャの幅と高さによるスケーリングを行うためのスケール行列<code>scaleMat</code>を作る</p>
+<p>スケール行列と、所有者であるアクターのワールド行列<code>mOwner-&gt;GetWorldTransform()</code>とを掛け合わせてこのスプライトのワールド行列<code>world</code>を作る</p>
+<p><code>SetMatrixUniform()</code>で頂点シェーダープログラムの<code>uWorldTransform</code>を設定する</p>
+<p><code>glDrawElements()</code>で三角形描画する</p>
 <h3 id="テクスチャマッピング">テクスチャマッピング</h3>
+<p><strong>テクスチャマッピング</strong>では、テクスチャを三角形の表面に貼ってレンダリングする</p>
+<p>それぞれの頂点について、対応するテクスチャ内の位置を指定する<strong>テクスチャ座標</strong>（texture coordinate）が必要になる（<strong>UV座標</strong>とも呼ばれる）</p>
+<p>例えば、キャラクターの顔にテクスチャを正しく貼り付けるには、テクスチャのどの部分がどの三角形に対応するのかを指定する</p>
+<p>OpenGLの場合、テクスチャの左下隅が$(0, 0)$で、右上隅が$(1, 1)$になる</p>
+<p>画像のピクセルデータの格納方法の違い（一般的な画像フォーマットはデータを上から格納する）に対処するため、以下の解決策がある</p>
+<ul>
+<li>V成分を逆転する</li>
+<li>画像を上下逆にロードする</li>
+<li>ディスクに画像を上下逆に保存する</li>
+</ul>
+<p>このプロジェクトではV成分を逆転する方法を用いる（DirectXのテクスチャ座標系に対応）</p>
+<p>三角形のそれぞれの頂点が個別のUV座標を持つ</p>
+<p>ピクセルを塗りつぶす際は、3つの頂点からの距離をベースとしたテクスチャ座標のブレンディング、または補間（interpolating）を行う</p>
+<p>テクスチャ座標（UV座標）が対応するテクスチャの画素は、<strong>テクスチャピクセル</strong>（texture pixel）または<strong>テクセル</strong>（texel）と呼ばれ、グラフィクスハードウェアがサンプリングする</p>
+<p><strong>最近傍フィルタリング</strong>（nearest-neighbor filtering）は、UV座標に最も近いテクセルの色を選択する方法である</p>
+<p><strong>双線形フィルタリング</strong>（bilinear filtering）は、複数の最近傍テクセルを合成した色を選択する方法である</p>
+<p>OpenGLでテクスチャマッピングを行うには以下のステップが必要になる</p>
+<ul>
+<li>画像ファイルをロードして、OpenGLのテクスチャオブジェクトを作る</li>
+<li>テクスチャ座標（UV座標）を含むように、頂点のフォーマットを更新する</li>
+<li>テクスチャを使うように、シェーダーを更新する</li>
+</ul>
 <h4 id="テクスチャをロードする">テクスチャをロードする</h4>
+<h5 id="textureh">Texture.h</h5>
+<p>Simple OpenGL Image Library（SOIL）を使って、OpenGL用に画像をロードする</p>
+<p>メンバ変数には、テクスチャの幅<code>mWidth</code>と高さ<code>mHeight</code>、OpenGLのテクスチャID<code>mTextureID</code>を用意する</p>
+<h5 id="texturecpp">Texture.cpp</h5>
+<h5 id="textureload">Texture::Load()</h5>
+<p>最初にチャンネル数を格納するローカル変数を宣言し、<code>SOIL_load_image()</code>でテクスチャを読み込む</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">channels</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">image</span> <span class="o">=</span> <span class="n">SOIL_load_image</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="n">fileName</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span>	<span class="c1">// ファイル名
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="o">&amp;</span><span class="n">mWidth</span><span class="p">,</span> 	<span class="c1">// 幅を記録
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="o">&amp;</span><span class="n">mHeight</span><span class="p">,</span> 	<span class="c1">// 高さを記録
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="o">&amp;</span><span class="n">channels</span><span class="p">,</span> 	<span class="c1">// チャンネル数を記録
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">SOIL_LOAD_AUTO</span>	<span class="c1">// 画像ファイルの種類
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="n">image</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">SDL_Log</span><span class="p">(</span><span class="s">&#34;SOIL failed to load image %s: %s&#34;</span><span class="p">,</span> <span class="n">fileName</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">SOIL_last_result</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>チャンネル数に応じてフォーマットを設定する（RGBなら<code>GL_RGB</code>、RGBAなら<code>GL_RGBA</code>）</p>
+<p><code>glGenTextures()</code>で、OpenGLテクスチャオブジェクトを作成して、そのIDを<code>mTextureID</code>に保存する</p>
+<p><code>glBindTexture()</code>で、テクスチャをアクティブにする（<code>GL_TEXTURE_2D</code>はテクスチャターゲットを表す）</p>
+<p><code>glTexImage2D()</code>で、画像データをコピーする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">glTexImage2D</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="n">GL_TEXTURE_2D</span><span class="p">,</span>	<span class="c1">// テクスチャターゲット
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="mi">0</span><span class="p">,</span>	<span class="c1">// 詳細レベル
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">format</span><span class="p">,</span>	<span class="c1">// OpenGLが使うべきカラーフォーマット
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">mWidth</span><span class="p">,</span>	<span class="c1">// テクスチャの幅
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">mHeight</span><span class="p">,</span>	<span class="c1">// テクスチャの高さ
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="mi">0</span><span class="p">,</span>	<span class="c1">// 境界色
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">format</span><span class="p">,</span>	<span class="c1">// 入力データのカラーフォーマット
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">GL_UNSIGNED_BYTE</span><span class="p">,</span>	<span class="c1">// 入力データのビット深度
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">image</span>  <span class="c1">// 画像データへのポインタ
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">);</span>
+</span></span></code></pre></div><p><code>SOIL_free_image_data()</code>で、SOILの画像データはメモリから解放される</p>
+<p><code>glTexParameteri()</code>で、バイリニアフィルタを有効にする</p>
+<h5 id="textureunload">Texture::Unload()</h5>
+<p>テクスチャオブジェクトを削除する</p>
+<h5 id="texturesetactive">Texture::SetActive()</h5>
+<p><code>glBindTexture()</code>を呼び出す</p>
+<h5 id="gamecpp-7">Game.cpp</h5>
+<h5 id="gamegettexture">Game::GetTexture()</h5>
+<p>要求されたテクスチャ<code>fileName</code>を指す<code>Texture*</code>を返す</p>
+<h5 id="spritecomponenth-1">SpriteComponent.h</h5>
+<p><code>SDL_Texture*</code>の代わりに、<code>Texture*</code>のメンバ変数を用意する</p>
+<h5 id="spritecomponentcpp-1">SpriteComponent.cpp</h5>
+<h5 id="spritecomponentdraw-2">SpriteComponent::Draw()</h5>
+<p><code>glDrawElements()</code>で頂点を描画する直前に、<code>mTexture-&gt;SetActive()</code>を行うことで、描画するスプライトコンポーネントごとに異なるテクスチャを設定できる</p>
 <h4 id="頂点フォーマットを更新する">頂点フォーマットを更新する</h4>
+<p>スプライトの<code>VertexArray</code>を変更する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">float</span> <span class="n">vertices</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="o">-</span><span class="mf">0.5f</span><span class="p">,</span>  <span class="mf">0.5f</span><span class="p">,</span>   <span class="mf">0.f</span><span class="p">,</span>   <span class="mf">0.f</span><span class="p">,</span>   <span class="mf">0.f</span>	<span class="c1">// 左上
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	 <span class="mf">0.5f</span><span class="p">,</span>  <span class="mf">0.5f</span><span class="p">,</span>   <span class="mf">0.f</span><span class="p">,</span>   <span class="mf">1.f</span><span class="p">,</span>   <span class="mf">0.f</span><span class="p">,</span>	<span class="c1">// 右上 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	 <span class="mf">0.5f</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5f</span><span class="p">,</span>   <span class="mf">0.f</span><span class="p">,</span>   <span class="mf">1.f</span><span class="p">,</span>   <span class="mf">1.f</span><span class="p">,</span>  <span class="c1">// 右下
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="o">-</span><span class="mf">0.5f</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5f</span><span class="p">,</span>   <span class="mf">0.f</span><span class="p">,</span>   <span class="mf">0.f</span><span class="p">,</span>   <span class="mf">1.f</span><span class="p">,</span>  <span class="c1">// 左下
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></code></pre></div><p>各頂点で、最初の3個の浮動小数点値が位置座標であり、続く2つの浮動小数点値がテクスチャ座標になる</p>
+<h5 id="vertexarraycpp-1">VertexArray.cpp</h5>
+<h5 id="vertexarrayvertexarray-2">VertexArray::VertexArray()</h5>
+<p><code>glBufferData()</code>で、コンストラクタに渡された頂点データ<code>verts</code>を頂点バッファにコピーする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">glBufferData</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="n">GL_ARRAY_BUFFER</span><span class="p">,</span>	<span class="c1">// バッファの種類
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">numVerts</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">),</span>	<span class="c1">// コピーするバイト数（3から5に変更）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">verts</span><span class="p">,</span>	<span class="c1">// コピー元（ポインタ）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">GL_STATIC_DRAW</span>	<span class="c1">// このデータの利用方法
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">);</span>
+</span></span></code></pre></div><p>頂点のストライドがfloat3個分から5個分に増えたので、<code>glEnableVertexAttribArray()</code>での頂点レイアウト（<strong>頂点属性</strong>（vertex attributes））<strong>&ldquo;0&rdquo;</strong>を調整する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">glEnableVertexAttribArray</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">glVertexAttribPointer</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="mi">0</span><span class="p">,</span>	<span class="c1">// 属性インデックス
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="mi">3</span><span class="p">,</span>	<span class="c1">// 要素数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">GL_FLOAT</span><span class="p">,</span>	<span class="c1">// 要素の型
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">GL_FALSE</span><span class="p">,</span>	<span class="c1">// （整数型のみ使用する）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span>	<span class="c1">// ストライド（通常は各頂点のサイズ）（※変更箇所）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="mi">0</span> 	<span class="c1">// 頂点データの開始位置からこの属性までのオフセット
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">);</span>
+</span></span></code></pre></div><p>テクスチャ座標のために第2の頂点属性を追加したので、頂点レイアウト（<strong>頂点属性</strong>（vertex attributes））<strong>&ldquo;1&rdquo;</strong>を有効にしてフォーマとを指定する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">glEnableVertexAttribArray</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">glVertexAttribPointer</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="mi">2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">GL_FLOAT</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="n">GL_FALSE</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">*&gt;</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span> 	<span class="c1">// 頂点データの開始位置からこの属性までのオフセット
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">);</span>
+</span></span></code></pre></div><p>OpenGLは最後の引数をオフセットポインタとして受け取るため、<code>reinterpret_cast&lt;&gt;()</code>を使って<code>void*</code>ポインタ型へ強制的に変換する必要がある</p>
 <h4 id="シェーダーを更新する">シェーダーを更新する</h4>
+<h5 id="spritevert">Sprite.vert</h5>
+<p>複数の頂点属性に対して、どの属性スロットがどの変数に対応するのかを<code>layout</code>ディレクティブによって指定する</p>
+<p>これらは、<code>glVertexAttribPointer()</code>呼び出しのスロット番号に対応する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-vert" data-lang="vert"><span class="line"><span class="cl"><span class="n">layout</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="mo">0</span><span class="p">)</span> <span class="k">in</span> <span class="k">vec3</span> <span class="n">inPosition</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="k">in</span> <span class="k">vec2</span> <span class="n">inTexCoord</span><span class="p">;</span>
+</span></span></code></pre></div><p>フラグメントシェーダーにテクスチャ座標を知らせるため、グローバルなout変数を頂点シェーダーの中に宣言して、main関数でコピーする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-vert" data-lang="vert"><span class="line"><span class="cl"><span class="k">out</span> <span class="k">vec2</span> <span class="n">fragTexCoord</span><span class="p">;</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-vert" data-lang="vert"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">main</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">	<span class="o">~</span>
+</span></span><span class="line"><span class="cl">	<span class="n">fragTexCoord</span> <span class="o">=</span> <span class="n">inTexCoord</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">~</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>OpenGLは、頂点シェーダーの出力を三角形ポリゴンの表面すべてに自動的に補間する</p>
+<h5 id="spritefrag">Sprite.frag</h5>
+<p>頂点シェーダーのout変数は、どれもフラグメントシェーダーのin変数に対応させなければならない（変数は名前も型も同じにする）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-frag" data-lang="frag"><span class="line"><span class="cl"><span class="k">in</span> <span class="k">vec2</span> <span class="n">fragTexCoord</span><span class="p">;</span>
+</span></span></code></pre></div><p>テクスチャサンプラーのためのuniformを追加する</p>
+<p><code>sampler2D</code>型は、2Dテクスチャをサンプリングする型である</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-frag" data-lang="frag"><span class="line"><span class="cl"><span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">uTexture</span><span class="p">;</span>
+</span></span></code></pre></div><p><code>outColor</code>への代入を行う</p>
+<p>頂点シェーダーから<strong>三角形の表面全体に補間されたテクスチャ座標</strong>を受け取り、テクスチャの色をサンプリングする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-frag" data-lang="frag"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">outColor</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">uTexture</span><span class="p">,</span> <span class="n">fragTexCoord</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="gamecpp-8">Game.cpp</h5>
+<h5 id="gameloadshaders-3">Game::LoadShaders()</h5>
+<p><code>Load()</code>の引数を、<code>Sprite.vert</code>と<code>Sprite.frag</code>に変更する</p>
 <h4 id="アルファブレンディング">アルファブレンディング</h4>
+<p><strong>アルファブレンディング</strong>は、半透明なピクセルを合成する処理である</p>
 <h3 id="ゲームプロジェクト">ゲームプロジェクト</h3>
 <h3 id="まとめ">まとめ</h3>
 
