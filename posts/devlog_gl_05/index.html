@@ -52,7 +52,7 @@
         },
         "datePublished": "2023-12-12",
         "description": "",
-        "wordCount":  951 ,
+        "wordCount":  967 ,
         "mainEntityOfPage": "True",
         "dateModified": "2023-12-12",
         "image": {
@@ -241,7 +241,11 @@ stroke-linejoin="round" class="feather feather-home">
           </ul>
         </li>
         <li><a href="#ゲームプロジェクト">ゲームプロジェクト</a></li>
-        <li><a href="#まとめ">まとめ</a></li>
+        <li><a href="#まとめ">まとめ</a>
+          <ul>
+            <li><a href="#参考文献">参考文献</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -360,10 +364,13 @@ stroke-linejoin="round" class="feather feather-home">
 <p>デストラクタでは、頂点バッファとインデックスバッファと頂点配列オブジェクトを破棄する</p>
 <h5 id="vertexarraysetactive">VertexArray::SetActive()</h5>
 <p>利用する頂点配列を指定する<code>glBindVertexArray()</code>を呼び出す</p>
+<h5 id="gamecpp-4">Game.cpp</h5>
 <h5 id="gamecreatespriteverts">Game::CreateSpriteVerts()</h5>
 <p><code>VertexArray</code>のインスタンスを作り、<code>Game</code>のメンバ変数<code>mSpriteVerts</code>に保存する（スプライト描画で使う）</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">mSpriteVerts</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VertexArray</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="mi">6</span><span class="p">);</span>
 </span></span></code></pre></div><p>頂点バッファに4つの頂点があり、インデックスバッファに6個のインデックスがある（四角形を作る2つの三角形）</p>
+<h5 id="gameinitialize-3">Game::Initialize()</h5>
+<p><code>CreateSpriteVerts()</code>で頂点配列オブジェクトを作成する</p>
 <h3 id="シェーダー">シェーダー</h3>
 <p>現代のグラフィクスパイプラインでは、頂点とインデックスのバッファを与えた上で、どのように描画するのかを指定する（固定色 or テクスチャの色？、ピクセルすべてにライティングの計算を行う？ など）</p>
 <p>OpenGLを含むグラフィクスAPIでは、グラフィクスハードウェアで実行される<strong>シェーダープログラム</strong>（shader program）をサポートしている</p>
@@ -437,10 +444,10 @@ stroke-linejoin="round" class="feather feather-home">
 <p><code>Shader</code>のポインタを<code>Game</code>のメンバ変数に追加する</p>
 <p>最終的にスプライトの描画に使う</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Shader</span><span class="o">*</span> <span class="n">mSpriteShader</span><span class="p">;</span>
-</span></span></code></pre></div><h5 id="gamecpp-4">Game.cpp</h5>
+</span></span></code></pre></div><h5 id="gamecpp-5">Game.cpp</h5>
 <h5 id="gameloadshaders">Game::LoadShaders()</h5>
 <p>2つのシェーダーファイルをロードして、シェーダープログラムをアクティブにする</p>
-<h5 id="gameinitialize-3">Game::Initialize()</h5>
+<h5 id="gameinitialize-4">Game::Initialize()</h5>
 <p><code>LoadShaders()</code>の呼び出しは、OpenGLとGLEWの初期化を終えた直後に行う（頂点配列オブジェクト<code>mSpriteVerts</code>を作成する前）</p>
 <h4 id="三角形を描画する">三角形を描画する</h4>
 <p>スプライトを描画する</p>
@@ -592,7 +599,7 @@ $$</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-vert" data-lang="vert"><span class="line"><span class="cl"><span class="k">vec4</span> <span class="n">pos</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">inPosition</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
 </span></span></code></pre></div><p>そのオブジェクト空間の位置にワールド行列を掛け、さらにビュー射影行列を掛けることでクリップ空間の位置に変換する</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-vert" data-lang="vert"><span class="line"><span class="cl"><span class="n">gl_Position</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">*</span> <span class="n">uWorldTransform</span> <span class="o">*</span> <span class="n">uViewProj</span><span class="p">;</span>
-</span></span></code></pre></div><h5 id="gamecpp-5">Game.cpp</h5>
+</span></span></code></pre></div><h5 id="gamecpp-6">Game.cpp</h5>
 <h5 id="gameloadshaders-1">Game::LoadShaders()</h5>
 <p>頂点シェーダーに使うシェーダーをロードする</p>
 <h5 id="shadercpp-1">Shader.cpp</h5>
@@ -610,7 +617,7 @@ $$</p>
 </span></span></code></pre></div><p><strong>uniformバッファオブジェクト</strong>（UBO）は、シェーダー内の複数のuniformをグループ化して1つにまとめ、すべての変数を同時に送る（効率が良い）（フレームごとに更新するuniformやオブジェクトごとに更新するuniformなどに分けることができる）</p>
 <p>このプロジェクトにおいて、
 <br>単純なビュー射影行列は、実行中に変化しないので設定は１回だけ、<br>ワールド行列は、描画すべき個々のスプライトコンポーネントごとに設定する</p>
-<h5 id="gamecpp-6">Game.cpp</h5>
+<h5 id="gamecpp-7">Game.cpp</h5>
 <h5 id="gameloadshaders-2">Game::LoadShaders()</h5>
 <p>画面が1024×768という前提で、単純なビュー射影行列を作成して設定する</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Matrix4</span> <span class="n">viewProj</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="o">::</span><span class="n">CreateSimpleViewProj</span><span class="p">(</span><span class="mf">1024.f</span><span class="p">,</span> <span class="mf">768.f</span><span class="p">);</span>
@@ -687,7 +694,7 @@ $$</p>
 <p>テクスチャオブジェクトを削除する</p>
 <h5 id="texturesetactive">Texture::SetActive()</h5>
 <p><code>glBindTexture()</code>を呼び出す</p>
-<h5 id="gamecpp-7">Game.cpp</h5>
+<h5 id="gamecpp-8">Game.cpp</h5>
 <h5 id="gamegettexture">Game::GetTexture()</h5>
 <p>要求されたテクスチャ<code>fileName</code>を指す<code>Texture*</code>を返す</p>
 <h5 id="spritecomponenth-1">SpriteComponent.h</h5>
@@ -759,7 +766,7 @@ $$</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-frag" data-lang="frag"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="n">outColor</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">uTexture</span><span class="p">,</span> <span class="n">fragTexCoord</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><h5 id="gamecpp-8">Game.cpp</h5>
+</span></span></code></pre></div><h5 id="gamecpp-9">Game.cpp</h5>
 <h5 id="gameloadshaders-3">Game::LoadShaders()</h5>
 <p><code>Load()</code>の引数を、<code>Sprite.vert</code>と<code>Sprite.frag</code>に変更する</p>
 <h4 id="アルファブレンディング">アルファブレンディング</h4>
@@ -773,7 +780,7 @@ $$</p>
 outputColor = srcAlpha \cdot srcColor + (1 - srcAlpha) \cdot dstColor
 $$</p>
 <p>例えば、現状は<code>srcColor</code>が無色であり、<code>dstColor</code>が黒色であるため、透明にすべきピクセルが黒塗りになっている</p>
-<h5 id="gamecpp-9">Game.cpp</h5>
+<h5 id="gamecpp-10">Game.cpp</h5>
 <h5 id="gamegenerateoutput-2">Game::GenerateOutput()</h5>
 <p>スプライトを描画する直前に<code>glEnable()</code>の呼び出しで、カラーバッファのブレンディングを有効にする</p>
 <p>そして<code>glBlendFunc()</code>の呼び出しで<code>srcFactor</code>と<code>dstFactor</code>を指定する</p>
@@ -783,7 +790,13 @@ $$</p>
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">GL_ONE_MINUS_SRC_ALPHA</span>	<span class="c1">// dstFactorは(1 - srcAplha)
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">);</span>
 </span></span></code></pre></div><h3 id="ゲームプロジェクト">ゲームプロジェクト</h3>
+<p>このプロジェクトは最新のドライバかOpenGLだとうまく動作しない可能性がある</p>
+<p>問題のissue：<a href="https://github.com/gameprogcpp/code/issues/31">https://github.com/gameprogcpp/code/issues/31</a></p>
 <h3 id="まとめ">まとめ</h3>
+<h4 id="参考文献">参考文献</h4>
+<p><a href="https://www.borndigital.co.jp/book/15291.html">Real Time Rendering Fourth Edition</a></p>
+<p><a href="https://learnopengl.com/">Learn OpenGL</a></p>
+<p><a href="https://registry.khronos.org/OpenGL/">OpenGL Reference Pages</a></p>
 
             </div>
         </article></main>
