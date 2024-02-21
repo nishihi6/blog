@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ja-jp"><head><meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">GameDev #6 3Dグラフィクス [Devlog #022] | nishihi6</title>
+<meta property="og:title" content="GameDev #6 3Dグラフィクス [Devlog #022] | nishihi6" />
+<meta name="twitter:title" content="GameDev #6 3Dグラフィクス [Devlog #022] | nishihi6" />
+<meta itemprop="name" content="GameDev #6 3Dグラフィクス [Devlog #022] | nishihi6" />
+<meta name="application-name" content="GameDev #6 3Dグラフィクス [Devlog #022] | nishihi6" />
+<meta property="og:site_name" content="nishihi6" />
+
+<meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
+<meta itemprop="description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta property="og:description" content="Minimal Hugo blog theme with light and dark mode support" />
+<meta name="twitter:description" content="Minimal Hugo blog theme with light and dark mode support" />
+
+<meta property="og:locale" content="ja-jp" />
+<meta name="language" content="ja-jp" />
+
+
+
+  <meta itemprop="image" content="https://nishihi6.github.io/blog/" />
+  <meta property="og:image" content="https://nishihi6.github.io/blog/" />
+  <meta name="twitter:image" content="https://nishihi6.github.io/blog/" />
+  <meta name="twitter:image:src" content="https://nishihi6.github.io/blog/" />
+
+
+
+
+    
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2024-01-20T18:25:03&#43;0900 />
+    <meta property="article:published_time" content=2024-01-20T18:25:03&#43;0900 />
+
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "GameDev #6 3Dグラフィクス [Devlog #022]",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2024-01-20",
+        "description": "",
+        "wordCount":  968 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2024-01-20",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "nishihi6"
+        }
+    }
+    </script>
+
+
+<meta name="generator" content="Hugo 0.117.0">
+
+    
+
+    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/devlog_gl_06/">
+    <link href="/blog/style.min.840eada6dfddec7b8ccfcf867f039bf80b1f16a265ec6e01dc553a3dddc9d509.css" rel="stylesheet">
+    <link href="/blog/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/blog/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/blog/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/blog/icons/favicon-16x16.png">
+    <link rel="mask-icon" href="/blog/icons/safari-pinned-tab.svg">
+    <link rel="shortcut icon" href="/blog/favicon.ico">
+
+
+
+
+<link rel="manifest" href="https://nishihi6.github.io/blog/site.webmanifest">
+
+<meta name="msapplication-config" content="/blog/browserconfig.xml">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="theme-color" content="#434648">
+
+    
+    <link rel="icon" type="image/svg+xml" href="/blog/icons/favicon.svg">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"
+    integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous" />
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"
+    integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4"
+    crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"
+    integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false}
+      ]
+    });"></script>
+
+    </head>
+<body data-theme = "dark" class="notransition">
+
+<script src="/blog/js/theme.min.8961c317c5b88b953fe27525839672c9343f1058ab044696ca225656c8ba2ab0.js" integrity="sha256-iWHDF8W4i5U/4nUlg5ZyyTQ/EFirBEaWyiJWVsi6KrA="></script>
+
+<div class="navbar" role="navigation">
+    <nav class="menu" aria-label="Main Navigation">
+        <a href="https://nishihi6.github.io/blog/" class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+        </a>
+        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+        <label for="menu-trigger">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+            </span>
+        </label>
+
+        <div class="trigger">
+            <ul class="trigger-container">
+                
+                
+                <li>
+                    <a class="menu-link " href="/blog/">
+                        Home
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link active" href="/blog/posts/">
+                        Posts
+                    </a>
+                    
+                </li>
+                
+                <li>
+                    <a class="menu-link " href="/blog/pages/about/">
+                        About
+                    </a>
+                    
+                </li>
+                
+                <li class="menu-separator">
+                    <span>|</span>
+                </li>
+            </ul>
+            <a id="mode" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+            </a>
+        </div>
+    </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">GameDev #6 3Dグラフィクス [Devlog #022]</h1>
+                
+                
+                <div class="post-meta">
+                    <time datetime="2024-01-20T18:25:03&#43;09:00" itemprop="datePublished"> 20 Jan 2024 </time>
+                </div>
+                
+            </header>
+            <details class="toc">
+                <summary><b>Table of Contents</b></summary>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#3dグラフィクス">3Dグラフィクス</a>
+      <ul>
+        <li><a href="#actorの3次元座標変換">Actorの3次元座標変換</a>
+          <ul>
+            <li><a href="#3次元の変換行列">3次元の変換行列</a></li>
+            <li><a href="#オイラー角">オイラー角</a></li>
+            <li><a href="#クォータニオン">クォータニオン</a></li>
+            <li><a href="#actorの新しい座標変換を使う">Actorの新しい座標変換を使う</a></li>
+          </ul>
+        </li>
+        <li><a href="#3dモデルのロード">3Dモデルのロード</a>
+          <ul>
+            <li><a href="#モデルフォーマットの選択">モデルフォーマットの選択</a></li>
+            <li><a href="#頂点属性の更新">頂点属性の更新</a></li>
+            <li><a href="#gpmeshファイルのロード">gpmeshファイルのロード</a></li>
+          </ul>
+        </li>
+        <li><a href="#3dメッシュの描画">3Dメッシュの描画</a>
+          <ul>
+            <li><a href="#クリップ空間への変換再び">クリップ空間への変換（再び）</a></li>
+            <li><a href="#画家のアルゴリズムからzバッファ法へ">画家のアルゴリズムからZバッファ法へ</a></li>
+            <li><a href="#basicmeshシェーダー">BasicMeshシェーダー</a></li>
+            <li><a href="#meshcomponentクラス">MeshComponentクラス</a></li>
+          </ul>
+        </li>
+        <li><a href="#ライティング照明">ライティング（照明）</a>
+          <ul>
+            <li><a href="#頂点属性再び">頂点属性（再び）</a></li>
+            <li><a href="#光の種類">光の種類</a></li>
+            <li><a href="#フォンの反射モデル">フォンの反射モデル</a></li>
+            <li><a href="#ライティングを実装する">ライティングを実装する</a></li>
+          </ul>
+        </li>
+        <li><a href="#ゲームプロジェクト">ゲームプロジェクト</a></li>
+        <li><a href="#まとめ">まとめ</a>
+          <ul>
+            <li><a href="#参考文献">参考文献</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+            </details><div class="page-content">
+                <p>ゲーム開発者の教科書：<a href="https://www.shoeisha.co.jp/book/detail/9784798157610">Game Programming in C++</a> を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します）</p>
+<h1 id="ゲームプログラミング-in-c">ゲームプログラミング in C++</h1>
+<hr>
+<h2 id="3dグラフィクス">3Dグラフィクス</h2>
+<p>ここでは、<strong>2Dゲームワールドから3Dゲームワールドに移行する</strong>プロセスを学ぶ</p>
+<h3 id="actorの3次元座標変換">Actorの3次元座標変換</h3>
+<p>このプロジェクトでは、$+x$が前方、$+y$が右向き、$+z$が上向きとなる<strong>左手座標系</strong>（left-handed coordinate system）を用いる</p>
+<h4 id="3次元の変換行列">3次元の変換行列</h4>
+<p>$(a,b,c)$をオフセットとする4×4の平行移動行列は、</p>
+<p>$$
+T(a,b,c)
+=\begin{bmatrix}
+1 &amp; 0 &amp; 0 &amp; 0 \\\
+0 &amp; 1 &amp; 0 &amp; 0 \\\
+0 &amp; 0 &amp; 1 &amp; 0 \\\
+a &amp; b &amp; c &amp; 1
+\end{bmatrix}
+$$</p>
+<p>スケール行列は、</p>
+<p>$$
+S(s_x,s_y,s_z)
+=\begin{bmatrix}
+s_x &amp; 0 &amp; 0 &amp; 0 \\\
+0 &amp; s_y &amp; 0 &amp; 0 \\\
+0 &amp; 0 &amp; s_z &amp; 0 \\\
+0 &amp; 0 &amp; 0 &amp; 1
+\end{bmatrix}
+$$</p>
+<h4 id="オイラー角">オイラー角</h4>
+<p>3次元での回転表現のアプローチである<strong>オイラー角</strong>（Euler angle）は、上下軸周りの回転&quot;<strong>ヨー</strong>&quot;（yow）、左右軸周りの回転&quot;<strong>ピッチ</strong>&quot;（pitch）、前後軸周りの回転&quot;<strong>ロール</strong>&quot;（roll）という3つの角度で表現する</p>
+<p>3つのオイラー角の別々の回転行列を組み合わせることで、回転行列を作ることができるが、掛け合わせの順序がオブジェクトの最終的な回転に影響する</p>
+<p>任意の方向を向くことが要求された際に、ヨー・ピッチ・ロールの個々の角度を単純な計算で求めることができない</p>
+<p>また、2つの角の間を補間することが要求された際に、不自然な角度に見える特異点に遭遇し、正しく補間することができない</p>
+<h4 id="クォータニオン">クォータニオン</h4>
+<p>多くのゲームが<strong>クォータニオン</strong>（quaternion:四元数）を使っている</p>
+<p>目的に関してのみ言うと、クォータニオンは、x、y、zに限らず、任意の軸周りの回転を表現する方法であると考えられる</p>
+<p><a href="https://www.youtube.com/watch?v=94NmanMgR9k">参考解説動画1（3Blue1Brown）</a>
+<br><a href="https://techblog.sega.jp/entry/2021/06/15/100000">参考解説記事1（株式会社セガ 開発技術部）</a></p>
+<h5 id="基礎的な定義">基礎的な定義</h5>
+<p><strong>単位クォータニオン</strong>（unit quaternion）は、大きさが1のクォータニオンであり、ベクトルとスカラーの成分を持つ</p>
+<p>$$
+q = [\vec{q_v},q_s]
+$$</p>
+<p>ベクトル成分とスカラー成分は、正規化された回転軸$\hat{a}$と、回転角$\theta$から計算される</p>
+<p>$$
+\vec{q_v} = \hat{a}sin\frac{\theta}{2},\quad q_s = cos\frac{\theta}{2}
+$$</p>
+<p>ここで、位置$S$で$+x$の方向を向いている状態から、座標$P$を向くように回転させるとする</p>
+<p>新しい座標$P$に向かうベクトルを正規化したものを$NewFacing$とすると、</p>
+<p>$$
+NewFacing = \frac{P-S}{\lVert P-S\rVert}
+$$</p>
+<p>もとの向き（$+x$の方向）から新しい向きに回す回転軸をクロス積で計算し、ベクトルを正規化すると、</p>
+<p>$$
+\hat{a} = \frac{\langle 1,0,0\rangle × NewFacing}{\lVert \langle1,0,0\rangle × NewFacing\rVert}
+$$</p>
+<p>回転角度をドット積とアークコサインを使って計算すると、</p>
+<p>$$
+\theta = arccos(\langle 1,0,0\rangle \cdot NewFacing)
+$$</p>
+<p>最後に、軸$\hat{a}$と角度$\theta$から、点$P$を向くまでの回転を表すクォータニオンを作る</p>
+<p><br><br>$NewFacing$が元の向きと平行なら、回転を行わない処理にする必要がある（ゼロ除算を回避する）</p>
+<p>2つのベクトルが逆向きであれば、$\pi$ラジアンの回転が必要になる</p>
+<h5 id="回転を組み合わせる">回転を組み合わせる</h5>
+<p><strong>グラスマン積</strong>（Grassmann product）は、$q$に続いて$p$で回転する
+$$
+(\vec{pq})_v = p_s \vec{q_v} + q_s \vec{p_v} + \vec{p_v} × \vec{q_v}
+$$
+$$
+(pq)_v = p_s q_s - \vec{p_v} \cdot \vec{q_v}
+$$</p>
+<p>可換ではなく、回転は右$q$から左$p$の順序で適用される</p>
+<p>単位クォータニオンの場合、クォータニオンの逆元（inverse）は、ベクトル成分の符号を反転させて求まる
+$$
+q^{-1} = [-\vec{p_v},q_s]
+$$</p>
+<p>単位元（恒等クォータニオン）は以下のように定義される
+$$
+\vec{i_v} = \langle 0,0,0\rangle , \quad i_s = 1
+$$</p>
+<h5 id="クォータニオンでベクトルを回転する">クォータニオンでベクトルを回転する</h5>
+<p>3次元ベクトル$\vec{v}$を、単位クォータニオンで回転させるとする</p>
+<p>$v$をクォータニオン$r$で表現すると、
+$$
+r = [\vec{v},0]
+$$</p>
+<p>2つのグラスマン積で$r^{\prime}$を計算すると、
+$$
+r^{\prime} = q\cdot r\cdot q^{-1}
+$$
+▶$q\cdot r$（クォータニオンの積）は、$q$によって定義される空間回転を$r$に適用する
+<br>▶この時点での結果は、元のベクトル空間ではなく、回転した空間における$r$の位置を表す
+<br>▶$q\cdot r$の結果に$q^{-1}$を掛けることで、回転した空間から元の空間への&quot;逆回転&quot;が適用される（回転を取り消すのではなく、回転後のベクトルを、元の座標系での向きに調整する）
+<br>▶$r^{\prime}$は、元のベクトル$v$が空間内でどのように回転したかを表す（純粋クォータニオン）</p>
+<p>回転されたベクトルは、$r^{\prime}$のベクトル成分になる
+$$
+\vec{v^{\prime}} = \vec{r^{\prime}_v}
+$$</p>
+<p><a href="https://www.youtube.com/watch?v=eWdawLuckus">参考解説動画2（3Blue1Brown）</a></p>
+<h5 id="球面線形補間">球面線形補間</h5>
+<p>クォータニオンによって、<strong>球面線形補間</strong>（spherical linear interpolation:Slerp）と呼ばれる、より正確な回転の補間がサポートされる</p>
+<p>Slerpは、$a$から$b$へ向かうパラメータとなる範囲$[0,1]$の小数値を受け取る
+$$
+Slerp(a,b,0.25)
+$$</p>
+<h5 id="クォータニオンから回転行列への変換">クォータニオンから回転行列への変換</h5>
+<p>$$
+\vec{q_v} = \langle q_x, q_y, q_z\rangle ,\quad q_s = q_w
+$$
+$$
+Rotate(q)
+=\begin{bmatrix}
+1-2{q_y}^2-2{q_z}^2 &amp; 2q_xq_y + 2q_wq_z &amp; 2q_xq_z - 2q_wq_y &amp; 0 \\\
+2q_xq_y - 2q_wq_z &amp; 1-2{q_x}^2-2{q_z}^2 &amp; 2q_yq_z + 2q_wq_x &amp; 0 \\\
+2q_xq_z + 2q_wq_y &amp; 2q_yq_z - 2q_wq_x &amp; 1-2{q_x}^2-2{q_y}^2 &amp; 0 \\\
+0 &amp; 0 &amp; 0 &amp; 1
+\end{bmatrix}
+$$</p>
+<h5 id="クォータニオンのコーディング">クォータニオンのコーディング</h5>
+<p><code>Math.h</code>ヘッダーファイルに<code>Quaternion</code>クラスを設置</p>
+<p>先に$p$、その後に$q$の回転をする時は以下のように書く</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Quaternion</span> <span class="n">result</span> <span class="o">=</span> <span class="n">Quaternion</span><span class="o">::</span><span class="n">Concatenate</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">p</span><span class="p">);</span>
+</span></span></code></pre></div><h4 id="actorの新しい座標変換を使う">Actorの新しい座標変換を使う</h4>
+<h5 id="actorh">Actor.h</h5>
+<p><code>Actor</code>クラスは、位置の<code>Vector3</code>、回転の<code>Quaternion</code>、スケールの<code>float</code>を持たせる</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Matrix4</span> <span class="n">mWorldTransform</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">Vector3</span> <span class="n">mPosition</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">Quaternion</span> <span class="n">mRotation</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">float</span> <span class="n">mScale</span><span class="p">;</span>
+</span></span></code></pre></div><h5 id="actorcpp">Actor.cpp</h5>
+<h5 id="actorcomputeworldtransform">Actor::ComputeWorldTransform()</h5>
+<p>スケーリング、回転、平行移動の順番</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">mWorldTransform</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="o">::</span><span class="n">CreateScale</span><span class="p">(</span><span class="n">mScale</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">mWorldTransform</span> <span class="o">*=</span> <span class="n">Matrix4</span><span class="o">::</span><span class="n">CreateFromQuaternion</span><span class="p">(</span><span class="n">mRotation</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">mWorldTransform</span> <span class="o">*=</span> <span class="n">Matrix4</span><span class="o">::</span><span class="n">CreateTranslation</span><span class="p">(</span><span class="n">mPosition</span><span class="p">);</span>
+</span></span></code></pre></div><h5 id="actorh-1">Actor.h</h5>
+<p><code>GetForward()</code>では、もとの前方ベクトル（$+x$）をクォータニオンで回転させる</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Vector3</span> <span class="nf">GetForward</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> 
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Transform</span><span class="p">(</span><span class="n">Vector3</span><span class="o">::</span><span class="n">UnitX</span><span class="p">,</span> <span class="n">mRotation</span><span class="p">);</span> 
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="movecomponentupdate">MoveComponent::Update()</h5>
+<ol>
+<li>所有アクターの回転クォータニオンを取得</li>
+<li>回転させるための新しいクォータニオンを作る</li>
+<li>もとの回転と新しい回転を結合して最終的な回転クォータニオンを作る</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">MoveComponent</span><span class="o">::</span><span class="n">Update</span><span class="p">(</span><span class="kt">float</span> <span class="n">deltaTime</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">Math</span><span class="o">::</span><span class="n">NearZero</span><span class="p">(</span><span class="n">mAngularSpeed</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">Quaternion</span> <span class="n">rot</span> <span class="o">=</span> <span class="n">mOwner</span><span class="o">-&gt;</span><span class="n">GetRotation</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">float</span> <span class="n">angle</span> <span class="o">=</span> <span class="n">mAngularSpeed</span> <span class="o">*</span> <span class="n">deltaTime</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Create quaternion for incremental rotation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">// (Rotate about up axis)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">Quaternion</span> <span class="nf">inc</span><span class="p">(</span><span class="n">Vector3</span><span class="o">::</span><span class="n">UnitZ</span><span class="p">,</span> <span class="n">angle</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Concatenate old and new quaternion
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">rot</span> <span class="o">=</span> <span class="n">Quaternion</span><span class="o">::</span><span class="n">Concatenate</span><span class="p">(</span><span class="n">rot</span><span class="p">,</span> <span class="n">inc</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">mOwner</span><span class="o">-&gt;</span><span class="n">SetRotation</span><span class="p">(</span><span class="n">rot</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">Math</span><span class="o">::</span><span class="n">NearZero</span><span class="p">(</span><span class="n">mForwardSpeed</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">Vector3</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">mOwner</span><span class="o">-&gt;</span><span class="n">GetPosition</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="n">pos</span> <span class="o">+=</span> <span class="n">mOwner</span><span class="o">-&gt;</span><span class="n">GetForward</span><span class="p">()</span> <span class="o">*</span> <span class="n">mForwardSpeed</span> <span class="o">*</span> <span class="n">deltaTime</span><span class="p">;</span>		
+</span></span><span class="line"><span class="cl">		<span class="n">mOwner</span><span class="o">-&gt;</span><span class="n">SetPosition</span><span class="p">(</span><span class="n">pos</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h3 id="3dモデルのロード">3Dモデルのロード</h3>
+<p>BlenderやMayaのような3Dモデリングツールで作成したモデルを、頂点バッファとインデックスバッファにロードするコードが必要になる</p>
+<h4 id="モデルフォーマットの選択">モデルフォーマットの選択</h4>
+<p>UnityやUnreal Engineなどのゲームエンジンでは、FBXのような<strong>変換フォーマット</strong>（exchange formats）をエディタでインポートするが、ランタイムでは使用しない（エンジンの内部フォーマットに変換する）</p>
+<p>エクスポータープラグインは、モデリングツールのフォーマットから、ランタイム目的で設計された独自フォーマットに変換する</p>
+<p>ほとんどのゲームでは、独自フォーマットにバイナリファイルフォーマットを使うが、当プロジェクトではJSON（JavaScript Object Notation）テキストフォーマットを使う</p>
+<h5 id="cubegpmesh">Cube.gpmesh</h5>
+<p>gpmeshファイルフォーマットでの立方体の表現</p>
+<p>モデルの頂点フォーマットを指定するvertexformatの<code>PosNormTx</code>は、位置を表す3個のfloatとテクスチャ座標を表す2個のfloatの間に、頂点法線のための3個のfloatを追加している</p>
+<p>シェーダープログラムを指定するshaderでは<code>BasicMesh</code>、モデルに割り当てたテクスチャのリストを指定するtexturesでは<code>[Assets/Cube.png</code>]を指定する</p>
+<p><code>vertices</code>と<code>indices</code>では、モデルの頂点とインデックスのバッファを指定する</p>
+<pre tabindex="0"><code class="language-gpmesh" data-lang="gpmesh">{
+	&#34;version&#34;:1,
+	&#34;vertexformat&#34;:&#34;PosNormTex&#34;,
+	&#34;shader&#34;:&#34;BasicMesh&#34;,
+	&#34;textures&#34;:[
+		&#34;Assets/Cube.png&#34;
+	],
+	&#34;specularPower&#34;:100.0,
+	&#34;vertices&#34;:[
+		[-0.5,-0.5,-0.5,0,0,-1,0,0],
+		[0.5,-0.5,-0.5,0,0,-1,1,0],
+		[-0.5,0.5,-0.5,0,0,-1,0,-1],
+		[0.5,0.5,-0.5,0,0,-1,1,-1],
+		[-0.5,0.5,0.5,0,1,0,0,-1],
+		[0.5,0.5,0.5,0,1,0,1,-1],
+		[-0.5,-0.5,0.5,0,0,1,0,0],
+		[0.5,-0.5,0.5,0,0,1,1,0],
+		[-0.5,0.5,-0.5,0,0,-1,0,-1],
+		[0.5,-0.5,-0.5,0,0,-1,1,0],
+		[-0.5,0.5,-0.5,0,1,0,0,-1],
+		[0.5,0.5,-0.5,0,1,0,1,-1],
+		[-0.5,0.5,0.5,0,1,0,0,-1],
+		[-0.5,0.5,0.5,0,0,1,0,-1],
+		[0.5,0.5,0.5,0,0,1,1,-1],
+		[-0.5,-0.5,0.5,0,0,1,0,0],
+		[-0.5,-0.5,0.5,0,-1,0,0,0],
+		[0.5,-0.5,0.5,0,-1,0,1,0],
+		[-0.5,-0.5,-0.5,0,-1,0,0,0],
+		[0.5,-0.5,-0.5,0,-1,0,1,0],
+		[0.5,-0.5,-0.5,1,0,0,1,0],
+		[0.5,-0.5,0.5,1,0,0,1,0],
+		[0.5,0.5,-0.5,1,0,0,1,-1],
+		[0.5,0.5,0.5,1,0,0,1,-1],
+		[-0.5,-0.5,0.5,-1,0,0,0,0],
+		[-0.5,-0.5,-0.5,-1,0,0,0,0],
+		[-0.5,0.5,0.5,-1,0,0,0,-1],
+		[-0.5,0.5,-0.5,-1,0,0,0,-1]
+	],
+	&#34;indices&#34;:[
+		[2,1,0],
+		[3,9,8],
+		[4,11,10],
+		[5,11,12],
+		[6,14,13],
+		[7,14,15],
+		[18,17,16],
+		[19,17,18],
+		[22,21,20],
+		[23,21,22],
+		[26,25,24],
+		[27,25,26]
+	]
+}
+</code></pre><p>エクスポーター：<a href="https://github.com/gameprogcpp/code/tree/master/Exporter">https://github.com/gameprogcpp/code/tree/master/Exporter</a></p>
+<h4 id="頂点属性の更新">頂点属性の更新</h4>
+<p>gpmeshファイルでの&quot;位置&quot;、&ldquo;法線&rdquo;、&ldquo;テクスチャ座標&quot;の3つの頂点属性を使う</p>
+<h5 id="vertexarraycpp">VertexArray.cpp</h5>
+<p>各頂点のサイズをfloat 8個分に増やし、法線の属性を追加する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Specify the vertex attributes
+</span></span></span><span class="line"><span class="cl"><span class="c1">// (For now, assume one vertex format)
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Position is 3 floats
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">glEnableVertexAttribArray</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">GL_FLOAT</span><span class="p">,</span> <span class="n">GL_FALSE</span><span class="p">,</span> <span class="mi">8</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">),</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Normal is 3 floats
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">glEnableVertexAttribArray</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">GL_FLOAT</span><span class="p">,</span> <span class="n">GL_FALSE</span><span class="p">,</span> <span class="mi">8</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">	<span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">*&gt;</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Texture coordinates is 2 floats
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">glEnableVertexAttribArray</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">glVertexAttribPointer</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">GL_FLOAT</span><span class="p">,</span> <span class="n">GL_FALSE</span><span class="p">,</span> <span class="mi">8</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">	<span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">*&gt;</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="o">*</span> <span class="mi">6</span><span class="p">));</span>
+</span></span></code></pre></div><h5 id="spritevert">Sprite.vert</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-vert" data-lang="vert"><span class="line"><span class="cl"><span class="c1">// Attribute 0 is position, 1 is normal, 2 is tex coords.</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="mo">0</span><span class="p">)</span> <span class="k">in</span> <span class="k">vec3</span> <span class="n">inPosition</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="k">in</span> <span class="k">vec3</span> <span class="n">inNormal</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">layout</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="k">in</span> <span class="k">vec2</span> <span class="n">inTexCoord</span><span class="p">;</span>
+</span></span></code></pre></div><h4 id="gpmeshファイルのロード">gpmeshファイルのロード</h4>
+<p>RapidJSONは、JSONファイルの高速な読み込みをサポートする</p>
+<p>メッシュのローディングは<code>Mesh</code>クラスにカプセル化する</p>
+<h5 id="meshh">Mesh.h</h5>
+<p><code>Texture</code>クラスと同じく、<code>Mesh</code>クラスにもコンストラクタ、デストラクタ、<code>Loas()</code>、<code>Unload()</code>がある</p>
+<p><code>Load()</code>は<code>Game</code>へのポインタを受け取り、<code>Game</code>でロードされたテクスチャの連想配列にアクセスする</p>
+<p><code>Mesh</code>のメンバデータには、<br>▶テクスチャの配列、<br>▶頂点バッファとインデックスバッファの<code>VertexArray</code>ポインタ、<br>▶オブジェクト空間での<strong>境界球</strong>（bounding sphere）の半径（オブジェクト空間の原点と最も遠い点までの距離 -&gt; コリジョンで利用する）<br>がある</p>
+<h5 id="meshcpp">Mesh.cpp</h5>
+<h5 id="meshload">Mesh::Load()</h5>
+<p>すべての頂点とインデックスを格納する2つの一時的な配列を構築する</p>
+<p>RapidJSONライブラリを通じて全部の値を読み終えたら、<code>VertexArray</code>オブジェクトを構築する</p>
+<h5 id="rendererh">Renderer.h</h5>
+<p>ロードしたメッシュの連想配列<code>mMeshes</code>を追加</p>
+<h5 id="renderercpp">Renderer.cpp</h5>
+<h5 id="renderergetmesh">Renderer::GetMesh()</h5>
+<p>メッシュがすでに連想配列に入っているか、それともディスクからロードする必要があるかを判定する</p>
+<h3 id="3dメッシュの描画">3Dメッシュの描画</h3>
+<p>レンダリング関連のコードを<code>Game</code>から<code>Renderer</code>に移行する</p>
+<p><code>Game</code>クラスは、<code>Game::Initialize()</code>で<code>Renderer</code>インスタンスの生成と初期化を行う</p>
+<p><code>Renderer::Initialize()</code>は、画面の幅と高さを受け取り、メンバ変数として保存する</p>
+<p><code>Game::GenerateOutput()</code>が、<code>Renderer::Draw()</code>を呼び出す</p>
+<p>テクスチャの連想配列、メシュの連想配列、<code>SpriteComponent</code>の連想配列も<code>Game</code>から<code>Renderer</code>に移行する</p>
+<h4 id="クリップ空間への変換再び">クリップ空間への変換（再び）</h4>
+<p>ビュー射影行列を、ビュー行列と射影行列に分解して考える</p>
+<h5 id="ビュー行列">ビュー行列</h5>
+<p>ビュー行列（view matrix）は、カメラの位置と方向についての行列である</p>
+<p>ここでは最小限の<strong>注視行列</strong>（look-at matrix）をカメラの位置と方向で表現する</p>
+<p>典型的な注視行列は、&ldquo;目の位置&rdquo;、&ldquo;注視するターゲットの位置&rdquo;、&ldquo;上を表す方向&quot;の3つのパラメータで構成される</p>
+<p>$$
+\hat{k} = \frac{target - eye}{\lVert target - eye\rVert}
+$$
+$$
+\hat{i} = \frac{up × \hat{k}}{\lVert up × \hat{k}\rVert}
+$$
+$$
+\hat{j} = \frac{\hat{k} × \hat{i}}{\lVert \hat{k} × \hat{i}\rVert}
+$$
+$$
+\vec{t} = \langle -\hat{i}\cdot eye, -\hat{j}\cdot eye, -\hat{k}\cdot eye \rangle
+$$</p>
+<p>$$
+LookAt
+=\begin{bmatrix}
+i_x &amp; j_x &amp; k_x &amp; 0 \\\
+i_y &amp; j_y &amp; k_y &amp; 0 \\\
+i_z &amp; j_z &amp; k_z &amp; 0 \\\
+t_x &amp; t_y &amp; t_z &amp; 1
+\end{bmatrix}
+$$</p>
+<p>カメラを動かす手っ取り早い方法は、カメラ用のアクターを作ること</p>
+<p>カメラアクターの位置が&quot;目の位置&quot;を表現し、ターゲットの位置は&quot;カメラアクターの正面の方向にある点&quot;になり、上方向は&rdquo;$+z$&ldquo;になる</p>
+<p>これらの引数を<code>Matrix4::CreateLookAt</code>に渡せば、ビュー行列が得られる</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Vector3</span> <span class="n">eye</span> <span class="o">=</span> <span class="n">mCameraActor</span><span class="o">-&gt;</span><span class="n">GetPosition</span><span class="p">();</span>	<span class="c1">// カメラの位置
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Vector3</span> <span class="n">target</span> <span class="o">=</span> <span class="n">mCameraActor</span><span class="o">-&gt;</span><span class="n">GetPosition</span><span class="p">()</span> <span class="o">+</span> <span class="n">mCameraActor</span><span class="o">-&gt;</span><span class="n">GetForward</span><span class="p">()</span> <span class="o">*</span> <span class="mf">10.0f</span><span class="p">;</span>	<span class="c1">// カメラの正面10単位先の位置
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Matrix4</span> <span class="n">view</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="o">::</span><span class="n">CreateLookAt</span><span class="p">(</span><span class="n">eye</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">UnitZ</span><span class="p">);</span>
+</span></span></code></pre></div><h5 id="射影行列">射影行列</h5>
+<p>射影行列（projection matrix）は、3次元の世界を、画面に描画される2次元の世界に射影する方法を決める</p>
+<p>正射影（orthographic projection）は、カメラから遠く離れたオブジェクトも、カメラに近いオブジェクトも同じ大きさになる</p>
+<p>透視射影（perspective projection）は、カメラから遠いオブジェクトが、近くにあるオブジェクトよりも小さく見える</p>
+<p>どちらの射影にも、近接平面（near plane）と遠方平面（far plane）がある</p>
+<p>正射影行列には、<br>▶ビューの幅、<br>▶ビューの高さ、<br>▶近接平面への距離、<br>▶遠方平面への距離<br>という4つのパラメータがある
+$$
+Orthographic（正射影）
+=\begin{bmatrix}
+\frac{2}{width} &amp; 0 &amp; 0 &amp; 0 \\\
+0 &amp; \frac{2}{height} &amp; 0 &amp; 0 \\\
+0 &amp; 0 &amp; \frac{1}{far - near} &amp; 0 \\\
+0 &amp; 0 &amp; \frac{near}{near - far} &amp; 1
+\end{bmatrix}
+$$</p>
+<p>透視投影行列には、fov：垂直画角（vertical field of view）のパラメータが増える
+$$
+yScale = cot(\frac{far}{2})
+$$
+$$
+xScale = yScale\cdot \frac{height}{width}
+$$
+$$
+Perspective（透視射影）
+=\begin{bmatrix}
+xScale &amp; 0 &amp; 0 &amp; 0 \\\
+0 &amp; yScale &amp; 0 &amp; 0 \\\
+0 &amp; 0 &amp; \frac{far}{far - near} &amp; 1 \\\
+0 &amp; 0 &amp; \frac{-near\cdot far}{far - near} &amp; 0
+\end{bmatrix}
+$$</p>
+<p>同次座標の$w$成分を変えている</p>
+<p>$w$成分を1に戻すには、変換された頂点の各成分をw成分で除算する<strong>透視除算</strong>（perspective divide）を行う</p>
+<p>透視除算によって、オブジェクトがカメラから遠いほど小さく表示され、OpenGLは自動的にこれを行う</p>
+<p>正射影行列には<code>Matrix4::CreateOrtho</code>、透視行列には<code>Matrix4::CreatePerspectiveFOV</code>を使う</p>
+<h5 id="ビュー射影の計算">ビュー射影の計算</h5>
+<p>ビュー射影行列は、ビュー行列と射影行列の積で表す</p>
+<p>$$
+ViewProjection = (View)(Projection)
+$$</p>
+<h4 id="画家のアルゴリズムからzバッファ法へ">画家のアルゴリズムからZバッファ法へ</h4>
+<h5 id="画家のアルゴリズムの憂鬱">画家のアルゴリズムの憂鬱</h5>
+<p>3Dゲームでは、オブジェクトの前後関係は変化する（複雑なシーンでは、ソートが性能のボトルネックになる）</p>
+<p>画家のアルゴリズムでは大量の重ね塗り（overdraw）が発生する</p>
+<p>3Dゲームでは、できるだけ重ね塗りを排除するため、画家のアルゴリズムはほとんど使われない</p>
+<h5 id="zバッファ法">Zバッファ法</h5>
+<p>Zバッファ法は、深度バッファ法、デプスバッファ法とも呼ばれる手法で、レンダリング処理に<strong>Zバッファ</strong>あるいは<strong>デプスバッファ</strong>と呼ばれる追加のメモリバッファを使う</p>
+<p>Zバッファには、シーンのデータがカラーバッファと似た形（深度）で格納される</p>
+<p>フレームをグラフィカルに表現するバッファを（カラーバッファ、Zバッファを含めた総称として）<strong>フレームバッファ</strong>と呼ぶ</p>
+<p>オブジェクトをレンダリングする際は、各ピクセルを描画する前に、そのピクセルの場所での描画オブジェクトの深度を計算する（もし深度がZバッファに書かれている深度の値よりも小さければ、そのピクセルはカラーバッファに描画され、Zバッファのピクセルの深度の値が更新される）</p>
+<h5 id="renderercpp-1">Renderer.cpp</h5>
+<h5 id="rendererinitialize">Renderer::Initialize()</h5>
+<p>OpenGLでデプスバッファ法を使うには、コンテクストを作成する前に、デプスバッファのビット数を設定する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">SDL_GL_SetAttribute</span><span class="p">(</span><span class="n">SDL_GL_DEPTH_SIZE</span><span class="p">,</span> <span class="mi">24</span><span class="p">);</span>
+</span></span></code></pre></div><h5 id="rendererdraw">Renderer::Draw()</h5>
+<p>デプスバッファ法を有効にする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">glEnable</span><span class="p">(</span><span class="n">GL_DEPTH_TEST</span><span class="p">);</span>
+</span></span></code></pre></div><p><code>glClear</code>でデプスバッファをクリアする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">glClear</span><span class="p">(</span><span class="n">GL_COLOR_BUFFER_BIT</span> <span class="o">|</span> <span class="n">GL_DEPTH_BUFFER_BIT</span><span class="p">);</span>
+</span></span></code></pre></div><p>半透明テクスチャを描画する時には、3Dオブジェクトを描画する際はアルファブレンディングを無効にし、スプライトを描画する時に有効にする</p>
+<p>また、スプライトをレンダリングする時は、Zバッファ法を無効にする（3Dゲームでは2DスプライトをHUD表示のUIにしか使わないため）</p>
+<h4 id="basicmeshシェーダー">BasicMeshシェーダー</h4>
+<h5 id="basicmeshvert">BasicMesh.vert</h5>
+<p><code>Sprite.vert</code>のコードを利用する</p>
+<h5 id="basicmeshfrag">BasicMesh.frag</h5>
+<p><code>Sprite.frag</code>のコードを利用する</p>
+<h5 id="rendererh-1">Renderer.h</h5>
+<p>メッシュシェーダー用の<code>Shader*</code>型のメンバ変数<code>mMeshShader</code>を追加する</p>
+<p>ビュー行列と射影行列のための<code>Matrix4</code>型のメンバ変数<code>mView</code>、<code>mProjection</code>を用意する</p>
+<h5 id="renderercpp-2">Renderer.cpp</h5>
+<h5 id="rendererloadshaders">Renderer::LoadShaders()</h5>
+<p><code>BasicMesh</code>シェーダーをロードし、ビューと射影行列を初期化する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">mMeshShader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Shader</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">mMeshShader</span><span class="o">-&gt;</span><span class="n">Load</span><span class="p">(</span><span class="s">&#34;Shaders/Phong.vert&#34;</span><span class="p">,</span> <span class="s">&#34;Shaders/Phong.frag&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">mMeshShader</span><span class="o">-&gt;</span><span class="n">SetActive</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Set the view-projection matrix
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">mView</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="o">::</span><span class="n">CreateLookAt</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span><span class="o">::</span><span class="n">Zero</span><span class="p">,</span> 	<span class="c1">// カメラの位置
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Vector3</span><span class="o">::</span><span class="n">UnitX</span><span class="p">,</span> <span class="c1">// ターゲットの位置
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Vector3</span><span class="o">::</span><span class="n">UnitZ</span>  <span class="c1">// 上向き
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">mProjection</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="o">::</span><span class="n">CreatePerspectiveFOV</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Math</span><span class="o">::</span><span class="n">ToRadians</span><span class="p">(</span><span class="mf">70.0f</span><span class="p">),</span>  <span class="c1">// 水平視野
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">mScreenWidth</span><span class="p">,</span>  <span class="c1">// ビューの幅
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">mScreenHeight</span><span class="p">,</span>  <span class="c1">// ビューの高さ
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="mf">25.0f</span><span class="p">,</span>  <span class="c1">// 近接平面までの距離
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="mf">10000.0f</span>  <span class="c1">// 遠方平面までの距離
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">mMeshShader</span><span class="o">-&gt;</span><span class="n">SetMatrixUniform</span><span class="p">(</span><span class="s">&#34;uViewProj&#34;</span><span class="p">,</span> <span class="n">mView</span> <span class="o">*</span> <span class="n">mProjection</span><span class="p">);</span>
+</span></span></code></pre></div><h4 id="meshcomponentクラス">MeshComponentクラス</h4>
+<h5 id="meshcomponenth">MeshComponent.h</h5>
+<p><code>SpriteComponent</code>と違い、描画順序の変数はない（3DメッシュはZバッファ法を使うため）</p>
+<p>メンバデータは、割り当てられたメッシュへのポインタ<code>mMesh</code>と、テクスチャインデックス<code>mTextureIndex</code>のみである</p>
+<h5 id="rendererh-2">Renderer.h</h5>
+<p><code>MeshComponent</code>ポインタの配列<code>mMeshComps</code>を持たせる</p>
+<h5 id="renderercpp-3">Renderer.cpp</h5>
+<h5 id="rendereraddmeshcomp">Renderer::AddMeshComp()</h5>
+<p><code>MeshComponent</code>を追加する</p>
+<h5 id="rendererremovemeshcomp">Renderer::RemoveMeshComp()</h5>
+<p><code>MeshComponent</code>を削除する</p>
+<h5 id="meshcomponentcpp">MeshComponent.cpp</h5>
+<p>コンストラクタとデストラクタで、<code>AddMeshComp()</code>と<code>RemoveMeshComp()</code>を呼び出す</p>
+<h5 id="meshcomponentdraw">MeshComponent::Draw()</h5>
+<p>ワールド行列のuniformを設定する（所有アクターのワールド行列を直接使う）</p>
+<p>メッシュに割り当てられているテクスチャと頂点属性をアクティブにする</p>
+<p>最後に、<code>glDrawElements()</code>で三角形を描画する</p>
+<h5 id="renderercpp-4">Renderer.cpp</h5>
+<h5 id="rendererdraw-1">Renderer::Draw()</h5>
+<ol>
+<li>フレームバッファをクリア</li>
+<li>デプスバッファ法は有効、アルファブレンディングは無効にする</li>
+<li>すべてのメッシュを描画する</li>
+<li>すべてのスプライトを描画する（以前と同じ設定）</li>
+<li>フロントバッファとバックバッファを交換する</li>
+</ol>
+<p>カメラの移動に応じて、フレームごとにビュー射影行列を再計算する</p>
+<h3 id="ライティング照明">ライティング（照明）</h3>
+<p>フラグメントシェーダーで、ピクセルの最終的な色を決定する</p>
+<p>これまではテクスチャの色を直接使ったが、ここでは照明を考慮する</p>
+<h4 id="頂点属性再び">頂点属性（再び）</h4>
+<p>メッシュをライティングするには、<strong>頂点法線</strong>（vertex normal）の頂点属性が必要になる</p>
+<p>三角形の表面のピクセルは、その三角形の3つの頂点法線が補間された法線ベクトルを持つ（すべての頂点属性は、フラグメントシェーダーに送られる際に、三角形全体に補間される）</p>
+<h4 id="光の種類">光の種類</h4>
+<h5 id="環境光">環境光</h5>
+<h5 id="平行光源">平行光源</h5>
+<h5 id="点光源">点光源</h5>
+<p>点光源には、RGBカラー、位置、<strong>減衰半径</strong>（falloff radius）を持つ</p>
+<h5 id="スポットライト">スポットライト</h5>
+<h4 id="フォンの反射モデル">フォンの反射モデル</h4>
+<p><strong>双方向反射率分布関数</strong>（Bidirectional Reflectance Distribution Function:BRDF）シーンに置かれたオブジェクトに光がどう影響するかの近似値を計算する</p>
+<p>古典的なBRDFモデルとして、<strong>フォンの反射モデル</strong>（Phong reflection model）がある</p>
+<p>フォンの反射モデルは、<strong>局所照明モデル</strong>（local lighting model）であり、光の二次的な反射を計算しない</p>
+<h4 id="ライティングを実装する">ライティングを実装する</h4>
+<h3 id="ゲームプロジェクト">ゲームプロジェクト</h3>
+<h3 id="まとめ">まとめ</h3>
+<h4 id="参考文献">参考文献</h4>
+
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/nishihi6" target="_blank" rel="noopener noreferrer me"
+    title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a>
+<a href="https://www.facebook.com/profile.php?id=100034856812491" target="_blank" rel="noopener noreferrer me"
+    title="Facebook">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+</svg>
+</a>
+<a href="https://twitter.com" target="_blank" rel="noopener noreferrer me"
+    title="X">
+    <svg viewBox="0 0 1200 1227" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"/>
+</svg>
+</a>
+<a href="https://connpass.com/user/nishihi6/" target="_blank" rel="noopener noreferrer me"
+    title="Connpass">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg>
+</a>
+<a href="http://www.igl.ise.shibaura-it.ac.jp/" target="_blank" rel="noopener noreferrer me"
+    title="Lab">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg>
+</a>
+<a href="index.xml" target="_blank" rel="noopener noreferrer me"
+    title="Rss">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11a9 9 0 0 1 9 9" />
+    <path d="M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
+</svg>
+</a>
+</div>
+    <small class="footer_copyright">
+        © 2024 nishihi6.
+    </small>
+    
+</footer><a href="#" title="Go to top" id="totop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
+    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
+</svg>
+
+</a>
+
+
+    
+
+
+
+
+    
+    
+        
+    
+
+    
+    
+        
+    
+
+
+
+    
+    <script src="https://nishihi6.github.io/blog/js/main.min.35f435a5d8eac613c52daa28d8af544a4512337d3e95236e4a4978417b8dcb2f.js" integrity="sha256-NfQ1pdjqxhPFLaoo2K9USkUSM30&#43;lSNuSkl4QXuNyy8="></script>
+
+    
+
+</body>
+</html>

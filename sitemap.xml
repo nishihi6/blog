@@ -2,13 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://nishihi6.github.io/blog/posts/devlog_cg-ml_05/</loc>
-    <lastmod>2024-01-06T19:13:47+09:00</lastmod>
+    <loc>https://nishihi6.github.io/blog/posts/devlog_gl_06/</loc>
+    <lastmod>2024-01-20T18:25:03+09:00</lastmod>
   </url><url>
     <loc>https://nishihi6.github.io/blog/</loc>
-    <lastmod>2024-01-06T19:13:47+09:00</lastmod>
+    <lastmod>2024-01-20T18:25:03+09:00</lastmod>
   </url><url>
     <loc>https://nishihi6.github.io/blog/posts/</loc>
+    <lastmod>2024-01-20T18:25:03+09:00</lastmod>
+  </url><url>
+    <loc>https://nishihi6.github.io/blog/posts/devlog_cg-ml_05/</loc>
     <lastmod>2024-01-06T19:13:47+09:00</lastmod>
   </url><url>
     <loc>https://nishihi6.github.io/blog/posts/devlog_unity-gamedev_01/</loc>

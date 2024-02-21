@@ -6,7 +6,22 @@
     <description>Recent content in Home on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Sat, 06 Jan 2024 19:13:47 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 20 Jan 2024 18:25:03 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GameDev #6 3Dグラフィクス [Devlog #022]</title>
+      <link>https://nishihi6.github.io/blog/posts/devlog_gl_06/</link>
+      <pubDate>Sat, 20 Jan 2024 18:25:03 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/devlog_gl_06/</guid>
+      <description>ゲーム開発者の教科書：Game Programming in C++ を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します）
+ゲームプログラミング in C++ 3Dグラフィクス ここでは、2Dゲームワールドから3Dゲームワールドに移行するプロセスを学ぶ
+Actorの3次元座標変換 このプロジェクトでは、$+x$が前方、$+y$が右向き、$+z$が上向きとなる左手座標系（left-handed coordinate system）を用いる
+3次元の変換行列 $(a,b,c)$をオフセットとする4×4の平行移動行列は、
+$$ T(a,b,c) =\begin{bmatrix} 1 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 \\\ 0 &amp;amp; 1 &amp;amp; 0 &amp;amp; 0 \\\ 0 &amp;amp; 0 &amp;amp; 1 &amp;amp; 0 \\\ a &amp;amp; b &amp;amp; c &amp;amp; 1 \end{bmatrix} $$
+スケール行列は、
+$$ S(s_x,s_y,s_z) =\begin{bmatrix} s_x &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 \\\ 0 &amp;amp; s_y &amp;amp; 0 &amp;amp; 0 \\\ 0 &amp;amp; 0 &amp;amp; s_z &amp;amp; 0 \\\ 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1 \end{bmatrix} $$</description>
+    </item>
+    
     <item>
       <title>CG×ML #5 Radiative Backpropagation [Devlog #021]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_cg-ml_05/</link>
