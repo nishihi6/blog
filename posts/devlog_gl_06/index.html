@@ -52,7 +52,7 @@
         },
         "datePublished": "2024-01-20",
         "description": "",
-        "wordCount":  968 ,
+        "wordCount":  1583 ,
         "mainEntityOfPage": "True",
         "dateModified": "2024-01-20",
         "image": {
@@ -220,6 +220,11 @@ stroke-linejoin="round" class="feather feather-home">
             <li><a href="#光の種類">光の種類</a></li>
             <li><a href="#フォンの反射モデル">フォンの反射モデル</a></li>
             <li><a href="#ライティングを実装する">ライティングを実装する</a></li>
+          </ul>
+        </li>
+        <li><a href="#追記">追記</a>
+          <ul>
+            <li><a href="#テクスチャのファイルパス取得から描画までの流れ">テクスチャのファイルパス取得から描画までの流れ</a></li>
           </ul>
         </li>
         <li><a href="#ゲームプロジェクト">ゲームプロジェクト</a></li>
@@ -674,10 +679,244 @@ $$</p>
 <p><strong>双方向反射率分布関数</strong>（Bidirectional Reflectance Distribution Function:BRDF）シーンに置かれたオブジェクトに光がどう影響するかの近似値を計算する</p>
 <p>古典的なBRDFモデルとして、<strong>フォンの反射モデル</strong>（Phong reflection model）がある</p>
 <p>フォンの反射モデルは、<strong>局所照明モデル</strong>（local lighting model）であり、光の二次的な反射を計算しない</p>
+<p>フォンのモデルは、光の反射を&quot;環境成分（ambient）&quot;、&ldquo;拡散反射（diffuse）&quot;、&ldquo;鏡面反射（specular）&ldquo;という3つの成分に分割する</p>
+<p>$\hat{n}$：正規化された面法線<br>
+$\hat{l}$：表面から光源への正規化されたベクトル<br>
+$\hat{v}$：表面からカメラの位置への正規化されたベクトル<br>
+$\hat{r}$：法線$\hat{n}$に関してベクトル$\hat{l}$と対称になるベクトル<br>
+$\alpha$：鏡面反射指数<br><br>
+$k_a$：環境色<br>
+$k_d$：拡散反射色<br>
+$k_s$：鏡面反射色</p>
+<p>$$
+Ambient = k_a
+$$
+$$
+Diffuse = k_d(\hat{n}\cdot \hat{l})
+$$
+$$
+Specular = k_s(\hat{r}\cdot \hat{v})^\alpha
+$$
+$$
+Phong = Ambient + \sum_{\forall light}
+\begin{equation*}
+\begin{cases}
+Specular + Diffuse \quad (\hat{n}\cdot \hat{l} &gt; 0) \\
+0 \quad (その他)
+\end{cases}
+\end{equation*}
+$$</p>
+<p>高度な実装では、表面の色を、環境色、拡散反射色、鏡面反射色に分ける</p>
+<p>当プロジェクトでは、最後に1回だけ乗算する処理を変更して、それぞれの色に各成分を掛ける
+<br><br></p>
+<p><strong>フラットシェーディング</strong>（flat shading）では、表面ごとに1回計算する｀</p>
+<p><strong>グローシェーディング</strong>（Gouraud shading）では、頂点ごとに1回計算する</p>
+<p><strong>フォンシェーディング</strong>（Phong shading）では、ピクセルごとに1回計算する</p>
+<p>当プロジェクトでは、フォンシェーディングを行う</p>
 <h4 id="ライティングを実装する">ライティングを実装する</h4>
-<h3 id="ゲームプロジェクト">ゲームプロジェクト</h3>
+<p>すべてのメッシュで<code>Phong</code>シェーダーを使うように更新する</p>
+<h5 id="phongvert">Phong.vert</h5>
+<p><code>BasicMesh.vert</code>をもとに変更する</p>
+<h5 id="phongfrag">Phong.frag</h5>
+<p><code>BasicMesh.frag</code>をもとに変更する</p>
+<p>平行光源用の<code>DirectionalLight</code>構造体を宣言する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-frag" data-lang="frag"><span class="line"><span class="cl"><span class="k">struct</span> <span class="n">DirectionalLight</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Direction of light</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">mDirection</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Diffuse color</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">mDiffuseColor</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Specular color</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">mSpecColor</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h5 id="rendererh-3">Renderer.h</h5>
+<p>環境光と平行光源のためのメンバ変数を追加する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Lighting data
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Vector3</span> <span class="n">mAmbientLight</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">DirectionalLight</span> <span class="n">mDirLight</span><span class="p">;</span>
+</span></span></code></pre></div><h5 id="shadercpp">Shader.cpp</h5>
+<h5 id="shadersetvectoruniform">Shader::SetVectorUniform()</h5>
+<p>3次元のベクトル型のuniformを設定する</p>
+<h5 id="shadersetfloatuniform">Shader::SetFloatUniform()</h5>
+<p>float型のuniformを設定する</p>
+<h5 id="renderercpp-5">Renderer.cpp</h5>
+<h5 id="renderersetlightuniforms">Renderer::SetLightUniforms()</h5>
+<p>新しいuniform値を設定する</p>
+<p>ドット記法で<code>uDirLight</code>構造体の特定のメンバを参照する</p>
+<p>カメラの位置は、ビュー行列の逆行列から求める（<code>GetTranslation()</code>がワールド空間におけるカメラの位置）</p>
+<h5 id="gpmesh">.gpmesh</h5>
+<p>gpmeshファイルフォーマットを拡張して、メッシュの&quot;鏡面反射指数（specular power）&ldquo;を<code>specularPower</code>プロパティで指定できるようにする</p>
+<h5 id="meshcpp-1">Mesh.cpp</h5>
+<h5 id="meshload-1">Mesh::Load</h5>
+<p><code>specularPower</code>プロパティを読み込むようにする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">mSpecPower</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="s">&#34;specularPower&#34;</span><span class="p">].</span><span class="n">GetDouble</span><span class="p">());</span>
+</span></span></code></pre></div><h5 id="meshcomponentcpp-1">MeshComponent.cpp</h5>
+<h5 id="meshcomponentdraw-1">MeshComponent::Draw()</h5>
+<p>メッシュを描画する直前に、uniformの<code>uSpecPower</code>を設定する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Set specular power
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">shader</span><span class="o">-&gt;</span><span class="n">SetFloatUniform</span><span class="p">(</span><span class="s">&#34;uSpecPower&#34;</span><span class="p">,</span> <span class="n">mMesh</span><span class="o">-&gt;</span><span class="n">GetSpecPower</span><span class="p">());</span>
+</span></span></code></pre></div><h5 id="phongvert-1">Phong.vert</h5>
+<p>ワールド空間の法線と、ワールド空間の位置座標を計算し、out変数を介して、それらをフラグメントシェーダーに送る</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-vert" data-lang="vert"><span class="line"><span class="cl"><span class="c1">// Normal (in world space)</span>
+</span></span><span class="line"><span class="cl"><span class="k">out</span> <span class="k">vec3</span> <span class="n">fragNormal</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Position (in world space)</span>
+</span></span><span class="line"><span class="cl"><span class="k">out</span> <span class="k">vec3</span> <span class="n">fragWorldPos</span><span class="p">;</span>
+</span></span></code></pre></div><h5 id="phongfrag-1">Phong.frag</h5>
+<p>in変数として、<code>fragNormal</code>と<code>fragWorldPos</code>を宣言する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-frag" data-lang="frag"><span class="line"><span class="cl"><span class="c1">// Normal (in world space)</span>
+</span></span><span class="line"><span class="cl"><span class="k">in</span> <span class="k">vec3</span> <span class="n">fragNormal</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Position (in world space)</span>
+</span></span><span class="line"><span class="cl"><span class="k">in</span> <span class="k">vec3</span> <span class="n">fragWorldPos</span><span class="p">;</span>
+</span></span></code></pre></div><h5 id="phongvert-2">Phong.vert</h5>
+<p>main関数で<code>fragNormal</code>と<code>fragWorldPos</code>を計算する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-vert" data-lang="vert"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Convert position to homogeneous coordinates</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec4</span> <span class="n">pos</span> <span class="o">=</span> <span class="k">vec4</span><span class="p">(</span><span class="n">inPosition</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Transform position to world space</span>
+</span></span><span class="line"><span class="cl">	<span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">*</span> <span class="n">uWorldTransform</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Save world position</span>
+</span></span><span class="line"><span class="cl">	<span class="n">fragWorldPos</span> <span class="o">=</span> <span class="n">pos</span><span class="p">.</span><span class="n">xyz</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Transform to clip space</span>
+</span></span><span class="line"><span class="cl">	<span class="n">gl_Position</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">*</span> <span class="n">uViewProj</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// Transform normal into world space (w = 0)</span>
+</span></span><span class="line"><span class="cl">	<span class="n">fragNormal</span> <span class="o">=</span> <span class="p">(</span><span class="k">vec4</span><span class="p">(</span><span class="n">inNormal</span><span class="p">,</span> <span class="mf">0.0</span><span class="n">f</span><span class="p">)</span> <span class="o">*</span> <span class="n">uWorldTransform</span><span class="p">).</span><span class="n">xyz</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// Pass along the texture coordinate to frag shader</span>
+</span></span><span class="line"><span class="cl">	<span class="n">fragTexCoord</span> <span class="o">=</span> <span class="n">inTexCoord</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p><code>.xyz</code>はswizzleと呼ばれる構文で、4Dベクトルから$x$、$y$、$z$の成分を抽出し、それらの値によって新しい3Dベクトルを作る（vec4 to vec3）</p>
+<p>法線を同次座標に変換する（法線は位置ではなく、平行移動しないので$w$成分は1ではなく0）</p>
+<h5 id="phongfrag-2">Phong.frag</h5>
+<p>フォンの反射モデルを計算する</p>
+<p>OpenGLは頂点法線を三角形の表面全体に線形補間するため、<code>fragNormal</code>を正規化する必要がある（単位ベクトルを補間したものが単位ベクトルである保証はないため）</p>
+<p>平行光源は、ある方向から発する光であり、オブジェクト表面から光源へのベクトルは、光線の法線ベクトルを逆にして求める</p>
+<p>dot関数はドット積を計算し、reflect関数は反射ベクトルを計算する</p>
+<p>max関数は2つの値から最大値を選択し、pow関数はべき乗を計算し、clamp関数はベクトルの各成分を指定された範囲内に制限する</p>
+<p><code>R</code>と<code>V</code>のドット積が負の時の問題はmax関数で防止する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-frag" data-lang="frag"><span class="line"><span class="cl"><span class="k">void</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Surface normal</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">N</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">fragNormal</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Vector from surface to light</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">L</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="o">-</span><span class="n">uDirLight</span><span class="p">.</span><span class="n">mDirection</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Vector from surface to camera</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">V</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">uCameraPos</span> <span class="o">-</span> <span class="n">fragWorldPos</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Reflection of -L about N</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">R</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">reflect</span><span class="p">(</span><span class="o">-</span><span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// Compute phong reflection</span>
+</span></span><span class="line"><span class="cl">	<span class="k">vec3</span> <span class="n">Phong</span> <span class="o">=</span> <span class="n">uAmbientLight</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">float</span> <span class="n">NdotL</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">L</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">NdotL</span> <span class="o">&gt;</span> <span class="mo">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">Diffuse</span> <span class="o">=</span> <span class="n">uDirLight</span><span class="p">.</span><span class="n">mDiffuseColor</span> <span class="o">*</span> <span class="n">NdotL</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">vec3</span> <span class="n">Specular</span> <span class="o">=</span> <span class="n">uDirLight</span><span class="p">.</span><span class="n">mSpecColor</span> <span class="o">*</span> <span class="n">pow</span><span class="p">(</span><span class="n">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">dot</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">V</span><span class="p">)),</span> <span class="n">uSpecPower</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">Phong</span> <span class="o">+=</span> <span class="n">Diffuse</span> <span class="o">+</span> <span class="n">Specular</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// Final color is texture color times phong light (alpha = 1)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">outColor</span> <span class="o">=</span> <span class="n">texture</span><span class="p">(</span><span class="n">uTexture</span><span class="p">,</span> <span class="n">fragTexCoord</span><span class="p">)</span> <span class="o">*</span> <span class="k">vec4</span><span class="p">(</span><span class="n">Phong</span><span class="p">,</span> <span class="mf">1.0</span><span class="n">f</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h3 id="追記">追記</h3>
+<h4 id="テクスチャのファイルパス取得から描画までの流れ">テクスチャのファイルパス取得から描画までの流れ</h4>
+<p><code>Mesh::Load()</code>でメッシュ（<code>~.gpmesh</code>）をロード、テクスチャファイルパスを抽出</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">Mesh</span><span class="o">::</span><span class="n">Load</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">Renderer</span><span class="o">*</span> <span class="n">renderer</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// ファイルを開く、解析するなどの処理...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// テクスチャパスの読み込み
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">const</span> <span class="n">rapidjson</span><span class="o">::</span><span class="n">Value</span><span class="o">&amp;</span> <span class="n">textures</span> <span class="o">=</span> <span class="n">doc</span><span class="p">[</span><span class="s">&#34;textures&#34;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="n">rapidjson</span><span class="o">::</span><span class="n">SizeType</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">textures</span><span class="p">.</span><span class="n">Size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">texName</span> <span class="o">=</span> <span class="n">textures</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">GetString</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Texture</span><span class="o">*</span> <span class="n">t</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">-&gt;</span><span class="n">GetTexture</span><span class="p">(</span><span class="n">texName</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">mTextures</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// その他のメッシュデータの読み込みと処理...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p><code>Renderer::GetTexture()</code>で指定されたファイル名のテクスチャが既に読み込まれているかをチェック、もし読み込まれていなければ新たにロードする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Texture</span><span class="o">*</span> <span class="n">Renderer</span><span class="o">::</span><span class="n">GetTexture</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">fileName</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Texture</span><span class="o">*</span> <span class="n">tex</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">auto</span> <span class="n">iter</span> <span class="o">=</span> <span class="n">mTextures</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">fileName</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">iter</span> <span class="o">!=</span> <span class="n">mTextures</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">tex</span> <span class="o">=</span> <span class="n">iter</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">tex</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Texture</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">tex</span><span class="o">-&gt;</span><span class="n">Load</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">mTextures</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">tex</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">delete</span> <span class="n">tex</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">tex</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">tex</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p><code>Texture::Load()</code>で実際にテクスチャファイルを読み込み、OpenGLのテクスチャとしてGPUにアップロードする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">Texture</span><span class="o">::</span><span class="n">Load</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">fileName</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">channels</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">image</span> <span class="o">=</span> <span class="n">SOIL_load_image</span><span class="p">(</span><span class="n">fileName</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">										   <span class="o">&amp;</span><span class="n">mWidth</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">mHeight</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">channels</span><span class="p">,</span> <span class="n">SOIL_LOAD_AUTO</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">image</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">SDL_Log</span><span class="p">(</span><span class="s">&#34;SOIL failed to load image %s: %s&#34;</span><span class="p">,</span> <span class="n">fileName</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">SOIL_last_result</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">format</span> <span class="o">=</span> <span class="n">GL_RGB</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">channels</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">format</span> <span class="o">=</span> <span class="n">GL_RGBA</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="n">glGenTextures</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">mTextureID</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">glBindTexture</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">mTextureID</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="n">glTexImage2D</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">mWidth</span><span class="p">,</span> <span class="n">mHeight</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				 <span class="n">GL_UNSIGNED_BYTE</span><span class="p">,</span> <span class="n">image</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="n">SOIL_free_image_data</span><span class="p">(</span><span class="n">image</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// Enable linear filtering
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">glTexParameteri</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">GL_TEXTURE_MIN_FILTER</span><span class="p">,</span> <span class="n">GL_LINEAR</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">glTexParameteri</span><span class="p">(</span><span class="n">GL_TEXTURE_2D</span><span class="p">,</span> <span class="n">GL_TEXTURE_MAG_FILTER</span><span class="p">,</span> <span class="n">GL_LINEAR</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p><code>MeshComponent::Draw()</code>でレンダリングを行う</p>
+<p>関連付けられた<code>Mesh</code>オブジェクトの各テキスチャをアクティブにし、シェーダーを使用してメッシュを描画する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">MeshComponent</span><span class="o">::</span><span class="n">Draw</span><span class="p">(</span><span class="n">Shader</span><span class="o">*</span> <span class="n">shader</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">mMesh</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Set the world transform
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">shader</span><span class="o">-&gt;</span><span class="n">SetMatrixUniform</span><span class="p">(</span><span class="s">&#34;uWorldTransform&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">			<span class="n">mOwner</span><span class="o">-&gt;</span><span class="n">GetWorldTransform</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Set specular power
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">shader</span><span class="o">-&gt;</span><span class="n">SetFloatUniform</span><span class="p">(</span><span class="s">&#34;uSpecPower&#34;</span><span class="p">,</span> <span class="n">mMesh</span><span class="o">-&gt;</span><span class="n">GetSpecPower</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Set the active texture
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">Texture</span><span class="o">*</span> <span class="n">t</span> <span class="o">=</span> <span class="n">mMesh</span><span class="o">-&gt;</span><span class="n">GetTexture</span><span class="p">(</span><span class="n">mTextureIndex</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">t</span><span class="o">-&gt;</span><span class="n">SetActive</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Set the mesh&#39;s vertex array as active
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">VertexArray</span><span class="o">*</span> <span class="n">va</span> <span class="o">=</span> <span class="n">mMesh</span><span class="o">-&gt;</span><span class="n">GetVertexArray</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="n">va</span><span class="o">-&gt;</span><span class="n">SetActive</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Draw
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">glDrawElements</span><span class="p">(</span><span class="n">GL_TRIANGLES</span><span class="p">,</span> <span class="n">va</span><span class="o">-&gt;</span><span class="n">GetNumIndices</span><span class="p">(),</span> <span class="n">GL_UNSIGNED_INT</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p><code>Mesh::GetTexture()</code>でアクティブにするテクスチャを取得する</p>
+<p><code>mTextureIndex</code>は、<code>Mesh</code>オブジェクトのテクスチャ配列内でアクティブにするテクスチャのインデックス</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Texture</span><span class="o">*</span> <span class="n">Mesh</span><span class="o">::</span><span class="n">GetTexture</span><span class="p">(</span><span class="n">size_t</span> <span class="n">index</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">index</span> <span class="o">&lt;</span> <span class="n">mTextures</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="n">mTextures</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h3 id="ゲームプロジェクト">ゲームプロジェクト</h3>
 <h3 id="まとめ">まとめ</h3>
 <h4 id="参考文献">参考文献</h4>
+<p>レンダリングプログラマーに人気のあるリファレンス：<br><a href="https://www.borndigital.co.jp/book/15291.html">Real Time Rendering Fourth Edition</a></p>
+<p>DirectX 12の使い方をカバーしたリファレンス：<br><a href="https://www.amazon.co.jp/-/en/Frank-D-Luna/dp/1942270062">Introduction to 3D Game Programming With DirectX 12</a>
+<br>無償で公開：<a href="https://terrorgum.com/tfox/books/introductionto3dgameprogrammingwithdirectx12.pdf">リンク</a></p>
+<p>物理ベースレンダリングの概観：<br><a href="https://www.amazon.com/Physically-Based-Rendering-Theory-Implementation/dp/0128006455">Physically Based Rendering: From Theory to Implementation 3rd Edition</a>
+<br>無償で公開：<a href="https://3dnchu.com/archives/pbr-theory-to-implementation/">リンク</a></p>
 
             </div>
         </article></main>
