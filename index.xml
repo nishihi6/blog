@@ -6,7 +6,39 @@
     <description>Recent content in Home on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Tue, 23 Jan 2024 19:02:50 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 24 Jan 2024 04:19:53 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GameDev #8 入力システム [Devlog #024]</title>
+      <link>https://nishihi6.github.io/blog/posts/devlog_gl_08/</link>
+      <pubDate>Wed, 24 Jan 2024 04:19:53 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/devlog_gl_08/</guid>
+      <description>ゲーム開発者の教科書：Game Programming in C++ を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します）
+ゲームプログラミング in C++ 入力システム ここでは、入力デバイスをまとまったシステムに統合させる
+入力システム ゲームループの&amp;quot;入力処理&amp;quot;で入力デバイスの現在の状態を取得し、ゲームループの&amp;quot;ゲームワールド更新&amp;quot;でゲームワールドに影響を与える
+ポーリング SDL_GetKeyboardState()で取得した&amp;quot;キーボードの各キーの状態&amp;quot;をアクターのProcessInput()に渡し、アクターはその状態を各コンポーネントのProcessInput()に渡す
+コンポーネントのProcessInput()では、フレームごとにキーの値を参照して判定する（ポーリングアプローチ（polling:定期的な問い合わせ））
+ポジティブエッジとネガティブエッジ キャラクターのジャンプを例にすると、
+スペースキーの値が1のフレームで必ずキャラクターをジャンプさせるのではなく、スペースキーのポジティブエッジ（positive edge）が立つフレームでだけジャンプさせる
+spacekeyLastという変数で1つ前のフレームの値を残し、&amp;ldquo;前のフレームの値が0&amp;quot;かつ&amp;quot;現在のフレームの値が1&amp;quot;のときだけジャンプさせる
+// 例 if (spacekey == 1 and spacekeyLast == 0){ character.jump(); } spacekeyLast = spacekey; 前のフレームでの入力値を保存して、現フレームと比較するアプローチを一般化することで、None、Pressed、Released、Heldの4種類の状態を簡単に管理できる（生の値もゲームには依然として必要）
+イベント 毎フレームGame::ProcessInput()で、イベントがキューにあるのかをチェックし、選択したイベントにだけ応答する
+今回は、必要な時にのみSDLイベントを使う（マウスホイールのスクロールなど）
+SDL_GetKeyboardState()から取得されるキーボード状態が更新されるのは、メッセージポンプのループでSDL_PollEvents()を呼び出したあと
+基礎的なInputSystemのアーキテクチャ InputSystemクラスでデータを記録する
+アクター・コンポーネントが欲しい情報は、ProseccInput()を経由してInputStateのヘルパー関数から得られるようにする
+InputSystem.h enum ButtonStateは4種類の状態を表す
+（ class KeyboardState()はキーボード入力に対するヘルパー（※後で詳細を説明） ）
+（ struct InputStateはキーボード状態のメンバを持つ ）
+InputSystemクラスでは、Initialize()とShutdown()を持つ
+PrepareForUpdate()はSDL_PollEvents()の前に呼び出す
+Update()はSDL_PollEvents()の後に呼び出す
+GetState()は、InputState型のメンバ変数mStateへのconst参照を返す
+Game.h InputSystemへのポインタmInputSystemを追加する
+class InputSystem* mInputSystem; Game.cpp Game::Initialize() InputSystemを生成し初期化する
+// Initialize input system mInputSystem = new InputSystem(); if (!</description>
+    </item>
+    
     <item>
       <title>GameDev #7 オーディオ [Devlog #023]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_gl_07/</link>
