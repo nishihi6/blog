@@ -52,7 +52,7 @@
         },
         "datePublished": "2024-01-24",
         "description": "",
-        "wordCount":  244 ,
+        "wordCount":  873 ,
         "mainEntityOfPage": "True",
         "dateModified": "2024-01-24",
         "image": {
@@ -204,6 +204,37 @@ stroke-linejoin="round" class="feather feather-home">
             <li></li>
           </ul>
         </li>
+        <li><a href="#マウス入力">マウス入力</a>
+          <ul>
+            <li><a href="#ボタンと位置">ボタンと位置</a></li>
+            <li><a href="#相対移動">相対移動</a></li>
+            <li><a href="#スクロールホイール">スクロールホイール</a></li>
+          </ul>
+        </li>
+        <li><a href="#コントローラー入力">コントローラー入力</a>
+          <ul>
+            <li><a href="#gamecpp-3">Game.cpp</a></li>
+            <li><a href="#gameinitialize-1">Game::Initialize()</a></li>
+            <li><a href="#コントローラーを1つだけ使う">コントローラーを1つだけ使う</a></li>
+            <li><a href="#ボタン">ボタン</a></li>
+            <li><a href="#アナログスティックとトリガー">アナログスティックとトリガー</a></li>
+            <li><a href="#アナログスティックを2次元でフィルタリングする">アナログスティックを2次元でフィルタリングする</a></li>
+            <li><a href="#複数のコントローラーをサポートする">複数のコントローラーをサポートする</a></li>
+          </ul>
+        </li>
+        <li><a href="#入力のマッピング">入力のマッピング</a></li>
+        <li><a href="#ゲームプロジェクト">ゲームプロジェクト</a>
+          <ul>
+            <li><a href="#shipcpp">Ship.cpp</a></li>
+            <li><a href="#shipactorinput">Ship::ActorInput()</a></li>
+            <li><a href="#shipupdateactor">Ship::UpdateActor()</a></li>
+          </ul>
+        </li>
+        <li><a href="#まとめ">まとめ</a>
+          <ul>
+            <li><a href="#参考文献">参考文献</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -321,7 +352,7 @@ stroke-linejoin="round" class="feather feather-home">
 </span></span><span class="line"><span class="cl"><span class="c1">// Clear previous state memory
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">memset</span><span class="p">(</span><span class="n">mState</span><span class="p">.</span><span class="n">Keyboard</span><span class="p">.</span><span class="n">mPrevState</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SDL_NUM_SCANCODES</span><span class="p">);</span>
 </span></span></code></pre></div><h5 id="inputsystemprepareforupdate">InputSystem::PrepareForUpdate()</h5>
-<p>現在のデータを&quot;前回のバッファ&quot;にコピーする（<code>SDL_PollEvents()</code>の呼び出し前に）</p>
+<p>現在の状態を&quot;前回のバッファ&quot;にコピーする（<code>SDL_PollEvents()</code>の呼び出し前に）</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Copy current state to previous
 </span></span></span><span class="line"><span class="cl"><span class="c1">// Keyboard
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">memcpy</span><span class="p">(</span><span class="n">mState</span><span class="p">.</span><span class="n">Keyboard</span><span class="p">.</span><span class="n">mPrevState</span><span class="p">,</span> <span class="n">mState</span><span class="p">.</span><span class="n">Keyboard</span><span class="p">.</span><span class="n">mCurrState</span><span class="p">,</span> <span class="n">SDL_NUM_SCANCODES</span><span class="p">);</span>
@@ -329,6 +360,258 @@ stroke-linejoin="round" class="feather feather-home">
 <p><code>mCurrState</code>バッファををインデックス参照して、値が1ならtrue、0ならfalseを返す</p>
 <h5 id="keyboardstategetkeystate">KeyboardState::GetKeyState()</h5>
 <p>現在のフレームと前のフレームのキーの状態から、4種類のボタン状態を判定する</p>
+<h3 id="マウス入力">マウス入力</h3>
+<p>ポジション入力には絶対と相対の2つのモードがある</p>
+<p>SDLは、スクロールホイールのデータをイベント経由でしか渡さない</p>
+<p>カーソル表示は、<code>SDL_ShowCursor()</code>で制御する</p>
+<h4 id="ボタンと位置">ボタンと位置</h4>
+<p><code>SDL_GetMouseState()</code>は、マウスの位置とボタンの状態を取得する（戻り値のビット列がボタンの状態を示し、渡すint型変数が座標を示す）</p>
+<p>SDLの2次元座標系では左上隅が<code>(0, 0)</code>になる</p>
+<p><code>buttons</code>変数が取得されている時、左マウスボタンが押されている場合、<code>leftIsDown</code>はtrueになる</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">Uint32</span> <span class="n">buttons</span> <span class="o">=</span> <span class="n">SDL_GetMouseState</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">y</span><span class="p">);</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">leftIsDown</span> <span class="o">=</span> <span class="p">(</span><span class="n">buttons</span> <span class="o">&amp;</span> <span class="n">SDL_BUTTON</span><span class="p">(</span><span class="n">SDL_BUTTON_LEFT</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span></code></pre></div><p><code>SDL_BUTTON()</code>マクロは、ボタン定数に基づいて1をビットシフトする<br>（<code>SDL_BUTTON(SDL_BUTTON_LEFT)</code>は、<code>1 &lt;&lt; ((1)-1)</code>で<code>0x0001</code>）<br>（<code>SDL_BUTTON(SDL_BUTTON_MIDDLE)</code>は、<code>1 &lt;&lt; ((2)-1)</code>で<code>0x0002</code>）</p>
+<h5 id="class-mousestate">class MouseState</h5>
+<p>32ビット符号なし整数でボタンの状態（現在<code>mCurrButtons</code>と1つ前<code>mPrevButtons</code>）を保存</p>
+<p><code>Vector2</code>でマウスポジション<code>mMousePos</code>を保存する</p>
+<p>クラス<code>InputSystem</code>をfriendにして、<code>InputSystem</code>が<code>MouseState</code>のメンバを操作しやすくする</p>
+<p>メンバデータ<code>struct InputState</code>に<code>MouseState</code>インスタンスの<code>Mouse</code>を追加</p>
+<h5 id="inputsystemcpp-1">InputSystem.cpp</h5>
+<h5 id="inputsysteminitialize-1">InputSystem::Initialize()</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Mouse (just set everything to 0)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">mState</span><span class="p">.</span><span class="n">Mouse</span><span class="p">.</span><span class="n">mCurrButtons</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">mState</span><span class="p">.</span><span class="n">Mouse</span><span class="p">.</span><span class="n">mPrevButtons</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span></code></pre></div><h5 id="inputsystemprepareforupdate-1">InputSystem::PrepareForUpdate()</h5>
+<p>現在のボタン状態を&quot;1つ前のボタン状態&quot;にコピーする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Mouse
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">mState</span><span class="p">.</span><span class="n">Mouse</span><span class="p">.</span><span class="n">mPrevButtons</span> <span class="o">=</span> <span class="n">mState</span><span class="p">.</span><span class="n">Mouse</span><span class="p">.</span><span class="n">mCurrButtons</span><span class="p">;</span>
+</span></span></code></pre></div><h5 id="inputsystemupdate">InputSystem::Update()</h5>
+<p><code>SDL_GetMouseState()</code>で<code>MouseState</code>のすべてのメンバを更新する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Mouse
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">mState</span><span class="p">.</span><span class="n">Mouse</span><span class="p">.</span><span class="n">mCurrButtons</span> <span class="o">=</span> <span class="n">SDL_GetMouseState</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">y</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">mState</span><span class="p">.</span><span class="n">Mouse</span><span class="p">.</span><span class="n">mMousePos</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">mState</span><span class="p">.</span><span class="n">Mouse</span><span class="p">.</span><span class="n">mMousePos</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
+</span></span></code></pre></div><h4 id="相対移動">相対移動</h4>
+<p>SDLには、<strong>相対</strong>（relative）マウスモードがサポートされており、<code>GetRelativeMouseState()</code>を2回呼び出す間に発生した移動量を取得できる</p>
+<p>相対マウスモードでは、マウスポインタを隠し、ウィンドウ内にマウスをロックし、フレームごとにマウスをセンタリングする</p>
+<h5 id="inputsystemcpp-2">InputSystem.cpp</h5>
+<h5 id="inputsystemsetrelativemousemode">InputSystem::SetRelativeMouseMode()</h5>
+<p>相対マウスモードの有効/無効を切り替える</p>
+<p><code>MouseState</code>のbool型変数である<code>mIsRelative</code>は、相対マウスモードの状態を表す</p>
+<h5 id="inputsystemupdate-1">InputSystem::Update()</h5>
+<p>モードに応じてマウス入力の関数を使い分ける</p>
+<h4 id="スクロールホイール">スクロールホイール</h4>
+<p>SDLは、スクロールホイールの状態をポーリングする関数を提供せず、<code>SDL_MOUSEWHEEL</code>イベントを呼び出す</p>
+<h5 id="gamecpp-2">Game.cpp</h5>
+<h5 id="gameprocessinput-1">Game::ProcessInput()</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">SDL_Event</span> <span class="n">event</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">while</span> <span class="p">(</span><span class="n">SDL_PollEvent</span><span class="p">(</span><span class="o">&amp;</span><span class="n">event</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">switch</span> <span class="p">(</span><span class="n">event</span><span class="p">.</span><span class="n">type</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="nl">SDL_QUIT</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">mIsRunning</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">case</span> <span class="nl">SDL_MOUSEWHEEL</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">mInputSystem</span><span class="o">-&gt;</span><span class="n">ProcessEvent</span><span class="p">(</span><span class="n">event</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">default</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="inputsystemh-2">InputSystem.h</h5>
+<h5 id="class-mousestate-1">class MouseState</h5>
+<p>垂直と水平方向のスクロールを保存するメンバ変数<code>mScrollWheel</code>を追加する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Motion of scroll wheel
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Vector2</span> <span class="n">mScrollWheel</span><span class="p">;</span>
+</span></span></code></pre></div><h5 id="inputsystemcpp-3">InputSystem.cpp</h5>
+<h5 id="inputsystemprocessevent">InputSystem::ProcessEvent()</h5>
+<p><code>event.wheel</code>構造体からスクロールホイールのx、y値を取得する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">switch</span> <span class="p">(</span><span class="n">event</span><span class="p">.</span><span class="n">type</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">case</span> <span class="nl">SDL_MOUSEWHEEL</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="n">mState</span><span class="p">.</span><span class="n">Mouse</span><span class="p">.</span><span class="n">mScrollWheel</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">event</span><span class="p">.</span><span class="n">wheel</span><span class="p">.</span><span class="n">x</span><span class="p">),</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">event</span><span class="p">.</span><span class="n">wheel</span><span class="p">.</span><span class="n">y</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">		<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">default</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">		<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="inputsystemprepareforupdate-2">InputSystem::PrepareForUpdate()</h5>
+<p><code>mScrollWheel</code>変数をクリアする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">mState</span><span class="p">.</span><span class="n">Mouse</span><span class="p">.</span><span class="n">mScrollWheel</span> <span class="o">=</span> <span class="n">Vector2</span><span class="o">::</span><span class="n">Zero</span><span class="p">;</span>
+</span></span></code></pre></div><h3 id="コントローラー入力">コントローラー入力</h3>
+<p>コントローラーを使う前に、SDLサブシステムを初期化する必要がある</p>
+<h4 id="gamecpp-3">Game.cpp</h4>
+<h4 id="gameinitialize-1">Game::Initialize()</h4>
+<p><code>SDL_INIT_GAMECONTROLLER</code>フラグを追加する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">SDL_Init</span><span class="p">(</span><span class="n">SDL_INIT_VIDEO</span><span class="o">|</span><span class="n">SDL_INIT_AUDIO</span><span class="o">|</span><span class="n">SDL_INIT_GAMECONTROLLER</span><span class="p">);</span>
+</span></span></code></pre></div><h4 id="コントローラーを1つだけ使う">コントローラーを1つだけ使う</h4>
+<h5 id="inputsystemh-3">InputSystem.h</h5>
+<p><code>SDL_GameController*</code>ポインタのメンバ変数<code>mController</code>を追加する</p>
+<h5 id="inputsystemcpp-4">InputSystem.cpp</h5>
+<h5 id="inputsysteminitialize-2">InputSystem::Initialize()</h5>
+<p><code>SDL_GameControllerOpen()</code>でコントローラーを初期化して、<code>mController</code>に<code>SDL_GameController</code>構造体へのポインタを返す</p>
+<p><code>DL_GameControllerOpen(0)</code>でコントローラー0をオープンする</p>
+<p>※ サポート外のコントローラーは、<code>SDL_GameControllerAddMappingsFromFile()</code>を使って、ファイルからコントローラーマッピングの設定を行って対応する <a href="https://github.com/gabomdq/SDL_GameControllerDB">https://github.com/gabomdq/SDL_GameControllerDB</a></p>
+<h4 id="ボタン">ボタン</h4>
+<p>SDLは、<code>SDL_GameControllerGetButton()</code>で、それぞれのボタンを個別に問い合わせる必要がある</p>
+<h5 id="inputsystemh-4">InputSystem.h</h5>
+<h5 id="class-controllerstate">class ControllerState</h5>
+<p>現在と1つ前のボタン状態を保存する配列<code>mCurrButtons[]</code>と<code>mPrevButtons[]</code>を用意する</p>
+<p><code>mIsConnected</code>は、コントローラーが接続されているかを示す</p>
+<p>クラス<code>InputSystem</code>をfriendにして、<code>InputSystem</code>が<code>ControllerState</code>のメンバを操作しやすくする</p>
+<p>メンバデータ<code>struct InputState</code>に<code>ControllerState</code>インスタンスの<code>Controller</code>を追加</p>
+<h5 id="inputsystemcpp-5">InputSystem.cpp</h5>
+<h5 id="inputsysteminitialize-3">InputSystem::Initialize()</h5>
+<p>コントローラー0をオープンした後、<code>mIsConnected</code>変数に<code>mController</code>ポインタのnullptr判定に基づく真偽値をセットする</p>
+<p><code>mCurrButtons</code>と<code>mPrevButtons</code>のメモリをクリアする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Get the connected controller, if it exists
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">mController</span> <span class="o">=</span> <span class="n">SDL_GameControllerOpen</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Initialize controller state
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">mState</span><span class="p">.</span><span class="n">Controller</span><span class="p">.</span><span class="n">mIsConnected</span> <span class="o">=</span> <span class="p">(</span><span class="n">mController</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">memset</span><span class="p">(</span><span class="n">mState</span><span class="p">.</span><span class="n">Controller</span><span class="p">.</span><span class="n">mCurrButtons</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SDL_CONTROLLER_BUTTON_MAX</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">memset</span><span class="p">(</span><span class="n">mState</span><span class="p">.</span><span class="n">Controller</span><span class="p">.</span><span class="n">mPrevButtons</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SDL_CONTROLLER_BUTTON_MAX</span><span class="p">);</span>
+</span></span></code></pre></div><h5 id="inputsystemprepareforupdate-3">InputSystem::PrepareForUpdate()</h5>
+<p>現在のボタン状態を&quot;1つ前のボタン状態&quot;にコピーする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Controller
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">memcpy</span><span class="p">(</span><span class="n">mState</span><span class="p">.</span><span class="n">Controller</span><span class="p">.</span><span class="n">mPrevButtons</span><span class="p">,</span> <span class="n">mState</span><span class="p">.</span><span class="n">Controller</span><span class="p">.</span><span class="n">mCurrButtons</span><span class="p">,</span> <span class="n">SDL_CONTROLLER_BUTTON_MAX</span><span class="p">);</span>
+</span></span></code></pre></div><h5 id="inputsystemupdate-2">InputSystem::Update()</h5>
+<p>各ボタンの状態を問い合わせて<code>mCurrButtons</code>配列に格納する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Controller
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Buttons
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">SDL_CONTROLLER_BUTTON_MAX</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">mState</span><span class="p">.</span><span class="n">Controller</span><span class="p">.</span><span class="n">mCurrButtons</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">SDL_GameControllerGetButton</span><span class="p">(</span><span class="n">mController</span><span class="p">,</span> <span class="n">SDL_GameControllerButton</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="アナログスティックとトリガー">アナログスティックとトリガー</h4>
+<p>SDLは合計6つの軸をサポートする（2つの2軸アナログスティックと、2つの1軸トリガー）</p>
+<p>トリガーの値の範囲は0~32767で、アナログスティックの値の範囲は-32768~32767である（$y$軸正は下、$x$軸正は右）</p>
+<p>デバイスごとの<strong>不正確さ</strong>を考慮し、勝手な入力 = <strong>ファントム入力</strong>（phantom input）などが発生しないように、軸からの入力にフィルターをかけて遊びをいれる（デッドゾーン）</p>
+<h5 id="inputsystemcpp-6">InputSystem.cpp</h5>
+<h5 id="inputsystemfilter1d">InputSystem::Filter1D()</h5>
+<p>デッドゾーンと最大値のための定数値<code>deadZone</code>と<code>maxValue</code>を宣言する（必要であればユーザー設定値にする）</p>
+<p>三項演算子を使って入力の絶対値を取得し、値に応じて-1.0fから1.0fまでの範囲にクランプする</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// A value &lt; dead zone is interpreted as 0%
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">const</span> <span class="kt">int</span> <span class="n">deadZone</span> <span class="o">=</span> <span class="mi">250</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// A value &gt; max value is interpreted as 100%
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">const</span> <span class="kt">int</span> <span class="n">maxValue</span> <span class="o">=</span> <span class="mi">30000</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">float</span> <span class="n">retVal</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Take absolute value of input
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">absValue</span> <span class="o">=</span> <span class="n">input</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="nl">input</span> <span class="p">:</span> <span class="o">-</span><span class="n">input</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Ignore input within dead zone
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="n">absValue</span> <span class="o">&gt;</span> <span class="n">deadZone</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Compute fractional value between dead zone and max value
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">retVal</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">absValue</span> <span class="o">-</span> <span class="n">deadZone</span><span class="p">)</span> <span class="o">/</span>
+</span></span><span class="line"><span class="cl">	<span class="p">(</span><span class="n">maxValue</span> <span class="o">-</span> <span class="n">deadZone</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Make sure sign matches original value
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">retVal</span> <span class="o">=</span> <span class="n">input</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="nl">retVal</span> <span class="p">:</span> <span class="o">-</span><span class="mf">1.0f</span> <span class="o">*</span> <span class="n">retVal</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Clamp between -1.0f and 1.0f
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">retVal</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Clamp</span><span class="p">(</span><span class="n">retVal</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">return</span> <span class="n">retVal</span><span class="p">;</span>
+</span></span></code></pre></div><h5 id="inputsystemh-5">InputSystem.h</h5>
+<h5 id="class-controllerstate-1">class ControllerState</h5>
+<p>左右それぞれの1軸トリガーのために、2つのfloat型変数を追加する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Left/right trigger
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">float</span> <span class="n">mLeftTrigger</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">float</span> <span class="n">mRightTrigger</span><span class="p">;</span>
+</span></span></code></pre></div><h5 id="inputsystemcpp-7">InputSystem.cpp</h5>
+<h5 id="inputsystemupdate-3">InputSystem::Update()</h5>
+<p><code>SDL_GameControllerGetAxis()</code>で取得した値を<code>Filter1D()</code>で0.0fから1.0fまでの範囲に変換する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Triggers
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">mState</span><span class="p">.</span><span class="n">Controller</span><span class="p">.</span><span class="n">mLeftTrigger</span> <span class="o">=</span> <span class="n">Filter1D</span><span class="p">(</span><span class="n">SDL_GameControllerGetAxis</span><span class="p">(</span><span class="n">mController</span><span class="p">,</span> <span class="n">SDL_CONTROLLER_AXIS_TRIGGERLEFT</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl"><span class="n">mState</span><span class="p">.</span><span class="n">Controller</span><span class="p">.</span><span class="n">mRightTrigger</span> <span class="o">=</span> <span class="n">Filter1D</span><span class="p">(</span><span class="n">SDL_GameControllerGetAxis</span><span class="p">(</span><span class="n">mController</span><span class="p">,</span> <span class="n">SDL_CONTROLLER_AXIS_TRIGGERRIGHT</span><span class="p">));</span>
+</span></span></code></pre></div><h4 id="アナログスティックを2次元でフィルタリングする">アナログスティックを2次元でフィルタリングする</h4>
+<p>アナログスティックの場合、<code>Filter1D</code>を独立して$x,y$軸に適用するのではなく、2次元の入力を同心円として解釈する（2次元のベクトルを作り、そのベクトルの長さを計算する）</p>
+<p>デッドゾーンよりも長さが短ければ<code>Vector2::Zero</code>、長ければデッドゾーンと最大値の間で小数値を求める</p>
+<h5 id="inputsystemcpp-8">InputSystem.cpp</h5>
+<h5 id="inputsystemfilter2d">InputSystem::Filter2D()</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">const</span> <span class="kt">float</span> <span class="n">deadZone</span> <span class="o">=</span> <span class="mf">8000.0f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="kt">float</span> <span class="n">maxValue</span> <span class="o">=</span> <span class="mf">30000.0f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Make into 2D vector
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Vector2</span> <span class="n">dir</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">dir</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">inputX</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">dir</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">inputY</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">float</span> <span class="n">length</span> <span class="o">=</span> <span class="n">dir</span><span class="p">.</span><span class="n">Length</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// If length &lt; deadZone, should be no input
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="n">length</span> <span class="o">&lt;</span> <span class="n">deadZone</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">dir</span> <span class="o">=</span> <span class="n">Vector2</span><span class="o">::</span><span class="n">Zero</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Calculate fractional value between
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// dead zone and max value circles
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">float</span> <span class="n">f</span> <span class="o">=</span> <span class="p">(</span><span class="n">length</span> <span class="o">-</span> <span class="n">deadZone</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">maxValue</span> <span class="o">-</span> <span class="n">deadZone</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Clamp f between 0.0f and 1.0f
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">f</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Clamp</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Normalize the vector, and then scale it to the
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// fractional value
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">dir</span> <span class="o">*=</span> <span class="n">f</span> <span class="o">/</span> <span class="n">length</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">return</span> <span class="n">dir</span><span class="p">;</span>
+</span></span></code></pre></div><h5 id="inputsystemh-6">InputSystem.h</h5>
+<h5 id="class-controllerstate-2">class ControllerState</h5>
+<p>左右2つの2軸アナログスティックのため、2つのVector2型変数を追加する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Left/right sticks
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Vector2</span> <span class="n">mLeftStick</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">Vector2</span> <span class="n">mRightStick</span><span class="p">;</span>
+</span></span></code></pre></div><h5 id="inputsystemcpp-9">InputSystem.cpp</h5>
+<h5 id="inputsystemupdate-4">InputSystem::Update()</h5>
+<p>アナログスティックの値を取得し、<code>Filter2D()</code>で最終的な値を求める</p>
+<p>$y$軸の正負を逆にする（+$y$を上方とする）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Sticks
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">x</span> <span class="o">=</span> <span class="n">SDL_GameControllerGetAxis</span><span class="p">(</span><span class="n">mController</span><span class="p">,</span> <span class="n">SDL_CONTROLLER_AXIS_LEFTX</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="n">SDL_GameControllerGetAxis</span><span class="p">(</span><span class="n">mController</span><span class="p">,</span> <span class="n">SDL_CONTROLLER_AXIS_LEFTY</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">mState</span><span class="p">.</span><span class="n">Controller</span><span class="p">.</span><span class="n">mLeftStick</span> <span class="o">=</span> <span class="n">Filter2D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">x</span> <span class="o">=</span> <span class="n">SDL_GameControllerGetAxis</span><span class="p">(</span><span class="n">mController</span><span class="p">,</span> <span class="n">SDL_CONTROLLER_AXIS_RIGHTX</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="n">SDL_GameControllerGetAxis</span><span class="p">(</span><span class="n">mController</span><span class="p">,</span> <span class="n">SDL_CONTROLLER_AXIS_RIGHTY</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">mState</span><span class="p">.</span><span class="n">Controller</span><span class="p">.</span><span class="n">mRightStick</span> <span class="o">=</span> <span class="n">Filter2D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+</span></span></code></pre></div><h4 id="複数のコントローラーをサポートする">複数のコントローラーをサポートする</h4>
+<p>すべてのジョイスティックをループ処理し、どれがコントローラーかを調べ、個々のコントローラーをオープンする</p>
+<p>当プロジェクトでは実装しない</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">SDL_NumJoysticks</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="n">SDL_IsGameController</span><span class="p">(</span><span class="n">i</span><span class="p">)){</span>
+</span></span><span class="line"><span class="cl">		<span class="n">SDL_GameController</span><span class="o">*</span> <span class="n">controller</span> <span class="o">=</span> <span class="n">SDL_GameControllerOpen</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>ホワイトスワップ（コントローラーの抜き差し）をサポートする際は、SDLがイベント<code>SDL_CONTROLLERDEVICEADDED</code>と<code>SDL_CONTROLLERDEVICEMOVED</code>を生成することを利用する</p>
+<h3 id="入力のマッピング">入力のマッピング</h3>
+<p>抽象的なアクションと、そのアクションに対応する{デバイス, ボタン}ペアの連想配列を用意することが理想</p>
+<p>さらに、複数バインディングを同じ抽象アクションに許すようにしたい</p>
+<p>これにより、AI制御のキャラクターのアクション実行が容易になるほか、キーボードとコントローラーの&quot;軸に沿った&quot;動きを定義できる</p>
+<p>ファイルからマッピングを読み込む機構も追加することで、マッピングをユーザーが定義できるようになる</p>
+<h3 id="ゲームプロジェクト">ゲームプロジェクト</h3>
+<p><a href="https://nishihi6.github.io/blog/posts/devlog_gl_05/">Devlog #019</a>での実装に<code>InputSystem</code>を追加実装する</p>
+<h4 id="shipcpp">Ship.cpp</h4>
+<h4 id="shipactorinput">Ship::ActorInput()</h4>
+<p>左右のアナログスティックから値を取得し、メンバ変数に保存する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="n">state</span><span class="p">.</span><span class="n">Controller</span><span class="p">.</span><span class="n">GetIsConnected</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">mVelocityDir</span> <span class="o">=</span> <span class="n">state</span><span class="p">.</span><span class="n">Controller</span><span class="p">.</span><span class="n">GetLeftStick</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">Math</span><span class="o">::</span><span class="n">NearZero</span><span class="p">(</span><span class="n">state</span><span class="p">.</span><span class="n">Controller</span><span class="p">.</span><span class="n">GetRightStick</span><span class="p">().</span><span class="n">Length</span><span class="p">()))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">mRotationDir</span> <span class="o">=</span> <span class="n">state</span><span class="p">.</span><span class="n">Controller</span><span class="p">.</span><span class="n">GetRightStick</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="shipupdateactor">Ship::UpdateActor()</h4>
+<p>速度の方向に基づいてアクターを動かす</p>
+<p><code>mVelocityDir</code>が1未満の長さの場合、減速する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Update position based on velocity
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Vector2</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">GetPosition</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="n">pos</span> <span class="o">+=</span> <span class="n">mVelocityDir</span> <span class="o">*</span> <span class="n">mSpeed</span> <span class="o">*</span> <span class="n">deltaTime</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">SetPosition</span><span class="p">(</span><span class="n">pos</span><span class="p">);</span>
+</span></span></code></pre></div><p>アクターを回転させる</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Update rotation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">float</span> <span class="n">angle</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Atan2</span><span class="p">(</span><span class="n">mRotationDir</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">mRotationDir</span><span class="p">.</span><span class="n">x</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">SetRotation</span><span class="p">(</span><span class="n">angle</span><span class="p">);</span>
+</span></span></code></pre></div><p>※ 3次元で使ったクォータニオンによる回転ではなく、角度に1個のfloatを使う2次元のアクタークラスであるため実行可能となる</p>
+<h3 id="まとめ">まとめ</h3>
+<h4 id="参考文献">参考文献</h4>
+<p>入力を記録して再生する方法についての記事：<br><a href="https://www.amazon.com/Game-Programming-Gems-GAME-PROGRAMMING/dp/1584500549">&ldquo;Game Input Recording and Playback.&ldquo;Game Programming Gems 2</a></p>
+<p>Oculus SDKのドキュメント：<br><a href="https://developer.oculus.com/documentation/native/pc/pcsdk-intro/?locale=ja_JP">Oculus PC SDK.</a></p>
+<p>入力ラグの計測方法について：<br><a href="https://www.gamedeveloper.com/game-platforms/feature-measuring-responsiveness-in-video-games-#close-modal">&ldquo;Programming Responsiveness.&rdquo;</a></p>
 
             </div>
         </article></main>
