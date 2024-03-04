@@ -296,7 +296,7 @@ stroke-linejoin="round" class="feather feather-home">
 <p>アタッチされたすべてのコンポーネントの<code>ProcessInput()</code>を呼び出すため、オーバーライドできない</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// ProcessInput function called from Game (not overridable)
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">ProcessInput</span><span class="p">(</span><span class="k">const</span> <span class="k">struct</span> <span class="nc">InputState</span><span class="o">&amp;</span> <span class="n">state</span><span class="p">);</span>
-</span></span></code></pre></div><p><code>Actor</code>自身の独自入力のためのオーバーライド可能な<code>ActorInput()</code>の宣言を変更し、<code>InputState</code>のconst参照を受け取る商にする</p>
+</span></span></code></pre></div><p><code>Actor</code>自身の独自入力のためのオーバーライド可能な<code>ActorInput()</code>の宣言を変更し、<code>InputState</code>のconst参照を受け取るようにする</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Any actor-specific input code (overridable)
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">virtual</span> <span class="kt">void</span> <span class="nf">ActorInput</span><span class="p">(</span><span class="k">const</span> <span class="k">struct</span> <span class="nc">InputState</span><span class="o">&amp;</span> <span class="n">state</span><span class="p">);</span>
 </span></span></code></pre></div><h5 id="componenth">Component.h</h5>
