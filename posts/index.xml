@@ -6,7 +6,24 @@
     <description>Recent content in Posts on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Wed, 24 Jan 2024 04:19:53 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 29 Jan 2024 03:15:04 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GameDev #9 カメラ（FPS・追従・軌道・スプライン） [Devlog #025]</title>
+      <link>https://nishihi6.github.io/blog/posts/devlog_gl_09/</link>
+      <pubDate>Mon, 29 Jan 2024 03:15:04 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/devlog_gl_09/</guid>
+      <description>ゲーム開発者の教科書：Game Programming in C++ を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します）
+ゲームプログラミング in C++ カメラ ここでは、4種類のカメラの実装を行う（FPSカメラ、追従カメラ、軌道カメラ、スプラインカメラ）
+FPSカメラ FPSカメラ（first-person camera）は、キャラクターの視点から映すようなカメラである
+PCの一人称シューターでは、キーボードとマウスを使う操作が一般的であり、WとSキーで前進と後退、AキーとDキーで左右移動（ストレイフ）、マウスの動きに合わせてビューがピッチングする
+基本的な一人称の動き キャラクターを動かす
+Actor.h 左右移動のため、右方ベクトルを取得するGetRight()を追加する
+Vector3 GetRight() const { return Vector3::Transform(Vector3::UnitY, mRotation); } MoveComponent.h 左右移動の速さを表すメンバ変数mStrafeSpeedを追加する
+ゲッターとセッターを追加する
+float GetAngularSpeed() const { return mAngularSpeed; } float GetForwardSpeed() const { return mForwardSpeed; } float GetStrafeSpeed() const { return mStrafeSpeed; }	//※ void SetAngularSpeed(float speed) { mAngularSpeed = speed; } void SetForwardSpeed(float speed) { mForwardSpeed = speed; } void SetStrafeSpeed(float speed) { mStrafeSpeed = speed; }	//※ MoveComponent.</description>
+    </item>
+    
     <item>
       <title>GameDev #8 入力システム [Devlog #024]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_gl_08/</link>
