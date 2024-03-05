@@ -1,12 +1,13 @@
-<!DOCTYPE html><html lang="ja-jp" class="dark"><head><meta charset="utf-8">
+<!DOCTYPE html>
+<html lang="ja-jp"><head><meta charset="utf-8">
 <meta http-equiv="content-type" content="text/html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title itemprop="name">Home | nishihi6</title>
-<meta property="og:title" content="Home | nishihi6" />
-<meta name="twitter:title" content="Home | nishihi6" />
-<meta itemprop="name" content="Home | nishihi6" />
-<meta name="application-name" content="Home | nishihi6" />
+<title itemprop="name">GameDev #10 衝突検知 [Devlog #026] | nishihi6</title>
+<meta property="og:title" content="GameDev #10 衝突検知 [Devlog #026] | nishihi6" />
+<meta name="twitter:title" content="GameDev #10 衝突検知 [Devlog #026] | nishihi6" />
+<meta itemprop="name" content="GameDev #10 衝突検知 [Devlog #026] | nishihi6" />
+<meta name="application-name" content="GameDev #10 衝突検知 [Devlog #026] | nishihi6" />
 <meta property="og:site_name" content="nishihi6" />
 
 <meta name="description" content="Minimal Hugo blog theme with light and dark mode support">
@@ -27,14 +28,50 @@
 
 
 
+    
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2024-02-04T11:23:58&#43;0900 />
+    <meta property="article:published_time" content=2024-02-04T11:23:58&#43;0900 />
+
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "GameDev #10 衝突検知 [Devlog #026]",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2024-02-04",
+        "description": "",
+        "wordCount":  23 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2024-02-04",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "nishihi6"
+        }
+    }
+    </script>
+
 
 <meta name="generator" content="Hugo 0.117.0">
 
     
 
-    <link rel="canonical" href="https://nishihi6.github.io/blog/">
-    <link href="/blog/index.xml" rel="alternate" type="application/rss+xml" title="nishihi6">
-    <link href="/blog/index.xml" rel="feed" type="application/rss+xml" title="nishihi6">
+    <link rel="canonical" href="https://nishihi6.github.io/blog/posts/devlog_gl_10/">
     <link href="/blog/style.min.840eada6dfddec7b8ccfcf867f039bf80b1f16a265ec6e01dc553a3dddc9d509.css" rel="stylesheet">
     <link href="/blog/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
 
@@ -75,7 +112,7 @@
     });"></script>
 
     </head>
-<body data-theme="dark" class="notransition">
+<body data-theme = "dark" class="notransition">
 
 <script src="/blog/js/theme.min.8961c317c5b88b953fe27525839672c9343f1058ab044696ca225656c8ba2ab0.js" integrity="sha256-iWHDF8W4i5U/4nUlg5ZyyTQ/EFirBEaWyiJWVsi6KrA="></script>
 
@@ -102,14 +139,14 @@ stroke-linejoin="round" class="feather feather-home">
                 
                 
                 <li>
-                    <a class="menu-link active" href="/blog/">
+                    <a class="menu-link " href="/blog/">
                         Home
                     </a>
                     
                 </li>
                 
                 <li>
-                    <a class="menu-link " href="/blog/posts/">
+                    <a class="menu-link active" href="/blog/posts/">
                         Posts
                     </a>
                     
@@ -135,95 +172,54 @@ stroke-linejoin="round" class="feather feather-home">
         </div>
     </nav>
 </div>
-<div class="wrapper">
-        
 
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">GameDev #10 衝突検知 [Devlog #026]</h1>
+                
+                
+                <div class="post-meta">
+                    <time datetime="2024-02-04T11:23:58&#43;09:00" itemprop="datePublished"> 4 Feb 2024 </time>
+                </div>
+                
+            </header>
+            <details class="toc">
+                <summary><b>Table of Contents</b></summary>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#衝突検知">衝突検知</a>
+      <ul>
+        <li><a href="#幾何学図形の種類">幾何学図形の種類</a>
+          <ul>
+            <li><a href="#線分">線分</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+            </details><div class="page-content">
+                <p>ゲーム開発者の教科書：<a href="https://www.shoeisha.co.jp/book/detail/9784798157610">Game Programming in C++</a> を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します）</p>
+<h1 id="ゲームプログラミング-in-c">ゲームプログラミング in C++</h1>
+<hr>
+<h2 id="衝突検知">衝突検知</h2>
+<p>ここでは、ゲームオブジェクトの<strong>交差判定</strong>の実装を行う</p>
+<h3 id="幾何学図形の種類">幾何学図形の種類</h3>
+<p>線分、平面、ボックスなどの幾何学図形については<code>Collision.h</code>で宣言する</p>
+<h4 id="線分">線分</h4>
+<p><strong>線分</strong>（line segment）は、始点と終点で構成される</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">LineSegment</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">mStart</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">mEnd</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>線分上の任意の点は、パラメトリック方程式で計算できる</p>
 
-<div class="author">
-    
-    
-    <img class="author-avatar" src="/blog/avatar_hua482c13146070e7c1a389f9b830d9831_60230_100x100_fill_q75_h2_box_smart1.webp" alt="nishihi6" width="956"
-        height="956" />
-    
-    <h2 class="author-name">nishihi6</h2>
-    <p class="author-bio">Computer Vision and Graphics</p>
+            </div>
+        </article></main>
 </div>
-
-        <main aria-label="Content">
-            <h3 class="posts-item-note" aria-label="Recent Posts">Recent Posts</h3>
-            
-            
-            
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_gl_10/">GameDev #10 衝突検知 [Devlog #026]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2024-02-04T11:23:58&#43;0900">
-        4 Feb 2024
-    </time>
-</article>
-
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_gl_09/">GameDev #9 カメラ（FPS・追従・軌道・スプライン） [Devlog #025]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2024-01-29T03:15:04&#43;0900">
-        29 Jan 2024
-    </time>
-</article>
-
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_gl_08/">GameDev #8 入力システム [Devlog #024]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2024-01-24T04:19:53&#43;0900">
-        24 Jan 2024
-    </time>
-</article>
-
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_gl_07/">GameDev #7 オーディオ [Devlog #023]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2024-01-23T19:02:50&#43;0900">
-        23 Jan 2024
-    </time>
-</article>
-
-            
-            <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/blog/posts/devlog_gl_06/">GameDev #6 3Dグラフィクス [Devlog #022]</a>
-    </h4>
-    
-    
-    <time class="post-item-meta" datetime="2024-01-20T18:25:03&#43;0900">
-        20 Jan 2024
-    </time>
-</article>
-
-            
-            
-            <p>
-                
-                <a href="https://nishihi6.github.io/blog/posts/">See all posts</a>
-                
-            </p>
-            
-        </main>
-    </div><footer class="footer">
+<footer class="footer">
     <span class="footer_item"> </span>
     &nbsp;
 
@@ -312,5 +308,4 @@ stroke-linejoin="round" class="feather feather-home">
     
 
 </body>
-
 </html>
