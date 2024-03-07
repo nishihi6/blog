@@ -6,7 +6,18 @@
     <description>Recent content in Posts on nishihi6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Sun, 04 Feb 2024 11:23:58 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 07 Feb 2024 23:03:50 +0900</lastBuildDate><atom:link href="https://nishihi6.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GameDev #11 ユーザーインターフェース [Devlog #027]</title>
+      <link>https://nishihi6.github.io/blog/posts/devlog_gl_11/</link>
+      <pubDate>Wed, 07 Feb 2024 23:03:50 +0900</pubDate>
+      
+      <guid>https://nishihi6.github.io/blog/posts/devlog_gl_11/</guid>
+      <description>ゲーム開発者の教科書：Game Programming in C++ を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します）
+ゲームプログラミング in C++ ユーザーインターフェース ここでは、フォントを指定して行うテキストのレンダリング、UI画面用のシステム、各言語へのローカライゼーション、HUDにいれる要素の実装を行う
+フォントレンダリング UI画面 </description>
+    </item>
+    
     <item>
       <title>GameDev #10 衝突検知 [Devlog #026]</title>
       <link>https://nishihi6.github.io/blog/posts/devlog_gl_10/</link>
