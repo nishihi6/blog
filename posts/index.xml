@@ -27,8 +27,13 @@
       <description>ゲーム開発者の教科書：Game Programming in C++ を読んで理解したことについてを要約します（内容の転載を避け、詳しく説明しすぎないように配慮します）
 ゲームプログラミング in C++ 衝突検知 ここでは、ゲームオブジェクトの交差判定の実装を行う
 幾何学図形の種類 線分、平面、ボックスなどの幾何学図形についてはCollision.hで宣言する
-線分 線分（line segment）は、始点と終点で構成される
-struct LineSegment{ Vector3 mStart; Vector3 mEnd; } 線分上の任意の点は、パラメトリック方程式で計算できる</description>
+線分 Collision.h 線分（line segment）は、始点と終点で構成される
+struct LineSegment { Vector3 mStart; Vector3 mEnd; }; Collision.cpp LineSegment::PointOnSegment() 線分上の任意の点は、パラメトリック方程式で計算できる
+$$ L(t) = Start + (End - Start)t \quad \quad (0 \leq t \leq 1) $$
+Vector3 LineSegment::PointOnSegment(float t)const { return mStart + (mEnd - mStart) * t; } 半直線の場合は$(0 \leq t \leq \infty)$、直線の場合は$(\infty \leq t \leq \infty)$
+線分は、着弾のテスト、標準レティクル、サウンドオクルージョンの判定、マウスによるピッキングなどに使う
+LineSegment::MinDistSq() 線分$AB$と任意の点$C$を結ぶ最短距離を求めるとき、3つのケースを考える
+ケース①：$AB$と$AC$の間の角度が$90$度よりも大きい ケース②：$AB$と$BC$の間の角度が$90$度よりも大きい ケース③：上記以外 これらの場合分けはドット積で判定する</description>
     </item>
     
     <item>
