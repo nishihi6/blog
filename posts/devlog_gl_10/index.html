@@ -52,7 +52,7 @@
         },
         "datePublished": "2024-02-04",
         "description": "",
-        "wordCount":  23 ,
+        "wordCount":  1853 ,
         "mainEntityOfPage": "True",
         "dateModified": "2024-02-04",
         "image": {
@@ -194,8 +194,40 @@ stroke-linejoin="round" class="feather feather-home">
         <li><a href="#幾何学図形の種類">幾何学図形の種類</a>
           <ul>
             <li><a href="#線分">線分</a></li>
+            <li><a href="#平面">平面</a></li>
+            <li><a href="#バウンディングボリューム">バウンディングボリューム</a></li>
+            <li><a href="#球">球</a></li>
+            <li><a href="#軸平行バウンディングボックスaabb">軸平行バウンディングボックス（AABB）</a></li>
+            <li><a href="#有向バウンディングボックスobb">有向バウンディングボックス（OBB）</a></li>
+            <li><a href="#カプセル">カプセル</a></li>
+            <li><a href="#凸ポリゴン">凸ポリゴン</a></li>
           </ul>
         </li>
+        <li><a href="#交差判定">交差判定</a></li>
+        <li><a href="#点の包含判定">点の包含判定</a>
+          <ul>
+            <li><a href="#球の包含判定">球の包含判定</a></li>
+            <li><a href="#aabbのの包含判定">AABBのの包含判定</a></li>
+            <li><a href="#カプセルの包含判定">カプセルの包含判定</a></li>
+            <li><a href="#凸ポリゴンの包含2d判定">凸ポリゴンの包含（2D）判定</a></li>
+          </ul>
+        </li>
+        <li><a href="#バウンディングボリューム間の交差判定">バウンディングボリューム間の交差判定</a>
+          <ul>
+            <li><a href="#球と球の判定">球と球の判定</a></li>
+            <li><a href="#aabbとaabbの判定">AABBとAABBの判定</a></li>
+            <li><a href="#球とaabbの判定">球とAABBの判定</a></li>
+            <li><a href="#カプセルとカプセルの判定">カプセルとカプセルの判定</a></li>
+          </ul>
+        </li>
+        <li><a href="#線分の判定">線分の判定</a>
+          <ul>
+            <li><a href="#線分と平面の判定">線分と平面の判定</a></li>
+            <li><a href="#線分と球の判定">線分と球の判定</a></li>
+            <li><a href="#線分とaabbの判定">線分とAABBの判定</a></li>
+          </ul>
+        </li>
+        <li><a href="#動的オブジェクト">動的オブジェクト</a></li>
       </ul>
     </li>
   </ul>
@@ -209,12 +241,547 @@ stroke-linejoin="round" class="feather feather-home">
 <h3 id="幾何学図形の種類">幾何学図形の種類</h3>
 <p>線分、平面、ボックスなどの幾何学図形については<code>Collision.h</code>で宣言する</p>
 <h4 id="線分">線分</h4>
+<h5 id="collisionh">Collision.h</h5>
 <p><strong>線分</strong>（line segment）は、始点と終点で構成される</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">LineSegment</span><span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">LineSegment</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">mStart</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">mEnd</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h5 id="collisioncpp">Collision.cpp</h5>
+<h5 id="linesegmentpointonsegment">LineSegment::PointOnSegment()</h5>
+<p>線分上の任意の点は、パラメトリック方程式で計算できる</p>
+<p>$$
+L(t) = Start + (End - Start)t \quad \quad (0 \leq t \leq 1)
+$$</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Vector3</span> <span class="n">LineSegment</span><span class="o">::</span><span class="n">PointOnSegment</span><span class="p">(</span><span class="kt">float</span> <span class="n">t</span><span class="p">)</span><span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">mStart</span> <span class="o">+</span> <span class="p">(</span><span class="n">mEnd</span> <span class="o">-</span> <span class="n">mStart</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>線分上の任意の点は、パラメトリック方程式で計算できる</p>
+</span></span></code></pre></div><p>半直線の場合は$(0 \leq t \leq \infty)$、直線の場合は$(\infty \leq t \leq \infty)$</p>
+<p>線分は、着弾のテスト、標準レティクル、サウンドオクルージョンの判定、マウスによるピッキングなどに使う</p>
+<h5 id="linesegmentmindistsq">LineSegment::MinDistSq()</h5>
+<p>線分$AB$と任意の点$C$を結ぶ最短距離を求めるとき、3つのケースを考える</p>
+<ul>
+<li><strong>ケース①</strong>：$AB$と$AC$の間の角度が$90$度よりも大きい</li>
+<li><strong>ケース②</strong>：$AB$と$BC$の間の角度が$90$度よりも大きい</li>
+<li><strong>ケース③</strong>：上記以外</li>
+</ul>
+<p>これらの場合分けはドット積で判定する</p>
+<ul>
+<li>ケース①の最短距離はベクトル$AC$の長さ</li>
+<li>ケース②の最短距離はベクトル$BC$の長さ</li>
+<li>ケース③の最短距離は$AB$に垂直な線分を$C$から$AB$まで引いたときの長さ
+<ul>
+<li>$AB$上の$\vec{p}$の長さは、ドット積による<strong>正射影</strong>（scalar projection）で求める</li>
+</ul>
+</li>
+</ul>
+<p>$\vec{p}$の長さは、&quot;$\vec{AC}$&ldquo;と&quot;正規化された$\vec{AB}$&ldquo;とのドット積
+$$
+\lVert \vec{p} \rVert = \vec{AC} \cdot \frac{\vec{AB}}{\lVert \vec{AB} \rVert}
+$$</p>
+<p>ベクトル$\vec{p}$は、$\lVert \vec{p} \rVert$と&quot;正規化された$\vec{AB}$&ldquo;とのスカラー積
+$$
+\vec{p} = \lVert \vec{p} \rVert \frac{\vec{AB}}{\lVert \vec{AB} \rVert}
+$$</p>
+<p>ベクトルの長さの2乗は、それ自身とのドット積と同じであるため、
+$$
+\vec{p} = (\vec{AC} \cdot \frac{\vec{AB}}{\lVert \vec{AB} \rVert})\frac{\vec{AB}}{\lVert \vec{AB} \rVert} = \frac{\vec{AC} \cdot \vec{AB}}{\lVert \vec{AB} \rVert} \frac{\vec{AB}}{\lVert \vec{AB} \rVert} = \frac{\vec{AC} \cdot \vec{AB}}{{\lVert \vec{AB} \rVert}^2} \vec{AB} = \frac{\vec{AC} \cdot \vec{AB}}{\vec{AB} \cdot \vec{AB}} \vec{AB}
+$$</p>
+<p>最短距離$d$は、
+$$
+d = \lVert \vec{AC} - \vec{p} \rVert
+$$</p>
+<p>これにより、高価な平方根の演算を回避できる</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">float</span> <span class="n">LineSegment</span><span class="o">::</span><span class="n">MinDistSq</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector3</span><span class="o">&amp;</span> <span class="n">point</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Construct vectors
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Vector3</span> <span class="n">ab</span> <span class="o">=</span> <span class="n">mEnd</span> <span class="o">-</span> <span class="n">mStart</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">ba</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0f</span> <span class="o">*</span> <span class="n">ab</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">ac</span> <span class="o">=</span> <span class="n">point</span> <span class="o">-</span> <span class="n">mStart</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">bc</span> <span class="o">=</span> <span class="n">point</span> <span class="o">-</span> <span class="n">mEnd</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// Case 1: C projects prior to A
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">ab</span><span class="p">,</span> <span class="n">ac</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.0f</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="n">ac</span><span class="p">.</span><span class="n">LengthSq</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Case 2: C projects after B
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">ba</span><span class="p">,</span> <span class="n">bc</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.0f</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="n">bc</span><span class="p">.</span><span class="n">LengthSq</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Case 3: C projects onto line
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Compute p
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="kt">float</span> <span class="n">scalar</span> <span class="o">=</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">ac</span><span class="p">,</span> <span class="n">ab</span><span class="p">)</span> <span class="o">/</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">ab</span><span class="p">,</span> <span class="n">ab</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">Vector3</span> <span class="n">p</span> <span class="o">=</span> <span class="n">scalar</span> <span class="o">*</span> <span class="n">ab</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Compute length squared of ac - p
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">return</span> <span class="p">(</span><span class="n">ac</span> <span class="o">-</span> <span class="n">p</span><span class="p">).</span><span class="n">LengthSq</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="平面">平面</h4>
+<p>平面（plane）は、無限に伸びている2次元のオブジェクトである</p>
+<h5 id="collisionh-1">Collision.h</h5>
+<p>平面の方程式：
+$$
+P \cdot \hat{n} + d = 0
+$$
+$P$：平面上の任意の位置座標
+<br>$n$：平面の法線
+<br>$d$：平面と原点との符号付き最短距離</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Plane</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">mNormal</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">mD</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h5 id="collicioncpp">Collicion.cpp</h5>
+<h5 id="planeplane">Plane::Plane()</h5>
+<p>任意の三角形から、その平面の方程式を導ける（平面の法線はクロス積で求まる）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Plane</span><span class="o">::</span><span class="n">Plane</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector3</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">Vector3</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="n">Vector3</span><span class="o">&amp;</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Compute vectors from a to b and a to c
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Vector3</span> <span class="n">ab</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">ac</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="n">a</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Cross product and normalize to get normal
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">mNormal</span> <span class="o">=</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Cross</span><span class="p">(</span><span class="n">ab</span><span class="p">,</span> <span class="n">ac</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">mNormal</span><span class="p">.</span><span class="n">Normalize</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// d = -P dot n
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">mD</span> <span class="o">=</span> <span class="o">-</span><span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">mNormal</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="planesigneddist">Plane::SignedDist()</h5>
+<p>任意の点$C$との最短距離を<strong>正射影</strong>を使って求める</p>
+<p>法線$n$に対する$C$の正射影$s$は、
+$$
+s = C \cdot \hat{n}
+$$</p>
+<p>$d$と正射影$s$の差が、求める最短距離となる
+$$
+SignedDist = s - d = C \cdot \hat{n} - d
+$$</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">float</span> <span class="n">Plane</span><span class="o">::</span><span class="n">SignedDist</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector3</span><span class="o">&amp;</span> <span class="n">point</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">mNormal</span><span class="p">)</span> <span class="o">-</span> <span class="n">mD</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="バウンディングボリューム">バウンディングボリューム</h4>
+<p>現代の3Dゲームでは、<strong>バウンディングボリューム</strong>（bounding volume）を使う</p>
+<p>2つのオブジェクトの交差（intersect）を判定する際は、コリジョン（collision）を行う</p>
+<h4 id="球">球</h4>
+<h5 id="collicionh">Collicion.h</h5>
+<p>中心位置（center）と半径（radius）で球を定義する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Sphere</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">mCenter</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">mRadius</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><p>人型のオブジェクトなどに適用すると&rdquo;<strong>バウンディングボリュームは交差しているが、オブジェクトは交差していない</strong>&ldquo;といった<strong>偽陽性</strong>（false positive）が増えるデメリットもある</p>
+<p>一方で、3Dオブジェクトの回転を気にする必要がないなどのメリットがある</p>
+<h4 id="軸平行バウンディングボックスaabb">軸平行バウンディングボックス（AABB）</h4>
+<h5 id="collisionh-2">Collision.h</h5>
+<p><strong>軸平行バウンディングボックス</strong>（axis-aligned bounding box）は、すべての面と法線が基本ベクトルの$x,y,z$のどれかと平行している直方体を表す（回転しない箱のイメージ）</p>
+<p>2次元の場合、左下の点$(x,y)$（最小点）と右上の点$(x,y)$（最大点）によって定義される</p>
+<p>3次元の場合、最小点は最小の$(x,y,z)$の値を持ち、最大点は最大の$(x,y,z)$の値を持つ</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">AABB</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">mMin</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">mMax</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h5 id="collisioncpp-1">Collision.cpp</h5>
+<h5 id="aabbupdateminmax">AABB::UpdateMinMax()</h5>
+<p>モデル（一連の点）をロードしてAABBを構築する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">AABB</span><span class="o">::</span><span class="n">UpdateMinMax</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector3</span><span class="o">&amp;</span> <span class="n">point</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Update each component separately
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">mMin</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Min</span><span class="p">(</span><span class="n">mMin</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">point</span><span class="p">.</span><span class="n">x</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">mMin</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Min</span><span class="p">(</span><span class="n">mMin</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">point</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">mMin</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Min</span><span class="p">(</span><span class="n">mMin</span><span class="p">.</span><span class="n">z</span><span class="p">,</span> <span class="n">point</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">mMax</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Max</span><span class="p">(</span><span class="n">mMax</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">point</span><span class="p">.</span><span class="n">x</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">mMax</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Max</span><span class="p">(</span><span class="n">mMax</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">point</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">mMax</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Max</span><span class="p">(</span><span class="n">mMax</span><span class="p">.</span><span class="n">z</span><span class="p">,</span> <span class="n">point</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>以下のように呼び出す</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">AABB</span> <span class="nf">box</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>	<span class="c1">// pointsはstd::vector&lt;Vector3&gt;と想定
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">points</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">box</span><span class="p">.</span><span class="n">UpdateMinMax</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>垂直軸周りの回転のみのオブジェクトなどは除き、基本的には回転後にはAABBを再計算する必要がある</p>
+<h5 id="aabbrotate">AABB::Rotate()</h5>
+<p>回転後のAABBを計算する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">AABB</span><span class="o">::</span><span class="n">Rotate</span><span class="p">(</span><span class="k">const</span> <span class="n">Quaternion</span><span class="o">&amp;</span> <span class="n">q</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Construct the 8 points for the corners of the box
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">Vector3</span><span class="p">,</span> <span class="mi">8</span><span class="o">&gt;</span> <span class="n">points</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Min point is always a corner
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">mMin</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Permutations with 2 min and 1 max
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">points</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">mMax</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">mMin</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">mMin</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">points</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">mMin</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">mMax</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">mMin</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">points</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">mMin</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">mMin</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">mMax</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Permutations with 2 max and 1 min
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">points</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">mMin</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">mMax</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">mMax</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">points</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">mMax</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">mMin</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">mMax</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">points</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">mMax</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">mMax</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">mMin</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Max point corner
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">points</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">mMax</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// Rotate first point
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Vector3</span> <span class="n">p</span> <span class="o">=</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Transform</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Reset min/max to first point rotated
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">mMin</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">mMax</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Update min/max based on remaining points, rotated
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">points</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">p</span> <span class="o">=</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Transform</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">q</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">UpdateMinMax</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="有向バウンディングボックスobb">有向バウンディングボックス（OBB）</h4>
+<h5 id="collisionh-3">Collision.h</h5>
+<p><strong>有向バウンディングボックス</strong>（oriented bounding box）は、AABBのような軸平行の制限を持たない</p>
+<p>中心の位置（center）、回転クォータニオン（rotation）、ボックスの広がり（extent）を使って表現される</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">OBB</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">mCenter</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Quaternion</span> <span class="n">mRotation</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">mExtents</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><p>計算コストはAABBよりもはるかに高い</p>
+<h4 id="カプセル">カプセル</h4>
+<h5 id="collisionh-4">Collision.h</h5>
+<p><strong>カプセル</strong>（capsule）は、半径を持つ線分である</p>
+<p>ある時間に移動する球の直線移動も表現できる</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Capsule</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">LineSegment</span> <span class="n">mSegment</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">mRadius</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h4 id="凸ポリゴン">凸ポリゴン</h4>
+<h5 id="collisionh-5">Collision.h</h5>
+<p>2Dゲームでは、オブジェクトのコリジョンが凸ポリゴンで表現される場合がある</p>
+<p><strong>凸ポリゴン</strong>（convex polygon）は、頂点の集合で表現できる</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">ConvexPolygon</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Vertices have a clockwise ordering
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Vector2</span><span class="o">&gt;</span> <span class="n">mVertices</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><p>頂点列には必ず順序を持たせる（ここでは時計回り）</p>
+<h3 id="交差判定">交差判定</h3>
+<p>コリジョンが点を含むかの判定、バウンディングボリューム間での交差、線分と他のオブジェクトとの交差、動くオブジェクトの動的な判定について考える</p>
+<h3 id="点の包含判定">点の包含判定</h3>
+<p>ここでは、点が形状の<strong>内側もしくは表面</strong>にある場合、含まれていると判定する</p>
+<h4 id="球の包含判定">球の包含判定</h4>
+<h5 id="collisioncpp-2">Collision.cpp</h5>
+<h5 id="spherecontains">Sphere::Contains()</h5>
+<p>球の中心と点の間の距離が、球の半径以下であれば、球は点を含む</p>
+<p>不等号の両辺を2乗することで、高価な平方根の演算を避ける</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">Sphere</span><span class="o">::</span><span class="n">Contains</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector3</span><span class="o">&amp;</span> <span class="n">point</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Get distance squared between center and point
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">float</span> <span class="n">distSq</span> <span class="o">=</span> <span class="p">(</span><span class="n">mCenter</span> <span class="o">-</span> <span class="n">point</span><span class="p">).</span><span class="n">LengthSq</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">distSq</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">mRadius</span> <span class="o">*</span> <span class="n">mRadius</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="aabbのの包含判定">AABBのの包含判定</h4>
+<h5 id="collisioncpp-3">Collision.cpp</h5>
+<h5 id="aabbcontains">AABB::Contains()</h5>
+<p>6面に対してチェックし、<strong>どれも真でない</strong>のなら必ず点を含む</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">AABB</span><span class="o">::</span><span class="n">Contains</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector3</span><span class="o">&amp;</span> <span class="n">point</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">bool</span> <span class="n">outside</span> <span class="o">=</span> <span class="n">point</span><span class="p">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">mMin</span><span class="p">.</span><span class="n">x</span> <span class="o">||</span>
+</span></span><span class="line"><span class="cl">		<span class="n">point</span><span class="p">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">mMin</span><span class="p">.</span><span class="n">y</span> <span class="o">||</span>
+</span></span><span class="line"><span class="cl">		<span class="n">point</span><span class="p">.</span><span class="n">z</span> <span class="o">&lt;</span> <span class="n">mMin</span><span class="p">.</span><span class="n">z</span> <span class="o">||</span>
+</span></span><span class="line"><span class="cl">		<span class="n">point</span><span class="p">.</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">mMax</span><span class="p">.</span><span class="n">x</span> <span class="o">||</span>
+</span></span><span class="line"><span class="cl">		<span class="n">point</span><span class="p">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">mMax</span><span class="p">.</span><span class="n">y</span> <span class="o">||</span>
+</span></span><span class="line"><span class="cl">		<span class="n">point</span><span class="p">.</span><span class="n">z</span> <span class="o">&gt;</span> <span class="n">mMax</span><span class="p">.</span><span class="n">z</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// If none of these are true, the point is inside the box
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">return</span> <span class="o">!</span><span class="n">outside</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="カプセルの包含判定">カプセルの包含判定</h4>
+<h5 id="collisioncpp-4">Collision.cpp</h5>
+<h5 id="capsulecontains">Capsule::Contains()</h5>
+<p>点と線分との最短距離の2乗が、半径の2乗以下の場合に点を含む</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">Capsule</span><span class="o">::</span><span class="n">Contains</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector3</span><span class="o">&amp;</span> <span class="n">point</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Get minimal dist. sq. between point and line segment
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">float</span> <span class="n">distSq</span> <span class="o">=</span> <span class="n">mSegment</span><span class="p">.</span><span class="n">MinDistSq</span><span class="p">(</span><span class="n">point</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">distSq</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">mRadius</span> <span class="o">*</span> <span class="n">mRadius</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="凸ポリゴンの包含2d判定">凸ポリゴンの包含（2D）判定</h4>
+<h5 id="collisioncpp-5">Collision.cpp</h5>
+<h5 id="convexpolygoncontains">ConvexPolygon::Contains()</h5>
+<p><strong>点</strong>から<strong>ポリゴンの頂点</strong>それぞれに向かうベクトルを作り、それぞれ隣接する2つのベクトルの成す角度の総和がほぼ$360$度であれば、ポリゴンは点を含む</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">ConvexPolygon</span><span class="o">::</span><span class="n">Contains</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector2</span><span class="o">&amp;</span> <span class="n">point</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">sum</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector2</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">mVertices</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// From point to first vertex
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">a</span> <span class="o">=</span> <span class="n">mVertices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">a</span><span class="p">.</span><span class="n">Normalize</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// From point to second vertex
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">b</span> <span class="o">=</span> <span class="n">mVertices</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">b</span><span class="p">.</span><span class="n">Normalize</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Add angle to sum
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">sum</span> <span class="o">+=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Acos</span><span class="p">(</span><span class="n">Vector2</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Have to add angle for last vertex and first vertex
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">a</span> <span class="o">=</span> <span class="n">mVertices</span><span class="p">.</span><span class="n">back</span><span class="p">()</span> <span class="o">-</span> <span class="n">point</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">a</span><span class="p">.</span><span class="n">Normalize</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">b</span> <span class="o">=</span> <span class="n">mVertices</span><span class="p">.</span><span class="n">front</span><span class="p">()</span> <span class="o">-</span> <span class="n">point</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">b</span><span class="p">.</span><span class="n">Normalize</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">sum</span> <span class="o">+=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Acos</span><span class="p">(</span><span class="n">Vector2</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Return true if approximately 2pi
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">return</span> <span class="n">Math</span><span class="o">::</span><span class="n">NearZero</span><span class="p">(</span><span class="n">sum</span> <span class="o">-</span> <span class="n">Math</span><span class="o">::</span><span class="n">TwoPi</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>acosや平方根を多用するため、効率の悪さがデメリットになる</p>
+<p>別の方法として、点を始点とする半直線（ray）を引いて、その半直線が辺と何回交差するのかを数える方法がある（奇数回交差した場合、その点はポリゴンの内側にある）</p>
+<h3 id="バウンディングボリューム間の交差判定">バウンディングボリューム間の交差判定</h3>
+<p>あらゆる組み合わせの交差判定がある</p>
+<h4 id="球と球の判定">球と球の判定</h4>
+<h5 id="collicioncpp-1">Collicion.cpp</h5>
+<h5 id="intersect">Intersect()</h5>
+<p>双方の中心の間の距離が、球の半径の和以下の場合、交差する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="nf">Intersect</span><span class="p">(</span><span class="k">const</span> <span class="n">Sphere</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">Sphere</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">distSq</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">mCenter</span> <span class="o">-</span> <span class="n">b</span><span class="p">.</span><span class="n">mCenter</span><span class="p">).</span><span class="n">LengthSq</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">sumRadii</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">mRadius</span> <span class="o">+</span> <span class="n">b</span><span class="p">.</span><span class="n">mRadius</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">distSq</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">sumRadii</span> <span class="o">*</span> <span class="n">sumRadii</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="aabbとaabbの判定">AABBとAABBの判定</h4>
+<h5 id="collicioncpp-2">Collicion.cpp</h5>
+<h5 id="intersect-1">Intersect()</h5>
+<p>ボックスが交差しないケースをテストする</p>
+<p>3つの座標軸をテストして、そのうちどれかがボックスを分離していないかを調べて交差判定する<strong>分離軸定理</strong>（separating axis theorem）の応用</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="nf">Intersect</span><span class="p">(</span><span class="k">const</span> <span class="n">AABB</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">AABB</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">bool</span> <span class="n">no</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">mMax</span><span class="p">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">.</span><span class="n">mMin</span><span class="p">.</span><span class="n">x</span> <span class="o">||</span>
+</span></span><span class="line"><span class="cl">		<span class="n">a</span><span class="p">.</span><span class="n">mMax</span><span class="p">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">.</span><span class="n">mMin</span><span class="p">.</span><span class="n">y</span> <span class="o">||</span>
+</span></span><span class="line"><span class="cl">		<span class="n">a</span><span class="p">.</span><span class="n">mMax</span><span class="p">.</span><span class="n">z</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">.</span><span class="n">mMin</span><span class="p">.</span><span class="n">z</span> <span class="o">||</span>
+</span></span><span class="line"><span class="cl">		<span class="n">b</span><span class="p">.</span><span class="n">mMax</span><span class="p">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">mMin</span><span class="p">.</span><span class="n">x</span> <span class="o">||</span>
+</span></span><span class="line"><span class="cl">		<span class="n">b</span><span class="p">.</span><span class="n">mMax</span><span class="p">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">mMin</span><span class="p">.</span><span class="n">y</span> <span class="o">||</span>
+</span></span><span class="line"><span class="cl">		<span class="n">b</span><span class="p">.</span><span class="n">mMax</span><span class="p">.</span><span class="n">z</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">mMin</span><span class="p">.</span><span class="n">z</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// If none of these are true, they must intersect
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">return</span> <span class="o">!</span><span class="n">no</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="球とaabbの判定">球とAABBの判定</h4>
+<h5 id="collicioncpp-3">Collicion.cpp</h5>
+<h5 id="intersect-2">Intersect()</h5>
+<p>球の中心とボックスの間の最短距離の2乗が、半径の2乗以下であれば交差する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="nf">Intersect</span><span class="p">(</span><span class="k">const</span> <span class="n">Sphere</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="k">const</span> <span class="n">AABB</span><span class="o">&amp;</span> <span class="n">box</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">distSq</span> <span class="o">=</span> <span class="n">box</span><span class="p">.</span><span class="n">MinDistSq</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">mCenter</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">distSq</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">mRadius</span> <span class="o">*</span> <span class="n">s</span><span class="p">.</span><span class="n">mRadius</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="linesegmentmindistsq-1">LineSegment::MinDistSq()</h5>
+<p>$x,y,z$各成分の最短距離を個別に求める</p>
+<p>それぞれの成分において、$min$と$max$の間にあるかそれ以外かで判定し、前者の場合距離は$0$となる</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">float</span> <span class="n">LineSegment</span><span class="o">::</span><span class="n">MinDistSq</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector3</span><span class="o">&amp;</span> <span class="n">point</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Construct vectors
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Vector3</span> <span class="n">ab</span> <span class="o">=</span> <span class="n">mEnd</span> <span class="o">-</span> <span class="n">mStart</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">ba</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0f</span> <span class="o">*</span> <span class="n">ab</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">ac</span> <span class="o">=</span> <span class="n">point</span> <span class="o">-</span> <span class="n">mStart</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">bc</span> <span class="o">=</span> <span class="n">point</span> <span class="o">-</span> <span class="n">mEnd</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// Case 1: C projects prior to A
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">ab</span><span class="p">,</span> <span class="n">ac</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.0f</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="n">ac</span><span class="p">.</span><span class="n">LengthSq</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Case 2: C projects after B
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">ba</span><span class="p">,</span> <span class="n">bc</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.0f</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="n">bc</span><span class="p">.</span><span class="n">LengthSq</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Case 3: C projects onto line
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Compute p
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="kt">float</span> <span class="n">scalar</span> <span class="o">=</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">ac</span><span class="p">,</span> <span class="n">ab</span><span class="p">)</span> <span class="o">/</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">ab</span><span class="p">,</span> <span class="n">ab</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">Vector3</span> <span class="n">p</span> <span class="o">=</span> <span class="n">scalar</span> <span class="o">*</span> <span class="n">ab</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Compute length squared of ac - p
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">return</span> <span class="p">(</span><span class="n">ac</span> <span class="o">-</span> <span class="n">p</span><span class="p">).</span><span class="n">LengthSq</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="カプセルとカプセルの判定">カプセルとカプセルの判定</h4>
+<h5 id="collicioncpp-4">Collicion.cpp</h5>
+<h5 id="intersect-3">Intersect()</h5>
+<p>2本の線分の間の最短距離の2乗が、半径の和の2乗以下であれば交差する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="nf">Intersect</span><span class="p">(</span><span class="k">const</span> <span class="n">Capsule</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">Capsule</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">distSq</span> <span class="o">=</span> <span class="n">LineSegment</span><span class="o">::</span><span class="n">MinDistSq</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">mSegment</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">		<span class="n">b</span><span class="p">.</span><span class="n">mSegment</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">sumRadii</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">mRadius</span> <span class="o">+</span> <span class="n">b</span><span class="p">.</span><span class="n">mRadius</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">distSq</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">sumRadii</span> <span class="o">*</span> <span class="n">sumRadii</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h3 id="線分の判定">線分の判定</h3>
+<p>弾丸とオブジェクトの衝突テストなどに線分を使う</p>
+<p>ほとんどの線分交差テストで、無限の長さを持つ直線として最初に判定を行い、交差することがわかったら、$t$が$[0,1]$の範囲に含まれるかを調べる</p>
+<h4 id="線分と平面の判定">線分と平面の判定</h4>
+<p>線分$L(t)$が平面上の点となる$t$が存在するかを調べる
+$$
+L(t) \cdot \hat{n} + d = 0
+$$</p>
+<p>変形して$t$について解くと、
+$$
+(Start + (End - Start)t) \cdot \hat{n} + d = 0
+$$
+$$
+Start \cdot \hat{n} + (End - Start) \cdot \hat{n}t + d = 0
+$$
+$$
+(End - Start) \cdot \hat{n}t = -Start \cdot \hat{n} - d
+$$
+$$
+t = \frac{-Start \cdot \hat{n} - d}{(End - Start) \cdot \hat{n}}
+$$</p>
+<h5 id="collicioncpp-5">Collicion.cpp</h5>
+<h5 id="intersect-4">Intersect()</h5>
+<p>直線が平面の法線と直行する場合、分母のドット積が$0$となり、ゼロ除算を行う（この場合に交差となるのは、startとendが平面上の点であるとき）</p>
+<p>参照を使って$t$の値を返す</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="nf">Intersect</span><span class="p">(</span><span class="k">const</span> <span class="n">LineSegment</span><span class="o">&amp;</span> <span class="n">l</span><span class="p">,</span> <span class="k">const</span> <span class="n">Plane</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">,</span> <span class="kt">float</span><span class="o">&amp;</span> <span class="n">outT</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// First test if there&#39;s a solution for t
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">float</span> <span class="n">denom</span> <span class="o">=</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">mEnd</span> <span class="o">-</span> <span class="n">l</span><span class="p">.</span><span class="n">mStart</span><span class="p">,</span> <span class="n">p</span><span class="p">.</span><span class="n">mNormal</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">Math</span><span class="o">::</span><span class="n">NearZero</span><span class="p">(</span><span class="n">denom</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// The only way they intersect is if start
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">// is a point on the plane (P dot N) == d
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">if</span> <span class="p">(</span><span class="n">Math</span><span class="o">::</span><span class="n">NearZero</span><span class="p">(</span><span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">mStart</span><span class="p">,</span> <span class="n">p</span><span class="p">.</span><span class="n">mNormal</span><span class="p">)</span> <span class="o">-</span> <span class="n">p</span><span class="p">.</span><span class="n">mD</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">float</span> <span class="n">numer</span> <span class="o">=</span> <span class="o">-</span><span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">mStart</span><span class="p">,</span> <span class="n">p</span><span class="p">.</span><span class="n">mNormal</span><span class="p">)</span> <span class="o">-</span> <span class="n">p</span><span class="p">.</span><span class="n">mD</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">outT</span> <span class="o">=</span> <span class="n">numer</span> <span class="o">/</span> <span class="n">denom</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Validate t is within bounds of the line segment
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">if</span> <span class="p">(</span><span class="n">outT</span> <span class="o">&gt;=</span> <span class="mf">0.0f</span> <span class="o">&amp;&amp;</span> <span class="n">outT</span> <span class="o">&lt;=</span> <span class="mf">1.0f</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="線分と球の判定">線分と球の判定</h4>
+<h5 id="collicioncpp-6">Collicion.cpp</h5>
+<h5 id="intersect-5">Intersect()</h5>
+<p>&ldquo;直線から球の中心$C$までの距離&quot;が&quot;球の半径$r$&ldquo;以下であれば交差する</p>
+<p>これらの距離が等しくなるような$t$があるかを調べると、
+$$
+\lVert L(t) - C \rVert = r
+$$
+$$
+\lVert Start + (End - Start)t - C \rVert = r
+$$
+$$
+\lVert Start - C + (End - Start)t \rVert = r
+$$</p>
+<p>両辺を2乗し、長さの2乗をドット積で置き換える
+$$
+{\lVert Start - C + (End - Start)t \rVert}^2 = r^2
+$$
+$$
+(Start - C + (End - Start)t) \cdot (Start - C + (End - Start)t) = r^2
+$$</p>
+<p>ベクトル加算に対するドット積は分配可能であるため、
+$$
+(Start - C) \cdot (Start - C) + 2(Start - C) \cdot (End - Start)t
+$$
+$$
+\quad \quad \quad \quad + (End - Start) \cdot (End - Start)t^2 = r^2
+$$</p>
+<p>これを$t$について求めると、
+$$
+t = \frac{-b\pm \sqrt{b^2 - 4ac}}{2a}
+$$
+$a = (End - Start) \cdot (End - Start)$
+<br>$b = 2(Start - C) \cdot (End - Start)$
+<br>$c = (Start - C) \cdot (Start - C) - r^2$</p>
+<p>この<strong>判別式</strong>（discriminant）：$b^2 - 4ac$から、解の個数と虚実を判別できる</p>
+<p>判別式が負であれば、直線は球と交差しない
+<br>判別式が$0$であれば、1つの交点を持つ
+<br>判別式が$0%より大きければ、2つの交点を持つ</p>
+<p>$t$の解を得たら、$t$が範囲$[0,1]$の中にあるかを確認する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="nf">Intersect</span><span class="p">(</span><span class="k">const</span> <span class="n">LineSegment</span><span class="o">&amp;</span> <span class="n">l</span><span class="p">,</span> <span class="k">const</span> <span class="n">Sphere</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="kt">float</span><span class="o">&amp;</span> <span class="n">outT</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Compute X, Y, a, b, c as per equations
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Vector3</span> <span class="n">X</span> <span class="o">=</span> <span class="n">l</span><span class="p">.</span><span class="n">mStart</span> <span class="o">-</span> <span class="n">s</span><span class="p">.</span><span class="n">mCenter</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">l</span><span class="p">.</span><span class="n">mEnd</span> <span class="o">-</span> <span class="n">l</span><span class="p">.</span><span class="n">mStart</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">Y</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">2.0f</span> <span class="o">*</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="n">s</span><span class="p">.</span><span class="n">mRadius</span> <span class="o">*</span> <span class="n">s</span><span class="p">.</span><span class="n">mRadius</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Compute discriminant
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">float</span> <span class="n">disc</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">b</span> <span class="o">-</span> <span class="mf">4.0f</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">c</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">disc</span> <span class="o">&lt;</span> <span class="mf">0.0f</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">disc</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Sqrt</span><span class="p">(</span><span class="n">disc</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Compute min and max solutions of t
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="kt">float</span> <span class="n">tMin</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">-</span> <span class="n">disc</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0f</span> <span class="o">*</span> <span class="n">a</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">float</span> <span class="n">tMax</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">+</span> <span class="n">disc</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0f</span> <span class="o">*</span> <span class="n">a</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Check whether either t is within bounds of segment
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">if</span> <span class="p">(</span><span class="n">tMin</span> <span class="o">&gt;=</span> <span class="mf">0.0f</span> <span class="o">&amp;&amp;</span> <span class="n">tMin</span> <span class="o">&lt;=</span> <span class="mf">1.0f</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">outT</span> <span class="o">=</span> <span class="n">tMin</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">tMax</span> <span class="o">&gt;=</span> <span class="mf">0.0f</span> <span class="o">&amp;&amp;</span> <span class="n">tMax</span> <span class="o">&lt;=</span> <span class="mf">1.0f</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">outT</span> <span class="o">=</span> <span class="n">tMax</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="線分とaabbの判定">線分とAABBの判定</h4>
+<h5 id="collicioncpp-7">Collicion.cpp</h5>
+<h5 id="intersect-6">Intersect()</h5>
+<p>線分と面との交差テストには、&ldquo;線分と平面の判定&quot;で利用した等式を応用する
+$$
+t = \frac{-Start \cdot \hat{n} - d}{(End - Start) \cdot \hat{n}}
+$$</p>
+<p>AABBの各面は<strong>座標軸と平行</strong>なので、上記の式を最適化することができる（3次元では、テストするべき面が6面になる）</p>
+<p>ボックスの6つの<strong>側面</strong>と線分との交差をテストする</p>
+<p>6つの面との交点の$t$の値を<code>tValues</code>配列に格納する</p>
+<p>この配列を小さい順にソートして、手前の交点から順にボックスに含まれているかを調べる</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="nf">Intersect</span><span class="p">(</span><span class="k">const</span> <span class="n">LineSegment</span><span class="o">&amp;</span> <span class="n">l</span><span class="p">,</span> <span class="k">const</span> <span class="n">AABB</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">,</span> <span class="kt">float</span><span class="o">&amp;</span> <span class="n">outT</span><span class="p">,</span> <span class="n">Vector3</span><span class="o">&amp;</span> <span class="n">outNorm</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Vector to save all possible t values, and normals for those sides
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">float</span><span class="p">,</span> <span class="n">Vector3</span><span class="o">&gt;&gt;</span> <span class="n">tValues</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Test the x planes
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">TestSidePlane</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">mStart</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">l</span><span class="p">.</span><span class="n">mEnd</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">mMin</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">NegUnitX</span><span class="p">,</span> <span class="n">tValues</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">TestSidePlane</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">mStart</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">l</span><span class="p">.</span><span class="n">mEnd</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">mMax</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">UnitX</span><span class="p">,</span> <span class="n">tValues</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Test the y planes
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">TestSidePlane</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">mStart</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">l</span><span class="p">.</span><span class="n">mEnd</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">mMin</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">NegUnitY</span><span class="p">,</span> <span class="n">tValues</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">TestSidePlane</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">mStart</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">l</span><span class="p">.</span><span class="n">mEnd</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">mMax</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">UnitY</span><span class="p">,</span> <span class="n">tValues</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Test the z planes
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">TestSidePlane</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">mStart</span><span class="p">.</span><span class="n">z</span><span class="p">,</span> <span class="n">l</span><span class="p">.</span><span class="n">mEnd</span><span class="p">.</span><span class="n">z</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">mMin</span><span class="p">.</span><span class="n">z</span><span class="p">,</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">NegUnitZ</span><span class="p">,</span> <span class="n">tValues</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">TestSidePlane</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">mStart</span><span class="p">.</span><span class="n">z</span><span class="p">,</span> <span class="n">l</span><span class="p">.</span><span class="n">mEnd</span><span class="p">.</span><span class="n">z</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">mMax</span><span class="p">.</span><span class="n">z</span><span class="p">,</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">UnitZ</span><span class="p">,</span> <span class="n">tValues</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="c1">// Sort the t values in ascending order
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">tValues</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">tValues</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span>
+</span></span><span class="line"><span class="cl">		<span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">float</span><span class="p">,</span> <span class="n">Vector3</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">float</span><span class="p">,</span> <span class="n">Vector3</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">first</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">});</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Test if the box contains any of these points of intersection
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Vector3</span> <span class="n">point</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">t</span> <span class="p">:</span> <span class="n">tValues</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">point</span> <span class="o">=</span> <span class="n">l</span><span class="p">.</span><span class="n">PointOnSegment</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">first</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="n">point</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">outT</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="n">outNorm</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">//None of the intersections are within bounds of box
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="testsideplane">TestSidePlane()</h5>
+<p>側面をテストする機能をカプセル化したヘルパー関数</p>
+<p>線分が交差する際に、$t$の値を<code>std::vector</code>に追加する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="nf">TestSidePlane</span><span class="p">(</span><span class="kt">float</span> <span class="n">start</span><span class="p">,</span> <span class="kt">float</span> <span class="n">end</span><span class="p">,</span> <span class="kt">float</span> <span class="n">negd</span><span class="p">,</span> <span class="k">const</span> <span class="n">Vector3</span><span class="o">&amp;</span> <span class="n">norm</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">float</span><span class="p">,</span> <span class="n">Vector3</span><span class="o">&gt;&gt;&amp;</span> <span class="n">out</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">denom</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">Math</span><span class="o">::</span><span class="n">NearZero</span><span class="p">(</span><span class="n">denom</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">float</span> <span class="n">numer</span> <span class="o">=</span> <span class="o">-</span><span class="n">start</span> <span class="o">+</span> <span class="n">negd</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">float</span> <span class="n">t</span> <span class="o">=</span> <span class="n">numer</span> <span class="o">/</span> <span class="n">denom</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Test that t is within bounds
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">if</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="mf">0.0f</span> <span class="o">&amp;&amp;</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="mf">1.0f</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">out</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">norm</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>ボックスの各側面を独立テストすれば、線分と交差した面を返すように修正できる（オブジェクトがボックスから跳ね返るときに利用できる）</p>
+<p>その際は、<code>TestSidePlane()</code>の引数にボックスの側面を割り当て、その面（あるいは側面の法線）を<code>Intersect()</code>が書き込める参照引数として渡す</p>
+<p>線分とAABBの交差は、<strong>スラブ</strong>（slab）を使って最適化することも可能（参考文献を参照）</p>
+<h3 id="動的オブジェクト">動的オブジェクト</h3>
+<p><strong>瞬間的な</strong>（instantaneous）テストでは交差を検出できない場合がある</p>
+<p>弾丸と紙との交差判定を考えると、</p>
+<p>弾丸を線分で表現すれば、線分の開始点を1つ前のフレームにおける弾丸の位置、終点を現在のフレームでの位置にして交差を検出できる</p>
+<p>フレーム間の複数の時間で交差判定するサンプリングを行う方法もある</p>
 
             </div>
         </article></main>
