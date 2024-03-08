@@ -52,7 +52,7 @@
         },
         "datePublished": "2024-02-04",
         "description": "",
-        "wordCount":  1853 ,
+        "wordCount":  2837 ,
         "mainEntityOfPage": "True",
         "dateModified": "2024-02-04",
         "image": {
@@ -227,7 +227,26 @@ stroke-linejoin="round" class="feather feather-home">
             <li><a href="#線分とaabbの判定">線分とAABBの判定</a></li>
           </ul>
         </li>
-        <li><a href="#動的オブジェクト">動的オブジェクト</a></li>
+        <li><a href="#動的オブジェクト">動的オブジェクト</a>
+          <ul>
+            <li><a href="#球スイープの交差swept-sphere-intersection">球スイープの交差（swept-sphere intersection）</a></li>
+          </ul>
+        </li>
+        <li><a href="#コードに衝突検知を追加する">コードに衝突検知を追加する</a>
+          <ul>
+            <li><a href="#boxcomponentクラス">BoxComponentクラス</a></li>
+            <li><a href="#physworldクラス">PhysWorldクラス</a></li>
+            <li><a href="#ボールの衝突を線分キャストで判定する">ボールの衝突を線分キャストで判定する</a></li>
+            <li><a href="#physworldでのボックス衝突判定">PhysWorldでのボックス衝突判定</a></li>
+            <li><a href="#プレイヤーと壁との衝突">プレイヤーと壁との衝突</a></li>
+          </ul>
+        </li>
+        <li><a href="#ゲームプロジェクト">ゲームプロジェクト</a></li>
+        <li><a href="#まとめ">まとめ</a>
+          <ul>
+            <li><a href="#参考文献">参考文献</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -782,6 +801,316 @@ $$</p>
 <p>弾丸と紙との交差判定を考えると、</p>
 <p>弾丸を線分で表現すれば、線分の開始点を1つ前のフレームにおける弾丸の位置、終点を現在のフレームでの位置にして交差を検出できる</p>
 <p>フレーム間の複数の時間で交差判定するサンプリングを行う方法もある</p>
+<p><strong>連続衝突検知</strong>（continuous collision detecton）は、交差時間を直接求める手法と、サンプリングする手法の両方に使われる</p>
+<h4 id="球スイープの交差swept-sphere-intersection">球スイープの交差（swept-sphere intersection）</h4>
+<h5 id="collisioncpp-6">Collision.cpp</h5>
+<h5 id="sweptsphere">SweptSphere()</h5>
+<p>動いている2つの球を考える</p>
+<p>1つ前のフレームでの位置を$t=0$とし、現フレームでの位置を$t=1$とする</p>
+<p>$P_0$は1つ前のフレームでの球$P$の位置、$P_1$は現フレームでの位置とする</p>
+<p>$Q_0$は1つ前のフレームでの球$Q$の位置、$Q_1$は現フレームでの位置とする</p>
+<p>$$
+P(t) = P_0 + (P_1 - P_0)t
+$$
+$$
+Q(t) = Q_0 + (Q_1 - Q_0)t
+$$</p>
+<p>球の間の距離が、2つの球の半径の合計と等しくなるような$t$を求める
+$$
+\lVert P(t) - Q(t) \rVert = r_p + r_q
+$$</p>
+<p>$$
+{\lVert P(t) - Q(t) \rVert}^2 = (r_p + r_q)^2
+$$
+$$
+(P(t) - Q(t)) \cdot (P(t) - Q(t)) = (r_p + r_q)^2
+$$
+$$
+(P_0 + (P_1 - P_0)t - Q_0 - (Q_1 - Q_0)t) \cdot (P_0 + (P_1 - P_0)t - Q_0 - (Q_1 - Q_0)t)
+$$
+$$
+= (r_p + r_q)^2
+$$
+$$
+(P_0 - Q_0 + ((P_1 - P_0) - (Q_1 - Q_0))t) \cdot (P_0 - Q_0 + ((P_1 - P_0)-(Q_1 - Q_0))t)
+$$
+$$
+= (r_p + r_q)^2
+$$</p>
+<p>$$
+t = \frac{-b\pm \sqrt{b^2 - 4ac}}{2a}
+$$
+$a = ((P_1 - P_0) - (Q_1 - Q_0)) \cdot ((P_1 - P_0) - (Q_1 - Q_0))$
+<br>$b = 2(P_0 - Q_0) \cdot ((P_1 - P_0) - (Q_1 - Q_0))$
+<br>$c = (P_0 - Q_0) \cdot (P_0 - Q_0) - (r_p + r_q)^2$</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="nf">SweptSphere</span><span class="p">(</span><span class="k">const</span> <span class="n">Sphere</span><span class="o">&amp;</span> <span class="n">P0</span><span class="p">,</span> <span class="k">const</span> <span class="n">Sphere</span><span class="o">&amp;</span> <span class="n">P1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Sphere</span><span class="o">&amp;</span> <span class="n">Q0</span><span class="p">,</span> <span class="k">const</span> <span class="n">Sphere</span><span class="o">&amp;</span> <span class="n">Q1</span><span class="p">,</span> <span class="kt">float</span><span class="o">&amp;</span> <span class="n">outT</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Compute X, Y, a, b, and c
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">Vector3</span> <span class="n">X</span> <span class="o">=</span> <span class="n">P0</span><span class="p">.</span><span class="n">mCenter</span> <span class="o">-</span> <span class="n">Q0</span><span class="p">.</span><span class="n">mCenter</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">P1</span><span class="p">.</span><span class="n">mCenter</span> <span class="o">-</span> <span class="n">P0</span><span class="p">.</span><span class="n">mCenter</span> <span class="o">-</span> <span class="p">(</span><span class="n">Q1</span><span class="p">.</span><span class="n">mCenter</span> <span class="o">-</span> <span class="n">Q0</span><span class="p">.</span><span class="n">mCenter</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">Y</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">2.0f</span> <span class="o">*</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">sumRadii</span> <span class="o">=</span> <span class="n">P0</span><span class="p">.</span><span class="n">mRadius</span> <span class="o">+</span> <span class="n">Q0</span><span class="p">.</span><span class="n">mRadius</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="n">sumRadii</span> <span class="o">*</span> <span class="n">sumRadii</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Solve discriminant
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">float</span> <span class="n">disc</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">b</span> <span class="o">-</span> <span class="mf">4.0f</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">c</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">disc</span> <span class="o">&lt;</span> <span class="mf">0.0f</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">disc</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Sqrt</span><span class="p">(</span><span class="n">disc</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// We only care about the smaller solution
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">outT</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">-</span> <span class="n">disc</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0f</span> <span class="o">*</span> <span class="n">a</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">outT</span> <span class="o">&gt;=</span> <span class="mf">0.0f</span> <span class="o">&amp;&amp;</span> <span class="n">outT</span> <span class="o">&lt;=</span> <span class="mf">0.0f</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h3 id="コードに衝突検知を追加する">コードに衝突検知を追加する</h3>
+<p><code>BoxComponent</code>クラスでは、アクターにAABBを追加する</p>
+<p><code>PhysWorld</code>クラスでは、AABBを追跡し、必要なときに交差を検出する</p>
+<h4 id="boxcomponentクラス">BoxComponentクラス</h4>
+<h5 id="boxcomponenth">BoxComponent.h</h5>
+<p>所有アクターがワールド変換を再計算するときに変化が起こるので、<code>Update()</code>ではなく<code>OnUpdateWorldTransform()</code>をオーバーライドする</p>
+<p>オブジェクト空間のAABB構造体のインスタンス<code>mObjectBox</code>、ワールド空間のAABB構造体のインスタンス<code>mWorldBox</code>をメンバ変数に持つ</p>
+<p>オブジェクト空間のバウンディングボックスは、<code>BoxComponent</code>を初期化したら変化しない</p>
+<p>ワールド空間のバウンディングボックスは、所有アクターのワールド変換に追従して変換する</p>
+<p>ワールドの回転に従って回転するべきかを示すbool値<code>mShouldRotate</code>もメンバ変数に持つ</p>
+<h5 id="meshh">Mesh.h</h5>
+<p>オブジェクト空間のAABBをメッシュファイルから取得するため、AABBをメンバ変数<code>mBox</code>として追加する</p>
+<h5 id="meshcpp">Mesh.cpp</h5>
+<h5 id="meshload">Mesh::Load()</h5>
+<p>gpmeshファイルを読み込むとき、個々の頂点で<code>AABB::UpdateMinMax()</code>を呼び出して、オブジェクト空間のAABBを作成する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="o">~</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="n">rapidjson</span><span class="o">::</span><span class="n">SizeType</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">vertsJson</span><span class="p">.</span><span class="n">Size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// For now, just assume we have 8 elements
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">const</span> <span class="n">rapidjson</span><span class="o">::</span><span class="n">Value</span><span class="o">&amp;</span> <span class="n">vert</span> <span class="o">=</span> <span class="n">vertsJson</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">vert</span><span class="p">.</span><span class="n">IsArray</span><span class="p">()</span> <span class="o">||</span> <span class="n">vert</span><span class="p">.</span><span class="n">Size</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">8</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">SDL_Log</span><span class="p">(</span><span class="s">&#34;Unexpected vertex format for %s&#34;</span><span class="p">,</span> <span class="n">fileName</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">Vector3</span> <span class="nf">pos</span><span class="p">(</span><span class="n">vert</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">GetDouble</span><span class="p">(),</span> <span class="n">vert</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">GetDouble</span><span class="p">(),</span> <span class="n">vert</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">GetDouble</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">		<span class="n">mRadius</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Max</span><span class="p">(</span><span class="n">mRadius</span><span class="p">,</span> <span class="n">pos</span><span class="p">.</span><span class="n">LengthSq</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">		<span class="n">mBox</span><span class="p">.</span><span class="n">UpdateMinMax</span><span class="p">(</span><span class="n">pos</span><span class="p">);</span>	<span class="c1">// ※
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Add the floats
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">for</span> <span class="p">(</span><span class="n">rapidjson</span><span class="o">::</span><span class="n">SizeType</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">vert</span><span class="p">.</span><span class="n">Size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">vertices</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">vert</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">GetDouble</span><span class="p">()));</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">~</span>
+</span></span></code></pre></div><h5 id="planeactorh">PlaneActor.h</h5>
+<p>AABBを表すBoxComponentクラス型のメンバ変数<code>mBox</code>を追加する</p>
+<h5 id="planeactorcpp">PlaneActor.cpp</h5>
+<p>メッシュのオブジェクト空間のAABBを受け取り、<code>BoxComponent</code>に設定する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Mesh</span><span class="o">*</span> <span class="n">mesh</span> <span class="o">=</span> <span class="n">GetGame</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetRenderer</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetMesh</span><span class="p">(</span><span class="s">&#34;Assets/Plane.gpmesh&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">mc</span><span class="o">-&gt;</span><span class="n">SetMesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Add collision box
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">mBox</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BoxComponent</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">mBox</span><span class="o">-&gt;</span><span class="n">SetObjectBox</span><span class="p">(</span><span class="n">mesh</span><span class="o">-&gt;</span><span class="n">GetBox</span><span class="p">());</span>
+</span></span></code></pre></div><h5 id="boxcomponentcpp">BoxComponent.cpp</h5>
+<h5 id="boxcomponentonupdateworldtransform">BoxComponent::OnUpdateWorldTransform()</h5>
+<p>オブジェクト境界をワールド空間に変換するには、スケーリングと回転と平行移動を適用する</p>
+<p>スケーリングする際は、<code>min</code>と<code>max</code>に所有アクターのスケールを掛ける</p>
+<p>回転する際は、<code>AABB::Rotate()</code>に所有アクターのクォータニオンを渡す（<code>mShouldRotate</code>が<code>true</code>のとき）</p>
+<p>平行移動する際は、<code>min</code>と<code>max</code>の両方に所有アクターの位置を加算する</p>
+<h4 id="physworldクラス">PhysWorldクラス</h4>
+<h5 id="gameh">Game.h</h5>
+<p>物理の世界は<code>PhysWorld</code>クラスにまとめる</p>
+<p><code>PhysWorld</code>ポインタ<code>mPhysWorld</code>を<code>Game</code>に追加し、<code>Game::Initialize()</code>で初期化する</p>
+<h5 id="gamecpp">Game.cpp</h5>
+<h5 id="gameinitialize">Game::Initialize()</h5>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Create the physics world
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">mPhysWorld</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PhysWorld</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+</span></span></code></pre></div><h5 id="physworldh">PhysWorld.h</h5>
+<p><code>BoxComponent</code>ポインタの配列を持つ</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">BoxComponent</span><span class="o">*&gt;</span> <span class="n">mBoxes</span><span class="p">;</span>
+</span></span></code></pre></div><p><code>Renderer</code>がすべてのスプライトコンポーネントの配列を持つのと同様に、<code>PhysWorld</code>は<strong>すべてのボックスコンポーネントの配列</strong>を持つ</p>
+<h5 id="physworldcpp">PhysWorld.cpp</h5>
+<h5 id="physworldaddbox">PhysWorld::AddBox()</h5>
+<p><code>BoxComponent</code>を管理する（追加）</p>
+<h5 id="physworldremovebox">PhysWorld::RemoveBox()</h5>
+<p><code>BoxComponent</code>を管理する（削除）</p>
+<h5 id="boxcomponentcpp-1">BoxComponent.cpp</h5>
+<h5 id="boxcomponentboxcomponent">BoxComponent::BoxComponent()</h5>
+<p><code>AddBox()</code>を呼び出す</p>
+<h5 id="boxcomponentboxcomponent-1">BoxComponent::~BoxComponent()</h5>
+<p><code>RemoveBox()</code>を呼び出す</p>
+<h5 id="physworldh-1">PhysWorld.h</h5>
+<p>ボックスへの衝突検知を追加するため、衝突した位置、衝突点の法線、交差した<code>BoxComponent</code>と<code>Actor</code>の両方へのポインタを含む<code>CollisionInfo</code>構造体を定義する</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">CollisionInfo</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Point of collision
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">Vector3</span> <span class="n">mPoint</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Normal at collision
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">Vector3</span> <span class="n">mNormal</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Component collided with
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">class</span> <span class="nc">BoxComponent</span><span class="o">*</span> <span class="n">mBox</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Owning actor of component
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">class</span> <span class="nc">Actor</span><span class="o">*</span> <span class="n">mActor</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">};</span>
+</span></span></code></pre></div><h5 id="physworldcpp-1">PhysWorld.cpp</h5>
+<h5 id="physworldsegmentcast">PhysWorld::SegmentCast()</h5>
+<p>最も近い交差を最重要と想定する</p>
+<p>すべてのボックスをテストして、最も小さい$t$の値を持つ交差の結果を返す（線分の始点に最も近い交差であるため）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">PhysWorld</span><span class="o">::</span><span class="n">SegmentCast</span><span class="p">(</span><span class="k">const</span> <span class="n">LineSegment</span><span class="o">&amp;</span> <span class="n">l</span><span class="p">,</span> <span class="n">CollisionInfo</span><span class="o">&amp;</span> <span class="n">outColl</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">bool</span> <span class="n">collided</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Initialize closestT to infinity, so first
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// intersection will always update closestT
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">float</span> <span class="n">closestT</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Infinity</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">norm</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Test against all boxes
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">box</span> <span class="p">:</span> <span class="n">mBoxes</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">float</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Does the segment intersect with the box?
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">if</span> <span class="p">(</span><span class="n">Intersect</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">box</span><span class="o">-&gt;</span><span class="n">GetWorldBox</span><span class="p">(),</span> <span class="n">t</span><span class="p">,</span> <span class="n">norm</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="c1">// Is this closer than previous intersection?
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>			<span class="k">if</span> <span class="p">(</span><span class="n">t</span> <span class="o">&lt;</span> <span class="n">closestT</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="n">closestT</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">				<span class="n">outColl</span><span class="p">.</span><span class="n">mPoint</span> <span class="o">=</span> <span class="n">l</span><span class="p">.</span><span class="n">PointOnSegment</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="n">outColl</span><span class="p">.</span><span class="n">mNormal</span> <span class="o">=</span> <span class="n">norm</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">				<span class="n">outColl</span><span class="p">.</span><span class="n">mBox</span> <span class="o">=</span> <span class="n">box</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">				<span class="n">outColl</span><span class="p">.</span><span class="n">mActor</span> <span class="o">=</span> <span class="n">box</span><span class="o">-&gt;</span><span class="n">GetOwner</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">				<span class="n">collided</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="n">collided</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="ボールの衝突を線分キャストで判定する">ボールの衝突を線分キャストで判定する</h4>
+<p>このプロジェクトでは、<code>SegmentCast()</code>を使ってプレイヤーが撃つ銃弾（ball projectile）が何かに当たるか判定する</p>
+<p>判定して当たっていたら、弾が表面の法線に沿って跳ね返るようにする</p>
+<h5 id="actorcpp">Actor.cpp</h5>
+<h5 id="actorrotatetonewforward">Actor::RotateToNewForward()</h5>
+<p>ドット積とクロス積とクォータニオンで、アクターの進行方向を新しい方向へと回転させる</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Actor</span><span class="o">::</span><span class="n">RotateToNewForward</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector3</span><span class="o">&amp;</span> <span class="n">forward</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Figure out difference between original (unit x) and new
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="kt">float</span> <span class="n">dot</span> <span class="o">=</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">Vector3</span><span class="o">::</span><span class="n">UnitX</span><span class="p">,</span> <span class="n">forward</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">float</span> <span class="n">angle</span> <span class="o">=</span> <span class="n">Math</span><span class="o">::</span><span class="n">Acos</span><span class="p">(</span><span class="n">dot</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Facing down X
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="n">dot</span> <span class="o">&gt;</span> <span class="mf">0.9999f</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">SetRotation</span><span class="p">(</span><span class="n">Quaternion</span><span class="o">::</span><span class="n">Identity</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Facing down -X
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">dot</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.9999f</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">SetRotation</span><span class="p">(</span><span class="n">Quaternion</span><span class="p">(</span><span class="n">Vector3</span><span class="o">::</span><span class="n">UnitZ</span><span class="p">,</span> <span class="n">Math</span><span class="o">::</span><span class="n">Pi</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Rotate about axis from cross product
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">Vector3</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Cross</span><span class="p">(</span><span class="n">Vector3</span><span class="o">::</span><span class="n">UnitX</span><span class="p">,</span> <span class="n">forward</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">axis</span><span class="p">.</span><span class="n">Normalize</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="n">SetRotation</span><span class="p">(</span><span class="n">Quaternion</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">angle</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h5 id="ballactorh">BallActor.h</h5>
+<p><code>MoveComponent</code>の新しい派生クラスである<code>BallMove</code>をメンバ変数に持たせる（<code>BallActor</code>に固有な動きを実装する）</p>
+<h5 id="ballmovecpp">BallMove.cpp</h5>
+<h5 id="ballmoveupdate">BallMove::Update()</h5>
+<p>ボールが飛んでいく方向に線分を構築する</p>
+<p>その線分がワールドに置かれたコリジョンと交差したら、その表面でボールが跳ね返るようにする（<code>Vector3::Reflect()</code>で向きを反転させ、<code>RotateToNewForward()</code>で新しい方向に回転させる）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">BallMove</span><span class="o">::</span><span class="n">Update</span><span class="p">(</span><span class="kt">float</span> <span class="n">deltaTime</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Construct segment in direction of travel
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">const</span> <span class="kt">float</span> <span class="n">segmentLength</span> <span class="o">=</span> <span class="mf">30.0f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">start</span> <span class="o">=</span> <span class="n">mOwner</span><span class="o">-&gt;</span><span class="n">GetPosition</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">dir</span> <span class="o">=</span> <span class="n">mOwner</span><span class="o">-&gt;</span><span class="n">GetForward</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">Vector3</span> <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">dir</span> <span class="o">*</span> <span class="n">segmentLength</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// Create line segment
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">LineSegment</span> <span class="nf">l</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// Test segment vs world
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">PhysWorld</span><span class="o">*</span> <span class="n">phys</span> <span class="o">=</span> <span class="n">mOwner</span><span class="o">-&gt;</span><span class="n">GetGame</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetPhysWorld</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">PhysWorld</span><span class="o">::</span><span class="n">CollisionInfo</span> <span class="n">info</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// (Don&#39;t collide vs player)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="n">phys</span><span class="o">-&gt;</span><span class="n">SegmentCast</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">info</span><span class="p">.</span><span class="n">mActor</span> <span class="o">!=</span> <span class="n">mPlayer</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// If we collided, reflect the ball about the normal
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">dir</span> <span class="o">=</span> <span class="n">Vector3</span><span class="o">::</span><span class="n">Reflect</span><span class="p">(</span><span class="n">dir</span><span class="p">,</span> <span class="n">info</span><span class="p">.</span><span class="n">mNormal</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">mOwner</span><span class="o">-&gt;</span><span class="n">RotateToNewForward</span><span class="p">(</span><span class="n">dir</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Did we hit a target?
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">TargetActor</span><span class="o">*</span> <span class="n">target</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">TargetActor</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">info</span><span class="p">.</span><span class="n">mActor</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">static_cast</span><span class="o">&lt;</span><span class="n">BallActor</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">mOwner</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">HitTarget</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// Base class update moves based on forward speed
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">MoveComponent</span><span class="o">::</span><span class="n">Update</span><span class="p">(</span><span class="n">deltaTime</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h4 id="physworldでのボックス衝突判定">PhysWorldでのボックス衝突判定</h4>
+<h5 id="physworldcpp-2">PhysWorld.cpp</h5>
+<h5 id="physworldtestpairwise">PhysWorld::TestPairwise</h5>
+<p>ゲームの物理ワールドにあるすべてのボックスに関して衝突をテストする場合、素直に実装するとあらゆるペアの組み合わせで交差テストをすることになる（$O(n^2)$のアルゴリズム）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">PhysWorld</span><span class="o">::</span><span class="n">TestPairwise</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">Actor</span><span class="o">*</span><span class="p">,</span> <span class="n">Actor</span><span class="o">*</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">f</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Naive implementation O(n^2)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">mBoxes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Don&#39;t need to test vs itself and any previous i values
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">mBoxes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">BoxComponent</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="n">mBoxes</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">			<span class="n">BoxComponent</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="n">mBoxes</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="n">Intersect</span><span class="p">(</span><span class="n">a</span><span class="o">-&gt;</span><span class="n">GetWorldBox</span><span class="p">(),</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">GetWorldBox</span><span class="p">()))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="c1">// Call supplied function to handle intersection
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>				<span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="o">-&gt;</span><span class="n">GetOwner</span><span class="p">(),</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">GetOwner</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>不要な<code>Intersect()</code>の呼び出しが大量にある</p>
+<h5 id="physworldtestsweepandprune">PhysWorld::TestSweepAndPrune()</h5>
+<p><strong>スイープ＆プルーン</strong>（sweep-and-prune）手法は、特定の軸に沿って区間が重なるボックスだけテストし、交差テストの回数を減らす</p>
+<p>例えば、$x$軸に沿う区間でボックス同士が重なっているかを判定し、重なっていなければその時点でそのペアを除外する</p>
+<p>最初にボックスの配列を$x$の最小値の昇順でソートする</p>
+<p>すべてのボックスについて$x$の最大値を取り出し、それを$max$に保存する</p>
+<p>$min.x$が$max$よりも小さいボックスだけを重なり判定する</p>
+<p>$max$よりも$min.x$が大きいボックスに遭遇したら、$x$軸が重なるボックスはもう存在しないことになる</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">PhysWorld</span><span class="o">::</span><span class="n">TestSweepAndPrune</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">Actor</span><span class="o">*</span><span class="p">,</span> <span class="n">Actor</span><span class="o">*</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">f</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Sort by min.x
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">mBoxes</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">mBoxes</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="n">BoxComponent</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="n">BoxComponent</span><span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="n">a</span><span class="o">-&gt;</span><span class="n">GetWorldBox</span><span class="p">().</span><span class="n">mMin</span><span class="p">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">GetWorldBox</span><span class="p">().</span><span class="n">mMin</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">mBoxes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Get max.x for current box
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="n">BoxComponent</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="n">mBoxes</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">		<span class="kt">float</span> <span class="n">max</span> <span class="o">=</span> <span class="n">a</span><span class="o">-&gt;</span><span class="n">GetWorldBox</span><span class="p">().</span><span class="n">mMax</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">mBoxes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">BoxComponent</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="n">mBoxes</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">			<span class="c1">// If AABB[j] min is past the max bounds of AABB[i],
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>			<span class="c1">// then there aren&#39;t any other possible intersections
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>			<span class="c1">// against AABB[i]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>			<span class="k">if</span> <span class="p">(</span><span class="n">b</span><span class="o">-&gt;</span><span class="n">GetWorldBox</span><span class="p">().</span><span class="n">mMin</span><span class="p">.</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">max</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">Intersect</span><span class="p">(</span><span class="n">a</span><span class="o">-&gt;</span><span class="n">GetWorldBox</span><span class="p">(),</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">GetWorldBox</span><span class="p">()))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="o">-&gt;</span><span class="n">GetOwner</span><span class="p">(),</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">GetOwner</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>これにより、計算時間は半分に減らせる（$O(n log n)$アルゴリズム）</p>
+<p>3軸すべてのプルーニングを行って残されたボックスは必ず交差することになる</p>
+<p>スイープ＆プルーンは、ブロードフェーズ（broadphase）というカテゴリに属する技法であり、ナローフェーズ（narrowphase）に入る前に、可能な限り多くのコリジョンを除外する</p>
+<h4 id="プレイヤーと壁との衝突">プレイヤーと壁との衝突</h4>
+<p>プレイヤーが壁を突き抜けるのを許している実装を修正する</p>
+<p>プレイヤーに<code>BoxComponent</code>を追加し、<code>PlaneActor</code>でカプセル化した個々の壁にも<code>BoxComponent</code>を追加する</p>
+<p><code>Game</code>の中に<code>PlaneActor</code>ポインタの配列を作り、その配列をプレイヤーのコードからアクセスする</p>
+<p>もしAABBが交差すれば、壁と接触しないようにプレイヤーの位置を調整する</p>
+<p>プレイヤーの位置を調整するには、<strong>最小の重なり</strong>（minimum overlap）がある軸で重なりを相殺する</p>
+<p>2次元の場合は差の数は4個で、3次元の場合は差の数は6個になる</p>
+<h5 id="fpsactorcpp">FPSActor.cpp</h5>
+<h5 id="fpsactorfixcollisions">FPSActor::FixCollisions()</h5>
+<p>最小の重なりをテストする</p>
+<p>プレイヤーの位置を変更するとプレイヤーの<code>BoxComponent</code>も変わるので、毎回の交差テストで<code>BoxComponent</code>のワールド境界を再計算する</p>
+<h5 id="fpsactorupdateactor">FPSActor::UpdateActor()</h5>
+<p><code>FPSActor::FixCollisions()</code>を呼び出す</p>
+<h3 id="ゲームプロジェクト">ゲームプロジェクト</h3>
+<h3 id="まとめ">まとめ</h3>
+<h4 id="参考文献">参考文献</h4>
+<p>詳細に衝突検知のテーマを扱う：<br><a href="https://www.amazon.co.jp/Real-Time-Collision-Detection-Inteacive-Technolagy/dp/1558607323">Real-Time Collision Detection (The Morgan Kaufmann Series In Inteacive 3-D Technolagy)</a>
+<br>無償で公開：<a href="http://www.r-5.org/files/books/computers/algo-list/realtime-3d/Christer_Ericson-Real-Time_Collision_Detection-EN.pdf">リンク</a></p>
+<p>物理エンジンの動きのコンテクストに衝突検知を組み込む方法の解説：<br><a href="https://www.amazon.co.jp/-/en/Ian-Millington/dp/0123819768">Game Physics Engine Development</a>
+<br>無償で公開：<a href="http://www.r-5.org/files/books/computers/algo-list/realtime-3d/Ian_Millington-Game_Physics_Engine_Development-EN.pdf">リンク</a></p>
 
             </div>
         </article></main>
